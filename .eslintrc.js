@@ -25,6 +25,9 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
+    ecmaFeatures: {
+      modules: true,
+    },
   },
   plugins: ["vue"],
   rules: {
