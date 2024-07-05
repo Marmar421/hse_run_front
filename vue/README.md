@@ -1,6 +1,10 @@
 ## Project setup
 
 ```
+git clone git@github.com:Marmar421/hse_run_front.git
+```
+
+```
 npm install
 ```
 
