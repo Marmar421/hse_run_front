@@ -1,5 +1,3 @@
-import checkbox from "@/components/UI/checkbox";
+import HserunCheckbox from "@/components/UI/HserunCheckbox";
 
-export default {
-  checkbox,
-};
+export default [HserunCheckbox];
