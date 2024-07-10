@@ -1,5 +1,3 @@
-
-import HelloWorld from './components/HelloWorld.vue';
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
