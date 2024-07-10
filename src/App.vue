@@ -5,8 +5,6 @@ import HelloWorld from './components/HelloWorld.vue';
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav>
-<hserun-checkbox></hserun-checkbox>
-  <HelloWorld></HelloWorld>
   <router-view />
 </template>
 

@@ -1,5 +1,5 @@
-import checkbox from "@/components/UI/feat/checkbox";
+import checkbox from "@/components/UI/checkbox";
 
 export default {
-    name: "hserun-checkbox",
-  };
+  checkbox,
+};
