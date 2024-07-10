@@ -1,8 +1,12 @@
+
+import HelloWorld from './components/HelloWorld.vue';
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav>
+<hserun-checkbox></hserun-checkbox>
+  <HelloWorld></HelloWorld>
   <router-view />
 </template>
 
