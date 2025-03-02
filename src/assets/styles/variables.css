@@ -1,0 +1,17 @@
+/* src/assets/styles/variables.css */
+:root {
+    --primary-color: #ff0000;
+    --secondary-color: #4169e1;
+    --text-color: #333333;
+    --background-light: #f9f9f9;
+    --background-dark: #333333;
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --spacing-xl: 30px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font-family: 'Arial', sans-serif;
+  }

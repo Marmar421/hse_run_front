@@ -1,6 +1,8 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Всем привет это сайт рана</h1>
     <hserun-checkbox></hserun-checkbox>
   </div>
 </template>
+
+
