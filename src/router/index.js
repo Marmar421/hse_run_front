@@ -1,6 +1,10 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import ProfileView from "@/views/ProfileView.vue";
+import PreviousView from "@/views/PreviousView.vue";
+import RegistrationView from "@/views/RegistrationView.vue";
+import QuestView from "@/views/QuestView.vue";
 
 const routes = [
   {
@@ -12,21 +16,28 @@ const routes = [
   {
      path: "/quest",
      name: "quest",
-     component: () => import("../views/QuestView.vue"),
+     component: QuestView,
      meta: { title: "Прохождение квеста" }
    },
-  {
-    path: "/registration",
-     name: "registration",
-     component: () => import("../views/RegistrationView.vue"),
-     meta: { title: "Регистрация на квест" }
+  
+   {
+     path: "/profile",
+     name: "profile",
+     component: ProfileView,
+     meta: { title: "Личный кабинет" }
    },
    {
-     path: "/about",
-     name: "about",
-     component: () => import("../views/AboutProjectView.vue"),
-     meta: { title: "О проекте" }
-   },
+    path: "/previous",
+    name: "previous",
+    component: PreviousView,
+    meta: { title: "Предыдущие квесты" }
+  },
+  {
+    path: "/registration",
+    name: "registration",
+    component: RegistrationView,
+    meta: { title: "Предыдущие квесты" }
+  }
 ];
 
 const router = createRouter({

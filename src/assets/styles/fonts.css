@@ -1,0 +1,26 @@
+/* Подключение шрифтов */
+@font-face {
+  font-family: 'PhonkSans';
+  src: url('@/assets/fonts/PhonkSans.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+  
+  @font-face {
+    font-family: 'InvolveMedium';
+    src: url('@/assets/fonts/Involve-Medium.ttf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'DisruptorScript';
+    src: url('@/assets/fonts/DisruptorScript.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* Добавьте здесь другие шрифты по аналогии */ 

@@ -14,12 +14,8 @@ export default {
     return {
       checkboxs: [
         {id: 1, title: 'мужчина'},
-        {id: 2, title: 'женщина'}, 
-        {id: 3, title: 'не указывать'},
-        {id: 4, title: 'боевой вертолет'},
-        {id: 5, title: 'лена'},
-        {id: 6, title: 'лена'},
-      ]
+      ],
+      checked: false
     };
   }
 };

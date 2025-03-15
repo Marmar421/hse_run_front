@@ -1,6 +1,5 @@
 <template>
-  <div><div type="dropbox" v-for="dropbox in dropboxs" :key="dropbox.id">
-    <p class="greeting">{{ greeting }}</p></div>
+    <p class="greeting">{{ greeting }}</p>
   </template>
   
   <script>
