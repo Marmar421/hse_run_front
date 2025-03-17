@@ -10,7 +10,7 @@
       
       <p class="registration-address">HSE RUN 29</p>
       
-      <TelegramLogin />
+      <TelegramLogin botName="test_burlak1n_bot"/>
 
     </div>
   </div>
