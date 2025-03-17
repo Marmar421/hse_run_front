@@ -16,6 +16,7 @@ import ProfileMain from "./components/Profile/ProfileMain.vue";
 import BaseButton from "./components/UI/BaseButton.vue";
 import QuestBlocks from "./components/Quest/QuestBlocks.vue";
 import '@/assets/styles/fonts.css';
+import TelegramLogin from "./components/Registration/TelegramLogin.vue";
 
 
 const app = createApp(App);
@@ -34,4 +35,5 @@ app.component('HomeFooter', HomeFooter);
 app.component('ProfileMain', ProfileMain);
 app.component('BaseButton', BaseButton);
 app.component('QuestBlocks', QuestBlocks);
+app.component('TelegramLogin', TelegramLogin)
 
