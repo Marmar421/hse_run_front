@@ -11,24 +11,3 @@ export default {
   name: 'App'
 }
 </script>
-
-<style>
-/* Глобальные стили для всего приложения */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background-color: #f9f9f9;
-}
-
-#app {
-  width: 100%;
-  min-height: 100vh;
-} 
-</style>

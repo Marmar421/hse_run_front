@@ -1,12 +1,12 @@
 <!-- src/components/Quest/QuestHowToParticipate.vue -->
 <template>
     <section class="HomeParticipation">
-      <h2>Как принять участие</h2>
+      <h2>{{ $t('participation.titlemain') }}</h2>
       <div class="steps">
         <div class="step" v-for="(step, index) in steps" :key="index">
           <div class="step__number">{{ index + 1 }}</div>
           <div class="step__content">
-            <h3>{{ step.title }}</h3>
+            <h3>{{ $t('participation.title') }}</h3>
             <p>{{ step.description }}</p>
           </div>
         </div>
@@ -15,30 +15,18 @@
   </template>
   
   <script>
+  import LanguageSwitcher from '../UI/LanguageSwitcher.vue';
   export default {
     name: "Participation",
+    components: {
+    LanguageSwitcher
+  },
     data() {
       return {
         steps: [
           {
-            title: "Создайте команду",
-            description: "HSE RUN рассчитат на команды от 2 до 6 человек. Команду собрат и название придумат."
-          },
-          {
-            title: "Выберат язык квеста",
-            description: "Мы подготовит два версии квеста — на русскай и английскай языках."
-          },
-          {
-            title: "Ознакомит с удобно и по порядку",
-            description: "Квест проходит в Москве за 3 часов. Содержит задачу сфотографироват в общем."
-          },
-          {
-            title: "Зарегистрироват и получит своя уникальные код",
-            description: "Подойдит на нашу страницу, чтобы получит все необходимая инструкции."
-          },
-          {
-            title: "Решат задачи — у тебя 3 часа",
-            description: "Выиграт команда, которая быстрый всех пройдет весь маршрут и найдеть все ответы. Удачи!"
+            title: "hi",
+            description: ('participation.titlemain'), 
           }
         ]
       };

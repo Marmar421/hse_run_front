@@ -5,21 +5,13 @@
         <img src="@/assets/images/hserun_logo.svg" alt="Логотип" />
       </div>
       <nav class="navigation">
-        <a href="#" class="nav-link">О проекте</a>
-        <a href="#" class="nav-link">Как участвовать?</a>
-        <a href="#" class="nav-link">Партнеры</a>
-        <router-link to="/previous" class="nav-link">Предыдущие квесты</router-link>
+        <LanguageSwitcher />
+        <a href="#" class="nav-link">{{ $t('header.about') }}</a>
+        <a href="#" class="nav-link">{{ $t('header.participation') }}</a>
+        <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link>
         
         <div class="language-selector">
-          <button @click="toggleLanguageDropdown" class="language-button">
-            {{ currentLanguage }}
-            <span class="arrow-down">▼</span>
-          </button>
-          <div v-if="isLanguageDropdownOpen" class="language-dropdown">
-            <a href="#" @click.prevent="changeLanguage('RU')" class="language-option">Русский</a>
-            <a href="#" @click.prevent="changeLanguage('EN')" class="language-option">English</a>
-          </div>
-          <router-link to="/profile" class="nav-link">Войти</router-link>
+          <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link>
         </div>
       </nav>
     </div>
@@ -27,8 +19,13 @@
 </template>
 
 <script>
+import LanguageSwitcher from '../UI/LanguageSwitcher.vue';
+
 export default {
-  name: 'HomeHeader'
+  name: 'HomeHeader',
+  components: {
+    LanguageSwitcher
+  }
 }
 </script>
 
@@ -37,7 +34,7 @@ export default {
   position: sticky;
   top: 0;
   z-index: 1000;
-  width: 1600px;
+  width: 100%;
   height: 80px;
   background-color: #F3F3F3;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -53,14 +50,10 @@ export default {
   padding: 0 30px;
 }
 
-/* .logo {
-  font-size: 24px;
-  font-weight: bold;
-} */
-
 .navigation {
   display: flex;
   gap: 20px;
+  font-family: 'InvolveMedium';
 }
 
 .nav-link {

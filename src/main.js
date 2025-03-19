@@ -17,6 +17,8 @@ import BaseButton from "./components/UI/BaseButton.vue";
 import QuestBlocks from "./components/Quest/QuestBlocks.vue";
 import '@/assets/styles/fonts.css';
 import TelegramLogin from "./components/Registration/TelegramLogin.vue";
+import i18n from './i18n';
+
 
 
 const app = createApp(App);
@@ -24,7 +26,9 @@ const app = createApp(App);
 app.use(store);
 app.use(router);
 app.use(UI);
-app.mount("#app");
+app.use(i18n);
+
+app.mount('#app');
 
 app.component('HomeHeader', HomeHeader);
 app.component('HomeStart', HomeStart);
@@ -35,5 +39,5 @@ app.component('HomeFooter', HomeFooter);
 app.component('ProfileMain', ProfileMain);
 app.component('BaseButton', BaseButton);
 app.component('QuestBlocks', QuestBlocks);
-app.component('TelegramLogin', TelegramLogin)
+app.component('TelegramLogin', TelegramLogin);
 
