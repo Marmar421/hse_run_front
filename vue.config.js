@@ -4,6 +4,12 @@ module.exports = defineConfig({
   productionSourceMap: false,
   devServer: {
     host: 'localhost.local',
-    port: 80
+    port: 80,
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      }
+    }
   }
 });

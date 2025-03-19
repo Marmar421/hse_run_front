@@ -10,7 +10,7 @@
       
       <p class="registration-address">HSE RUN 29</p>
       
-      <TelegramLogin botName="test_burlak1n_bot"/>
+      <TelegramLogin @auth="handleAuth" botName="test_burlak1n_bot"/>
 
     </div>
   </div>
@@ -24,6 +24,12 @@ export default {
   components: {
     TelegramLogin,
   },
+  methods: {
+    handleAuth(user) {
+      console.log('Authenticated user:', user);
+      // Обработка данных пользователя
+    },
+  }
 };
 </script>
 

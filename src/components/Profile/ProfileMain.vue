@@ -5,10 +5,11 @@
       <p>Добро пожаловать!</p>
       <p>Telegram ID: 870424192</p>
       <p>Username: burlak1n</p>
-      <label for="fullname">ФИО:</label>
-      <input id="fullname" v-model="fullname" />
-      <button @click="saveProfile">Сохранить</button>
-      <button @click="deleteProfile" class="delete">Удалить профиль</button>
+      <!-- <label for="fullname">ФИО:</label>
+      <input id="fullname" v-model="fullname" /> -->
+      <p>ФИО: <span id="full_name"></span></p>
+      <!-- <button @click="saveProfile">Сохранить</button>
+      <button @click="deleteProfile" class="delete">Удалить профиль</button> -->
       <template>
   <div>
     <BaseButton>Обычная кнопка</BaseButton>
@@ -40,18 +41,29 @@ export default {
     };
   },
   methods: {
+    async fetchUserData() {
+      try {
+        const res = await fetch('/api/auth/me/');
+        if (!res.ok) throw new Error((await res.json()).detail || 'Ошибка');
+        const { full_name } = await res.json();
+        document.getElementById('full_name').textContent = full_name;
+        document.getElementById('user-info').hidden = false;
+      } catch (e) {
+        window.location.href = '/registration'
+      }
+    },
     saveProfile() {
-      // Логика для сохранения профиля
       console.log('Профиль сохранен:', this.fullname);
     },
     deleteProfile() {
-      // Логика для удаления профиля
       console.log('Профиль удален');
     },
     createTeam() {
-      // Логика для создания команды
       console.log('Команда создана:', this.teamName);
     }
+  },
+  mounted() {
+    this.fetchUserData();
   }
 }
 </script>
