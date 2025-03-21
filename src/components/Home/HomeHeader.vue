@@ -11,7 +11,7 @@
         <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link>
         
         <div class="language-selector">
-          <router-link to="/registration" class="nav-link">{{ $t('header.signin') }}</router-link>
+          <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link>
         </div>
       </nav>
     </div>

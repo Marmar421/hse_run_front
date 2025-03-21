@@ -1,11 +1,16 @@
 <template>
   <div class="quest-blocks-container">
-    <QuestBlock 
-      v-for="quest in quests" 
-      :key="quest.id"
-      :title="quest.title"
-      :progress="quest.progress"
-    />
+    <div v-if="loading" class="loading">Загрузка...</div>
+    <div v-else-if="error" class="error">{{ error }}</div>
+    <template v-else>
+      <QuestBlock 
+        v-for="quest in quests" 
+        :key="quest.id"
+        :title="quest.title"
+        :progress="quest.progress"
+        @click="startQuest(quest.id)"
+      />
+    </template>
   </div>
 </template>
 
@@ -18,14 +23,44 @@ export default {
   },
   data() {
     return {
-      quests: [
-        { id: 1, title: 'Москва с видом на', progress: 50 },
-        { id: 2, title: 'Москва Булгакова', progress: 85 },
-        { id: 3, title: 'Москва деревянная', progress: 75 },
-        { id: 4, title: 'Москва круглая', progress: 90 },
-        { id: 5, title: 'Москва конструктивистская', progress: 80 },
-        { id: 6, title: '125 лет МХТ им. Чехова/ Москва по-Станиславскому', progress: 85 }
-      ]
+      quests: [],
+      loading: true,
+      error: null
+    }
+  },
+  mounted() {
+    this.fetchQuests()
+  },
+  methods: {
+    async fetchQuests() {
+      try {
+        this.loading = true
+        const response = await fetch('/api/quest')
+        
+        if (!response.ok) {
+          throw new Error('Ошибка загрузки квестов')
+        }
+        
+        const { blocks } = await response.json()
+        this.quests = blocks.map(block => ({
+          id: block.id,
+          title: block.title,
+          progress: block.progress || 0
+        }))
+        
+        this.loading = false
+      } catch (error) {
+        this.error = error.message
+        this.loading = false
+        
+        // Если ошибка авторизации, перенаправляем на страницу регистрации
+        if (error.message.includes('Ошибка сервера')) {
+          this.$router.push('/registration')
+        }
+      }
+    },
+    startQuest(questId) {
+      this.$router.push(`/quest/${questId}`)
     }
   }
 }
@@ -36,5 +71,15 @@ export default {
   padding: 15px;
   max-width: 500px;
   margin: 0 auto;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.error {
+  color: #e74c3c;
 }
 </style>

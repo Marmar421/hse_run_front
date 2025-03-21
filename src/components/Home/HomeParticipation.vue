@@ -3,11 +3,11 @@
     <section class="HomeParticipation">
       <h2>{{ $t('participation.titlemain') }}</h2>
       <div class="steps">
-        <div class="step" v-for="(step, index) in steps" :key="index">
-          <div class="step__number">{{ index + 1 }}</div>
+        <div v-for="index in 5" :key="index" class="step">
+          <div class="step__number">{{ index }}</div>
           <div class="step__content">
-            <h3>{{ $t('participation.title') }}</h3>
-            <p>{{ step.description }}</p>
+            <h3>{{ $t(`participation.steps[${index-1}].point`) }}</h3>
+            <p>{{ $t(`participation.steps[${index-1}].description`) }}</p>
           </div>
         </div>
       </div>
@@ -17,25 +17,15 @@
   <script>
   import LanguageSwitcher from '../UI/LanguageSwitcher.vue';
   export default {
-    name: "Participation",
+    name: "HomeParticipation",
     components: {
     LanguageSwitcher
   },
-    data() {
-      return {
-        steps: [
-          {
-            title: "hi",
-            description: ('participation.titlemain'), 
-          }
-        ]
-      };
-    }
   };
   </script>
   
   <style scoped>
-  .how-to-participate {
+  .HomeParticipation {
     padding: 30px 20px;
   }
   
