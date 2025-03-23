@@ -50,6 +50,22 @@ export default {
     title: 'Profile',
     name: 'Name',
     team: 'Team',
+    createTeam: 'Create a team',
+    teamNamePlaceholder: 'Team name',
+    createButton: 'Create',
+    teamCreatedSuccess: 'Team created successfully!',
+    yourTeam: 'Your team',
+    teamMembers: 'Members',
+    leaveTeam: 'Leave team',
+    leftTeamSuccess: 'You have successfully left the team',
+    noTeam: 'No team',
+    noTeamMessage: 'You don\'t have a team yet. Create a new one or join an existing one.',
+    inviteMembers: 'Invite members',
+    fullName: 'Full name',
+    birthDate: 'Birth date',
+    workPlace: 'University/Work place',
+    notSpecified: 'Not specified',
+    logout: 'Logout'
   },
 
   faq: {
@@ -81,5 +97,10 @@ export default {
   registration: {
     title: 'Registration',
     address: 'HSE RUN 29'
+  },
+  common: {
+    save: 'Save',
+    cancel: 'Cancel',
+    back: 'Back'
   }
 } 

@@ -10,7 +10,7 @@ export default {
 
   start: {
     tagline: 'разгадай каждую загадку',
-    maintitle: 'КУЛЬТУРНО_ИСТОРИЧЕСКИЙ КВЕСТ',
+    maintitle: 'КУЛЬТУРНО-ИСТОРИЧЕСКИЙ КВЕСТ',
     subtitle1: 'Бегать совсем не обязательно!',
     subtitle2: 'Главное – решить как можно больше загадок во время квеста.',
     registration: 'ЗАРЕГИСТРИРОВАТЬСЯ',
@@ -48,9 +48,27 @@ export default {
     ]
   },
   profile: {
-    title: 'Профиль',
-    name: 'Имя',
+    title: 'Ваш профиль',
+    personalInfo: 'Персональная информация',
     team: 'Команда',
+    createTeam: 'Создать команду',
+    teamName: 'Название команды',
+    teamNamePlaceholder: 'Введите название команды',
+    createButton: 'Создать',
+    teamCreatedSuccess: 'Команда успешно создана!',
+    yourTeam: 'Ваша команда',
+    teamMembers: 'Участников',
+    leaveTeam: 'Покинуть команду',
+    confirmLeaveTeam: 'Вы уверены, что хотите покинуть команду?',
+    leftTeamSuccess: 'Вы успешно покинули команду',
+    noTeam: 'Нет команды',
+    noTeamMessage: 'У вас пока нет команды. Создайте новую или присоединитесь к существующей.',
+    inviteMembers: 'Пригласить участников',
+    fullName: 'ФИО',
+    birthDate: 'Дата рождения',
+    workPlace: 'ВУЗ/Место работы',
+    notSpecified: 'Не указано',
+    logout: 'Выйти'
   },
   faq: {
     title: 'FAQ',
@@ -81,5 +99,10 @@ export default {
   registration: {
     title: 'Регистрация',
     address: 'HSE RUN 29'
+  },
+  common: {
+    save: 'Сохранить',
+    cancel: 'Отмена',
+    back: 'Назад'
   }
 };
