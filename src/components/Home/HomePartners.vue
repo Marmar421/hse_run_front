@@ -9,7 +9,9 @@
       <div class="partners-logos">
         <div class="logos-container" :style="slidesStyle">
           <div v-for="(partner, index) in visiblePartners" :key="index" class="partner-logo">
-            <img :src="partner.logo" :alt="partner.name">
+            <a :href="getPartnerLink(partner)" target="_blank" rel="noopener noreferrer" class="partner-link">
+              <img :src="partner.logo" :alt="partner.name || 'Партнер'">
+            </a>
           </div>
         </div>
       </div>
@@ -28,13 +30,32 @@ export default {
     return {
       currentIndex: 0,
       partners: [
-        {logo: require('@/assets/images/WKUP.png') },
-        {logo: require('@/assets/images/Ahmad_Tea_logo.jpg') },
-        {logo: require('@/assets/images/sborka_logo.svg') },
-        {logo: require('@/assets/images/alfa-logo.jpg') },
-        {logo: require('@/assets/images/clothing_supply_logo.png') },
-        // { name: "Партнер 6", logo: require('@/assets/images/partner-placeholder.png') },
-        // { name: "Партнер 7", logo: require('@/assets/images/partner-placeholder.png') },
+        {
+          name: "WKUP",
+          logo: require('@/assets/images/WKUP.png'),
+          url: "https://wkup.ru"
+        },
+        {
+          name: "Ahmad Tea",
+          logo: require('@/assets/images/Ahmad_Tea_logo.jpg'),
+          url: "https://vk.cc/cK7A2e"
+        },
+        {
+          name: "Сборка",
+          logo: require('@/assets/images/sborka_logo.svg'),
+          url: "https://sborka.ru"
+        },
+        {
+          name: "Альфа-Банк",
+          logo: require('@/assets/images/alfa-logo.jpg'),
+          url: "https://alfabank.ru"
+        },
+        {
+          name: "Clothing Supply",
+          logo: require('@/assets/images/clothing_supply_logo.png'),
+          url: "https://clothingsupply.ru"
+        },
+        // { name: "Партнер 6", logo: require('@/assets/images/partner-placeholder.png'), url: "https://example.com" },
       ]
     };
   },
@@ -67,6 +88,23 @@ export default {
     slideRight() {
       // Прокрутка вправо с зацикливанием
       this.currentIndex = (this.currentIndex + 1) % this.partners.length;
+    },
+    getPartnerLink(partner) {
+      if (!partner.url) return "#";
+      
+      // Добавляем UTM-метки к URL партнера
+      const utmParams = new URLSearchParams({
+        utm_source: 'hserun',
+        utm_medium: 'referral',
+        utm_campaign: 'partners',
+        utm_content: partner.name || 'logo'
+      });
+      
+      // Проверяем, содержит ли URL уже параметры
+      const hasParams = partner.url.includes('?');
+      const separator = hasParams ? '&' : '?';
+      
+      return `${partner.url}${separator}${utmParams.toString()}`;
     }
   }
 };
@@ -167,5 +205,15 @@ h2 {
   .partner-logo {
     flex: 0 0 50%;
   }
+}
+
+.partner-link {
+  display: block;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.partner-link:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
 }
 </style>
