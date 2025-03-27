@@ -10,7 +10,7 @@ export default {
 
   start: {
     tagline: 'разгадай каждую загадку',
-    maintitle: 'КУЛЬТУРНО-ИСТОРИЧЕСКИЙ КВЕСТ',
+    maintitle: 'КУЛЬТУРНО-ИСТОРИЧЕСКИЙ КВЕСТ ПО МОСКВЕ',
     subtitle1: 'Бегать совсем не обязательно!',
     subtitle2: 'Главное – решить как можно больше загадок во время квеста.',
     registration: 'ЗАРЕГИСТРИРОВАТЬСЯ',
@@ -23,7 +23,7 @@ export default {
   },
 
   participation: {
-    titlemain: "Как принять участие",
+    titlemain: "Как участвовать?",
     steps: [
       {
         point: "Создайте команду",
@@ -48,30 +48,12 @@ export default {
     ]
   },
   profile: {
-    title: 'Ваш профиль',
-    personalInfo: 'Персональная информация',
+    title: 'Профиль',
+    name: 'Имя',
     team: 'Команда',
-    createTeam: 'Создать команду',
-    teamName: 'Название команды',
-    teamNamePlaceholder: 'Введите название команды',
-    createButton: 'Создать',
-    teamCreatedSuccess: 'Команда успешно создана!',
-    yourTeam: 'Ваша команда',
-    teamMembers: 'Участников',
-    leaveTeam: 'Покинуть команду',
-    confirmLeaveTeam: 'Вы уверены, что хотите покинуть команду?',
-    leftTeamSuccess: 'Вы успешно покинули команду',
-    noTeam: 'Нет команды',
-    noTeamMessage: 'У вас пока нет команды. Создайте новую или присоединитесь к существующей.',
-    inviteMembers: 'Пригласить участников',
-    fullName: 'ФИО',
-    birthDate: 'Дата рождения',
-    workPlace: 'ВУЗ/Место работы',
-    notSpecified: 'Не указано',
-    logout: 'Выйти'
   },
   faq: {
-    title: 'FAQ',
+    title: 'ОСТАЛИСЬ ВОПРОСЫ?',
     question1: 'Как зарегистрироваться?',
     answer1: 'Для регистрации необходимо заполнить форму регистрации на сайте.',
     question2: 'Сколько человек может быть в команде?',
@@ -99,10 +81,5 @@ export default {
   registration: {
     title: 'Регистрация',
     address: 'HSE RUN 29'
-  },
-  common: {
-    save: 'Сохранить',
-    cancel: 'Отмена',
-    back: 'Назад'
   }
 };

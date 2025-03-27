@@ -9,9 +9,7 @@
       <div class="partners-logos">
         <div class="logos-container" :style="slidesStyle">
           <div v-for="(partner, index) in visiblePartners" :key="index" class="partner-logo">
-            <a :href="getPartnerLink(partner)" target="_blank" rel="noopener noreferrer" class="partner-link">
-              <img :src="partner.logo" :alt="partner.name || 'Партнер'">
-            </a>
+            <img :src="partner.logo" :alt="partner.name">
           </div>
         </div>
       </div>
@@ -30,32 +28,13 @@ export default {
     return {
       currentIndex: 0,
       partners: [
-        {
-          name: "WKUP",
-          logo: require('@/assets/images/WKUP.png'),
-          url: "https://wkup.ru"
-        },
-        {
-          name: "Ahmad Tea",
-          logo: require('@/assets/images/Ahmad_Tea_logo.jpg'),
-          url: "https://vk.cc/cK7A2e"
-        },
-        {
-          name: "Сборка",
-          logo: require('@/assets/images/sborka_logo.svg'),
-          url: "https://sborka.ru"
-        },
-        {
-          name: "Альфа-Банк",
-          logo: require('@/assets/images/alfa-logo.jpg'),
-          url: "https://alfabank.ru"
-        },
-        {
-          name: "Clothing Supply",
-          logo: require('@/assets/images/clothing_supply_logo.png'),
-          url: "https://clothingsupply.ru"
-        },
-        // { name: "Партнер 6", logo: require('@/assets/images/partner-placeholder.png'), url: "https://example.com" },
+        {logo: require('@/assets/images/WKUP.png') },
+        {logo: require('@/assets/images/Ahmad_Tea_logo.jpg') },
+        {logo: require('@/assets/images/sborka_logo.svg') },
+        {logo: require('@/assets/images/alfa-logo.jpg') },
+        {logo: require('@/assets/images/clothing_supply_logo.png') },
+        // { name: "Партнер 6", logo: require('@/assets/images/partner-placeholder.png') },
+        // { name: "Партнер 7", logo: require('@/assets/images/partner-placeholder.png') },
       ]
     };
   },
@@ -88,23 +67,6 @@ export default {
     slideRight() {
       // Прокрутка вправо с зацикливанием
       this.currentIndex = (this.currentIndex + 1) % this.partners.length;
-    },
-    getPartnerLink(partner) {
-      if (!partner.url) return "#";
-      
-      // Добавляем UTM-метки к URL партнера
-      const utmParams = new URLSearchParams({
-        utm_source: 'hserun',
-        utm_medium: 'referral',
-        utm_campaign: 'partners',
-        utm_content: partner.name || 'logo'
-      });
-      
-      // Проверяем, содержит ли URL уже параметры
-      const hasParams = partner.url.includes('?');
-      const separator = hasParams ? '&' : '?';
-      
-      return `${partner.url}${separator}${utmParams.toString()}`;
     }
   }
 };
@@ -112,39 +74,50 @@ export default {
 
 <style scoped>
 .partners {
-  padding: 30px 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  margin: 0 auto;
+  padding: 40px 150px;
+  max-width: 1360px;
 }
 
 h2 {
-  margin-bottom: 25px;
-  font-size: 24px;
+  margin: 0;
+  font-size: 55px;
+  text-align: center;
+  font-family: 'PhonkSans';
+  color: #C80002;
+  -webkit-text-stroke: 3px #C80002;
 }
 
 .carousel-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .partners-logos {
   display: flex;
   justify-content: center;
   overflow: hidden;
-  width: 100%;
 }
 
 .logos-container {
   display: flex;
   justify-content: center;
-  width: 100%;
+  flex: 1;
+  gap: 82px;
 }
 
 .partner-logo {
-  flex: 0 0 calc(100% / 3);
-  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
   box-sizing: border-box;
   text-align: center;
   transition: transform 0.3s ease;
@@ -152,9 +125,10 @@ h2 {
 
 .partner-logo img {
   max-width: 100%;
-  max-height: 100px;
+  max-height: 150px;
   margin-bottom: 10px;
   object-fit: contain;
+  
 }
 
 .partner-logo p {
@@ -167,15 +141,15 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  background-color: rgba(67, 105, 172, 0.1);
+  width: 60px;
+  height: 60px;
   border: none;
   border-radius: 50%;
+  background-color: #F3F3F3;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 28px;
   margin: 0 15px;
-  color: #4369AC;
+  color: #C80002;
   transition: background-color 0.3s ease;
 }
 
@@ -187,8 +161,21 @@ h2 {
   outline: none;
 }
 
+@media (max-width: 1360px) {
+  .partners {
+    padding: 40px 50px;
+  }
+}
 /* Адаптив для мобильных устройств */
 @media (max-width: 768px) {
+  .partners {
+  gap: 22px;
+  padding: 22px;
+}
+  h2 {
+    font-size: 22px;
+    -webkit-text-stroke: 1px #C80002;
+  }
   .partner-logo {
     flex: 0 0 100%;
   }
@@ -199,21 +186,8 @@ h2 {
     font-size: 14px;
     margin: 0 5px;
   }
+  .partner-logo img {
+  max-height: 60px;
 }
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .partner-logo {
-    flex: 0 0 50%;
-  }
-}
-
-.partner-link {
-  display: block;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.partner-link:hover {
-  opacity: 0.8;
-  transform: scale(1.05);
 }
 </style>

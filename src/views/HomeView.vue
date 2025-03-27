@@ -4,9 +4,7 @@
     <HomeHeader />
     <main>
       <HomeStart/>
-      Тут будет картинка 
       <HomeParticipation />
-      Тут будут фотографии
       <HomeFAQ/>
       <HomePartners/>
     </main>

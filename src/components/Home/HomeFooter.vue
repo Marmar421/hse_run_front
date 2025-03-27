@@ -21,26 +21,31 @@ export default {
 
 <style scoped>
 .HomeFooter {
+    padding-top: 143px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    max-width: 1360px;
+    margin: 0 auto;
     background-color: #F3F3F3;
-    padding: 20px;
-    text-align: center;
-    margin-top: auto; /* Важно для прилипания футера */
+    font-size: 32px;
+    gap: 12px;
+    font-family: 'InvolveMedium';
 }
 
 .nav-link {
-    color: #4369AC;
-    margin: 0 15px;
+    color: #000000;
     text-decoration: none;
-    transition: color 0.3s;
+    transition: font-family 0.3s;
 }
 
 .nav-link:hover {
-    color: #2c4e8c;
-    text-decoration: underline;
+    font-family: 'InvolveBold';
 }
 
 p {
-    margin: 10px 0;
+    margin: 0;
     color: #666;
     font-size: 14px;
 }

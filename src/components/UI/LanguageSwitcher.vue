@@ -43,12 +43,12 @@ export default {
 }
 
 select {
-  padding: 5px 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: white;
-  font-size: 14px;
+  padding: 0px 3px;
+  background-color: #F3F3F3;
+  border: none;
+  font-size: 20px;
   cursor: pointer;
+  font-family: 'InvolveMedium';
 }
 
 select:focus {

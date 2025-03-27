@@ -2,7 +2,9 @@
   <header class="sticky-header">
     <div class="header-content">
       <div class="logo">
-        <img src="@/assets/images/hserun_logo.svg" alt="Логотип" />
+        <a href="/">
+          <img src="@/assets/images/hserun_logo.svg" alt="Логотип" />
+        </a>
       </div>
       <nav class="navigation">
         <LanguageSwitcher />
@@ -12,6 +14,9 @@
         
         <div class="language-selector">
           <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link>
+        </div>
+        <div class="mobile-menu-icon">
+          <img src="@/assets/images/down-button.svg" alt="header-down-button" class="down-button-mobile">
         </div>
       </nav>
     </div>
@@ -33,13 +38,12 @@ export default {
 .sticky-header {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 111;
   width: 100%;
-  height: 80px;
+  height: 90px;
   background-color: #F3F3F3;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
-  max-width: 100%;
+  max-width: 1360px;
 }
 
 .header-content {
@@ -47,13 +51,14 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  padding: 0 30px;
+  max-width: 1360px;
 }
 
 .navigation {
   display: flex;
   gap: 20px;
   font-family: 'InvolveMedium';
+  font-size: 20px;
 }
 
 .nav-link {
@@ -66,10 +71,32 @@ export default {
 .nav-link:hover {
   color: #4369AC;
 }
+.down-button-mobile{
+  display: none;
+}
 
 @media screen and (max-width: 1600px) {
   .sticky-header {
     width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .nav-link{
+    display: none;
+  }
+  .language-switcher{
+    display: none;
+  }
+  .down-button-mobile{
+    display: block;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+  }
+  .mobile-menu-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

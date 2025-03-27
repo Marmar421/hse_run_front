@@ -1,197 +1,76 @@
 <template>
-  <div class="profile-main">
-    <div class="profile-card">
-      <div class="profile-avatar">
-        <img :src="userData.avatar || '/img/default-avatar.png'" alt="Avatar">
-      </div>
-      
-      <div class="profile-details">
-        <h3 class="profile-name">{{ userData.full_name }}</h3>
-        <p class="profile-username">@{{ userData.telegram_username || 'username' }}</p>
-        <p class="profile-team">{{ $t('profile.team') }}: {{ userData.team ? userData.team.name : $t('profile.noTeam') }}</p>
-      </div>
-      
-      <div class="profile-qr" @click="showQrModal = true">
-        <img :src="qrCodeUrl" alt="QR код">
-        <p class="qr-description">Это QR-код для входа на площадку и начисления баллов за программу и квест</p>
-      </div>
+  <div class="profile">
+    <h1>{{ $t('profile.title') }}</h1>
+    <LanguageSwitcher />
+    <div class="welcome">
+      <p>Telegram ID: 870424192</p>
+      <p>Username: burlak1n</p>
+      <label for="fullname">ФИО:</label>
+      <input id="fullname" v-model="fullname" />
+      <button @click="saveProfile">Сохранить</button>
+      <button @click="deleteProfile" class="delete">Удалить профиль</button>
+      <template>
+  <div>
+    <BaseButton>Обычная кнопка</BaseButton>
+    <BaseButton variant="secondary">Вторичная</BaseButton>
+    <BaseButton variant="danger">Удалить</BaseButton>
+    <BaseButton variant="success">Сохранить</BaseButton>
+  </div>
+</template>
     </div>
-    
-    <!-- Модальное окно для увеличенного QR-кода -->
-    <div class="qr-modal" v-if="showQrModal" @click="showQrModal = false">
-      <div class="qr-modal-content" @click.stop>
-        <button class="close-btn" @click="showQrModal = false">&times;</button>
-        <img :src="qrCodeUrl" alt="QR код (увеличенный)">
-        <p class="qr-modal-description">Это QR-код для входа на площадку и начисления баллов за программу и квест</p>
-      </div>
+    <div class="team">
+      <h2>{{ $t('profile.team') }}</h2>
+      <label for="teamName">Название команды:</label>
+      <input id="teamName" v-model="teamName" />
+      <button @click="createTeam">Создать команду</button>
     </div>
   </div>
 </template>
 
 <script>
+import BaseButton from '@/components/UI/BaseButton.vue';
+import LanguageSwitcher from '@/components/UI/LanguageSwitcher.vue';
 export default {
   name: 'ProfileMain',
-  props: {
-    userData: {
-      type: Object,
-      required: true
-    }
+  components: {
+    BaseButton,
+    LanguageSwitcher,
   },
   data() {
     return {
-      showQrModal: false
+      fullname: 'burlak1n',
+      teamName: ''
     };
   },
-  computed: {
-    qrCodeUrl() {
-      // Здесь можно использовать API для генерации QR кода или заглушку
-      return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=user_id:${this.userData.id}`;
+  methods: {
+    saveProfile() {
+      // Логика для сохранения профиля
+      console.log('Профиль сохранен:', this.fullname);
+    },
+    deleteProfile() {
+      // Логика для удаления профиля
+      console.log('Профиль удален');
+    },
+    createTeam() {
+      // Логика для создания команды
+      console.log('Команда создана:', this.teamName);
     }
   }
-};
+}
 </script>
 
 <style scoped>
-.profile-main {
-  margin-bottom: 30px;
-}
-
-.profile-card {
-  display: flex;
-  align-items: center;
-  background-color: #f0f7ff;
-  border: 1px solid #d0e1f9;
-  border-radius: 8px;
+.profile {
   padding: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-
-.profile-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #b8c9e5;
-  margin-right: 20px;
-  flex-shrink: 0;
+.welcome, .team {
+  margin-bottom: 20px;
 }
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-details {
-  flex-grow: 1;
-}
-
-.profile-name {
-  font-size: 24px;
-  font-weight: 500;
-  color: #333;
-  margin: 0 0 5px 0;
-}
-
-.profile-username {
-  font-size: 16px;
-  color: #4369AC;
-  margin: 0 0 10px 0;
-}
-
-.profile-team {
-  font-size: 16px;
-  color: #666;
-  margin: 0;
-}
-
-.profile-qr {
-  width: 140px;
-  height: 140px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer; /* Указывает, что элемент кликабельный */
-}
-
-.profile-qr img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.qr-description {
-  font-size: 12px;
-  color: #666;
-  margin-top: 5px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@media (max-width: 768px) {
-  .profile-card {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .profile-avatar {
-    margin-right: 0;
-    margin-bottom: 15px;
-  }
-  
-  .profile-details {
-    margin-bottom: 15px;
-  }
-}
-
-/* Стили для модального окна */
-.qr-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.qr-modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  position: relative;
-  max-width: 90%;
-  max-height: 90%;
-}
-
-.qr-modal-content img {
-  max-width: 100%;
-  max-height: 100%;
-  width: 400px;
-  height: 400px;
-}
-
-.qr-modal-description {
-  font-size: 14px;
-  color: #666;
+button {
   margin-top: 10px;
-  text-align: center;
 }
-
-.close-btn {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
+.delete {
+  background-color: red;
+  color: white;
 }
 </style>
