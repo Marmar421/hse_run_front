@@ -1,21 +1,28 @@
 <template>
   <section class="partners">
     <h2>{{ $t('partners.title') }}</h2>
-    <div class="carousel-container">
-      <button class="carousel-arrow arrow-left" @click="slideLeft">
-        <span>&#10094;</span>
-      </button>
-      
-      <div class="partners-logos">
-        <div class="logos-container" :style="slidesStyle">
-          <div v-for="(partner, index) in visiblePartners" :key="index" class="partner-logo">
-            <img :src="partner.logo" :alt="partner.name">
-          </div>
+    <div class="partners-carousel">
+      <div class="carousel-inner">
+        <div 
+          v-for="(partner, index) in partners" 
+          :key="index"
+          class="carousel-item"
+          :class="{ active: index === currentIndex }"
+        >
+          <img 
+            :src="partner.logo" 
+            @click="goToPartnerSite(partner.url)"
+            class="partner-logo"
+            alt="Partner logo"
+          >
         </div>
       </div>
       
-      <button class="carousel-arrow arrow-right" @click="slideRight">
-        <span>&#10095;</span>
+      <button class="carousel-control-prev" @click="prevSlide">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" @click="nextSlide">
+        <span class="carousel-control-next-icon"></span>
       </button>
     </div>
   </section>
@@ -27,12 +34,24 @@ export default {
   data() {
     return {
       currentIndex: 0,
+      autoSlideInterval: null,
       partners: [
-        {logo: require('@/assets/images/WKUP.png') },
-        {logo: require('@/assets/images/Ahmad_Tea_logo.jpg') },
-        {logo: require('@/assets/images/sborka_logo.svg') },
-        {logo: require('@/assets/images/alfa-logo.jpg') },
-        {logo: require('@/assets/images/clothing_supply_logo.png') },
+        {
+          logo: require('@/assets/images/WKUP.png'),
+          url: 'https://wakeupnow.ru'
+        },
+        {
+          logo: require('@/assets/images/Ahmad_Tea_logo.png'),
+          url: 'https://ahmadtea.ru'
+        },
+        {
+          logo: require('@/assets/images/sborka_logo.svg'),
+          url: 'https://ecosborka.ru'
+        },
+        {
+          logo: require('@/assets/images/alfa-logo.jpg'),
+          url: 'https://alfabank.ru'
+        },
         // { name: "Партнер 6", logo: require('@/assets/images/partner-placeholder.png') },
         // { name: "Партнер 7", logo: require('@/assets/images/partner-placeholder.png') },
       ]
@@ -55,19 +74,38 @@ export default {
     slidesStyle() {
       // Для плавного перехода между слайдами
       return {
-        transition: 'transform 0.1s ease-in-out'
+        transition: 'transform 0.5s'
       };
     }
   },
   methods: {
-    slideLeft() {
-      // Прокрутка влево с зацикливанием
+    nextSlide() {
+      this.currentIndex = (this.currentIndex + 1) % this.partners.length;
+    },
+    prevSlide() {
       this.currentIndex = (this.currentIndex - 1 + this.partners.length) % this.partners.length;
     },
-    slideRight() {
-      // Прокрутка вправо с зацикливанием
-      this.currentIndex = (this.currentIndex + 1) % this.partners.length;
+    goToPartnerSite(url) {
+      if (url) {
+        window.open(url, '_blank');
+      }
+    },
+    startAutoSlide() {
+      this.autoSlideInterval = setInterval(() => {
+        this.nextSlide();
+      }, 5000); // Интервал в 5 секунд
+    },
+    stopAutoSlide() {
+      if (this.autoSlideInterval) {
+        clearInterval(this.autoSlideInterval);
+      }
     }
+  },
+  mounted() {
+    this.startAutoSlide();
+  },
+  beforeDestroy() {
+    this.stopAutoSlide();
   }
 };
 </script>
@@ -93,72 +131,66 @@ h2 {
   -webkit-text-stroke: 3px #C80002;
 }
 
-.carousel-container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-}
-
-.partners-logos {
-  display: flex;
-  justify-content: center;
+.partners-carousel {
+  position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
-.logos-container {
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
   display: flex;
   justify-content: center;
-  flex: 1;
-  gap: 82px;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  transform: translateX(-${100 * currentIndex}%);
+}
+
+.carousel-item.active {
+  opacity: 1;
 }
 
 .partner-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  box-sizing: border-box;
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.partner-logo img {
-  max-width: 100%;
-  max-height: 150px;
-  margin-bottom: 10px;
-  object-fit: contain;
-  
-}
-
-.partner-logo p {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
-}
-
-.carousel-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
   height: 60px;
-  border: none;
-  border-radius: 50%;
-  background-color: #F3F3F3;
+  width: auto;
+  object-fit: contain;
   cursor: pointer;
-  font-size: 28px;
-  margin: 0 15px;
-  color: #C80002;
-  transition: background-color 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
-.carousel-arrow:hover {
-  background-color: rgba(67, 105, 172, 0.2);
+.partner-logo:hover {
+  transform: scale(1.05);
 }
 
-.carousel-arrow:focus {
-  outline: none;
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-control-prev {
+  left: 0;
+}
+
+.carousel-control-next {
+  right: 0;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  opacity: 0.9;
 }
 
 @media (max-width: 1360px) {
@@ -189,5 +221,10 @@ h2 {
   .partner-logo img {
   max-height: 60px;
 }
+}
+
+/* Для особых случаев */
+.partner-logo[src*="specific-partner"] {
+  height: 70px; /* особая высота для конкретного партнера */
 }
 </style>
