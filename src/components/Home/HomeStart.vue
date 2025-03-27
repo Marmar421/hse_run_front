@@ -1,5 +1,5 @@
 <template>
-  <section class="home-start">
+  <section class="home-start" v-if="mounted">
     <div class="start-container">
       <div class="tag-line">{{ $t('start.tagline') }}</div>
       
@@ -42,6 +42,9 @@
       </div>
       <div class="brand-mark">hse run 29</div>
     </div>
+    <div v-if="userName">
+      {{ userName }}
+    </div>
   </section>
   <section class="home-cards">
     <div class="cards-container">
@@ -70,6 +73,30 @@ export default {
   components: {
     BaseButton,
     LanguageSwitcher
+  },
+  props: {
+    userData: {
+      type: Object,
+      default: () => ({
+        full_name: ''
+      })
+    }
+  },
+  data() {
+    return {
+      mounted: false
+    }
+  },
+  mounted() {
+    this.mounted = true
+  },
+  beforeDestroy() {
+    // Очистка всех возможных слушателей событий
+  },
+  computed: {
+    userName() {
+      return this.userData?.full_name || ''
+    }
   }
 }
 </script>
@@ -118,7 +145,7 @@ export default {
   left: 60px;
   color: #4369AC;
   font-size: 55px;
-  z-index: 1000;
+  z-index: 100;
 }
 
 .main-content {
