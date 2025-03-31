@@ -61,13 +61,12 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 70px;
-  border: 2px solid #C80002;
+  padding: 0px;
   margin: 0 auto;
   border-radius: 80px;
   margin-top: 73px;
   margin-bottom: 73px;
-  max-width: 1216px;
+  max-width: 1360px;
 }
 .homefaq-wrapper {
   display: flex;
@@ -92,20 +91,27 @@ export default {
   column-gap: 70px;
 }
 .question-container {
-  border: solid 2px #C80002;
-  border-radius: 40px;
-  max-width: 575px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 200px;
-  padding: 10px 20px
+  padding: 10px 20px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 .question-card {
+  perspective: 1000px;
+  border-radius: 40px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  border: solid 2px #C80002;
   justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  min-height: 200px;
+  display: flex;
+  max-width: 575px;
 }
 .question-card__front h3 {
   font-size: 33px;
@@ -113,9 +119,35 @@ export default {
   font-family: 'InvolveMedium';
   color: #C80002;
   text-align: center;
+  padding: 10px 20px;
+}
+.question-card.is-flipped {
+  transform: rotateY(180deg);
 }
 .question-card__back {
-  display: none;
+  font-size: 33px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 0;
+  top: 0;
+  transform: rotateY(180deg);
+  background-color: #C80002;
+  border-radius: 38px;
+  
+}
+.question-card__back p {
+  font-size: 33px;
+  margin: 0;
+  font-family: 'InvolveMedium';
+  font-size: 24px;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
 }
 
 @media (max-width: 1360px) {
@@ -128,7 +160,41 @@ export default {
 }
 @media (max-width: 768px) {
   .HomeFAQ {
-    display: none;
+    padding: 10px;
+    gap: 20px;
+  }
+
+  .questions {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+    width: 100%;
+  }
+
+  .question-container {
+    max-width: 100%;
+    min-height: 90px;
+    padding: 5px;
+  }
+
+  .homefaq-wrapper h2 {
+    font-size: 22px;
+    -webkit-text-stroke: 1px #C80002;
+  }
+
+  .question-card__front h3,
+  .question-card__back p {
+    font-size: 15px;
+  }
+  .question-card {
+    max-width: 90%;
+    min-height: 120px;
+    margin: 0 auto;
+    border-radius: 16px;
+    border: solid 1px #C80002;
+  }
+  .question-card__back {
+    border-radius: 16px;
+    border: solid 1px #C80002;
   }
 }
 </style>

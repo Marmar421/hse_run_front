@@ -5,8 +5,8 @@
     <main>
       <HomeStart/>
       <HomeParticipation />
-      <HomeFAQ/>
       <HomePartners/>
+      <HomeFAQ/>
     </main>
     <HomeFooter />
   </div>

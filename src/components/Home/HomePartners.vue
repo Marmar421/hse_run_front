@@ -1,28 +1,26 @@
 <template>
   <section class="partners">
     <h2>{{ $t('partners.title') }}</h2>
-    <div class="partners-carousel">
-      <div class="carousel-inner">
-        <div 
-          v-for="(partner, index) in partners" 
-          :key="index"
-          class="carousel-item"
-          :class="{ active: index === currentIndex }"
-        >
-          <img 
-            :src="partner.logo" 
-            @click="goToPartnerSite(partner.url)"
-            class="partner-logo"
-            alt="Partner logo"
-          >
+    <div class="carousel-container">
+      <button class="carousel-arrow arrow-left" @click="slideLeft">
+        <span>&#10094;</span>
+      </button>
+      
+      <div class="partners-logos">
+        <div class="logos-container" :style="slidesStyle">
+          <div v-for="(partner, index) in visiblePartners" :key="index" class="partner-logo">
+            <img 
+              :src="partner.logo" 
+              @click="goToPartnerSite(partner.url)"
+              class="partner-logo"
+              :alt="'Partner logo'"
+            >
+          </div>
         </div>
       </div>
       
-      <button class="carousel-control-prev" @click="prevSlide">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" @click="nextSlide">
-        <span class="carousel-control-next-icon"></span>
+      <button class="carousel-arrow arrow-right" @click="slideRight">
+        <span>&#10095;</span>
       </button>
     </div>
   </section>
@@ -34,7 +32,6 @@ export default {
   data() {
     return {
       currentIndex: 0,
-      autoSlideInterval: null,
       partners: [
         {
           logo: require('@/assets/images/WKUP.png'),
@@ -51,6 +48,10 @@ export default {
         {
           logo: require('@/assets/images/alfa-logo.jpg'),
           url: 'https://alfabank.ru'
+        },
+        {
+          logo: require('@/assets/images/clothing_supply_logo.png'),
+          url: 'https://clothingsupply.ru'
         },
         // { name: "Партнер 6", logo: require('@/assets/images/partner-placeholder.png') },
         // { name: "Партнер 7", logo: require('@/assets/images/partner-placeholder.png') },
@@ -74,38 +75,24 @@ export default {
     slidesStyle() {
       // Для плавного перехода между слайдами
       return {
-        transition: 'transform 0.5s'
+        transition: 'transform 0.1s ease-in-out'
       };
     }
   },
   methods: {
-    nextSlide() {
-      this.currentIndex = (this.currentIndex + 1) % this.partners.length;
-    },
-    prevSlide() {
+    slideLeft() {
+      // Прокрутка влево с зацикливанием
       this.currentIndex = (this.currentIndex - 1 + this.partners.length) % this.partners.length;
+    },
+    slideRight() {
+      // Прокрутка вправо с зацикливанием
+      this.currentIndex = (this.currentIndex + 1) % this.partners.length;
     },
     goToPartnerSite(url) {
       if (url) {
         window.open(url, '_blank');
       }
-    },
-    startAutoSlide() {
-      this.autoSlideInterval = setInterval(() => {
-        this.nextSlide();
-      }, 5000); // Интервал в 5 секунд
-    },
-    stopAutoSlide() {
-      if (this.autoSlideInterval) {
-        clearInterval(this.autoSlideInterval);
-      }
     }
-  },
-  mounted() {
-    this.startAutoSlide();
-  },
-  beforeDestroy() {
-    this.stopAutoSlide();
   }
 };
 </script>
@@ -117,9 +104,10 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 64px;
-  margin: 0 auto;
+  margin-top: 70px;
   padding: 40px 150px;
   max-width: 1360px;
+
 }
 
 h2 {
@@ -131,66 +119,83 @@ h2 {
   -webkit-text-stroke: 3px #C80002;
 }
 
-.partners-carousel {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-
-.carousel-inner {
+.carousel-container {
   display: flex;
-  transition: transform 0.5s ease-in-out;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
 }
 
-.carousel-item {
-  flex: 0 0 100%;
+.partners-logos {
   display: flex;
   justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  transform: translateX(-${100 * currentIndex}%);
+  overflow: hidden;
 }
 
-.carousel-item.active {
-  opacity: 1;
+.logos-container {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  gap: 82px;
 }
 
 .partner-logo {
-  height: 60px;
-  width: auto;
-  object-fit: contain;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  box-sizing: border-box;
+  text-align: center;
+  transition: transform 0.3s ease;
 }
+
 
 .partner-logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.3);
+.partner-logo img {
+  max-width: 100%;
+  max-height: 150px;
+  margin-bottom: 10px;
+  object-fit: contain;
+  
+}
+
+.partner-logo p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.carousel-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
   border: none;
-  padding: 10px;
+  background-color: #F3F3F3;
   cursor: pointer;
-  transition: opacity 0.3s ease;
+  font-size: 28px;
+  margin: 0 15px;
+  color: #191A1E;
+  transition: background-color 0.3s ease;
 }
 
-.carousel-control-prev {
-  left: 0;
-}
-
-.carousel-control-next {
-  right: 0;
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  opacity: 0.9;
+.carousel-arrow:hover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: none;
+  background-color: #F3F3F3;
+  cursor: pointer;
+  font-size: 28px;
+  margin: 0 15px;
+  color: #C80002;
+  transition: background-color 0.3s ease;
 }
 
 @media (max-width: 1360px) {
@@ -211,20 +216,14 @@ h2 {
   .partner-logo {
     flex: 0 0 100%;
   }
-  
-  .carousel-arrow {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
-    margin: 0 5px;
-  }
   .partner-logo img {
   max-height: 60px;
+  margin-bottom: 0;
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 200px;
 }
 }
 
-/* Для особых случаев */
-.partner-logo[src*="specific-partner"] {
-  height: 70px; /* особая высота для конкретного партнера */
-}
 </style>

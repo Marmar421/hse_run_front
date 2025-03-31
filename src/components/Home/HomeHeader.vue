@@ -8,28 +8,68 @@
       </div>
       <nav class="navigation">
         <LanguageSwitcher />
-        <a href="#" class="nav-link">{{ $t('header.about') }}</a>
-        <a href="#" class="nav-link">{{ $t('header.participation') }}</a>
-        <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link>
-        
+        <a @click="scrollToParticipation" class="nav-link">{{ $t('header.participation') }}</a>
+       <!-- <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link> -->
+       <a href="#" class="nav-link">FAQ</a>
         <div class="language-selector">
-          <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link>
+         <!-- <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link> -->
         </div>
-        <div class="mobile-menu-icon">
-          <img src="@/assets/images/down-button.svg" alt="header-down-button" class="down-button-mobile">
+        <div class="mobile-menu-icon" @click="toggleMenu">
+          <img 
+            src="@/assets/images/down-button.svg" 
+            alt="header-down-button" 
+            class="down-button-mobile"
+            :class="{ 'rotated': isMenuOpen }"
+          >
         </div>
       </nav>
     </div>
+    <SlideMenu 
+      :isOpen="isMenuOpen" 
+      @close="closeMenu"
+    />
   </header>
 </template>
 
 <script>
 import LanguageSwitcher from '../UI/LanguageSwitcher.vue';
+import SlideMenu from '../UI/SlideMenu.vue';
 
 export default {
   name: 'HomeHeader',
   components: {
-    LanguageSwitcher
+    LanguageSwitcher,
+    SlideMenu
+  },
+  data() {
+    return {
+      isMenuOpen: false
+    }
+  },
+  methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
+    closeMenu() {
+      this.isMenuOpen = false;
+    },
+    scrollToParticipation() {
+      this.$nextTick(() => {
+        const element = document.getElementById('participation');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          this.$router.push('/').then(() => {
+            setTimeout(() => {
+              const participationElement = document.getElementById('participation');
+              if (participationElement) {
+                participationElement.scrollIntoView({ behavior: 'smooth' });
+              }
+            }, 100);
+          });
+        }
+      });
+    }
   }
 }
 </script>
@@ -66,6 +106,7 @@ export default {
   color: #333;
   font-weight: 500;
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 
 .nav-link:hover {
@@ -79,8 +120,24 @@ export default {
   .sticky-header {
     width: 100%;
   }
+  .bm-burger-button{
+    display: none;
+  }
+  .mobile-menu-icon{
+    display: none;
+  }
 }
 @media (max-width: 768px) {
+  .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .logo img {
+    width: auto;
+  }
+
   .nav-link{
     display: none;
   }
@@ -98,5 +155,14 @@ export default {
     align-items: center;
     justify-content: center;
   }
+}
+
+.down-button-mobile {
+  display: none;
+  transition: transform 0.3s ease;
+}
+
+.down-button-mobile.rotated {
+  transform: rotate(180deg);
 }
 </style>

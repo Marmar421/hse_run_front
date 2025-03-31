@@ -1,9 +1,8 @@
 <template>
   <section class="home-start" v-if="mounted">
     <div class="start-container">
-      <div class="tag-line">{{ $t('start.tagline') }}</div>
-      
       <div class="main-content">
+        <div class="tag-line">{{ $t('start.tagline') }}</div>
         <div class="hero-content">
           <div class="hero-title-section">
             <h1 class="main-title">{{ $t('start.maintitle') }}</h1>
@@ -23,15 +22,16 @@
                 </BaseButton>
               </router-link>
               
-              <router-link to="/quest">
+              <!-- <router-link to="/quest">
                 <BaseButton 
                   class="start-quest-btn" 
                   type="outlined">
                   {{ $t('start.startquest') }}
                 </BaseButton>
-              </router-link>
+              </router-link> -->
             </div>
-            <p class="event-info">{{ $t('start.eventinfo') }}</p>
+            <p class="event-date">{{ $t('start.eventdate') }}</p>
+            <p class="event-place">{{ $t('start.eventplace') }}</p>
           </div>
           
           </div>
@@ -144,7 +144,7 @@ export default {
   top: -50px;
   left: 60px;
   color: #4369AC;
-  font-size: 55px;
+  font-size: 66px;
   z-index: 100;
 }
 
@@ -152,7 +152,6 @@ export default {
   display: flex;
   flex-direction: column;
   padding-bottom: 93px;
-
   overflow: hidden;
   
 }
@@ -171,7 +170,7 @@ export default {
 
 .main-title {
   font-family: 'PhonkSans';
-  font-size: 55px;
+  font-size: clamp(45px, 3vw, 50px);
   font-weight: 300;
   color: #C80002;
   -webkit-text-stroke: 3px #C80002;
@@ -180,6 +179,7 @@ export default {
   box-sizing: border-box;
   margin-top: 40.5px;
   z-index: 1;
+  position: relative;
 }
 
 .subtitle {
@@ -200,21 +200,16 @@ export default {
 .buttons-info-section {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 5px;
   justify-content: center;
 }
 .buttons-container {
   display: flex;
-  margin-top: 60px;
+  margin-top: 50px;
   gap: 16px;
+  margin-bottom: 10px;
 }
 
-.register-btn, .start-quest-btn {
-  padding: 15px 30px;
-  font-weight: bold;
-  font-size: 16px;
-  font-family: 'InvolveMedium';
-}
 
 .register-btn {
   background-color: #C80002;
@@ -237,13 +232,22 @@ export default {
   outline: none;
 }
 
-.event-info {
-  font-size: 20px;
+.event-date {
+  font-size: 25px;
   color: #191A1E;
   margin: 0;
   font-weight: bold;
   margin-left: 12px;
   font-family: 'InvolveMedium';
+}
+.event-place {
+  font-size: 25px;
+  color: #191A1E;
+  margin-top: 0;
+  font-weight: bold;
+  margin-left: 12px;
+  font-family: 'InvolveMedium';
+  padding: 0px;
 }
 
 .brand-mark {
@@ -257,7 +261,7 @@ export default {
 
 .home-cards {
   background-color: #F3F3F3;
-  padding: 80px 0px;
+  padding: 40px 0px;
   color: white;
   position: relative;
   overflow: hidden;
@@ -277,17 +281,16 @@ export default {
   color: #333030;
   font-family: 'InvolveMedium';
   border: 2px solid #C80002;
-  padding: 36px 62px ;
+  padding: 30px 80px ;
   border-radius: 39px;
   max-height: 114px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   box-sizing: border-box;
 }
 .card-title {
-  max-width:  140px;
+  max-width:  160px;
   text-align: center;
   margin: 0;
 }
@@ -296,10 +299,16 @@ export default {
 }
 
 @media (max-width: 1360px) {
+  .home-start {
+    height: 44.11%;
+  }
+  .start-container{
+    max-height: 580px;
+  }
   .main-title{
     font-size: 40px;
     -webkit-text-stroke: 2px #C80002;
-    margin-top: 25px;
+    margin-top: 40px;
   }
   .buttons-container{
     flex-direction: column;
@@ -315,7 +324,10 @@ export default {
     margin-bottom: 25px;
     font-size: 22px;
   }
-  
+  .card-content { 
+  padding: 30px 60px ;
+  max-height: 100px;
+  }
   
 }
 @media (max-width: 1150px) {
@@ -323,7 +335,7 @@ export default {
     margin-top: 35px;
   }
   .brand-mark {
-    bottom: 30px;
+    display: none;
   }
   .home-cards{
     padding-top: 0px;
@@ -335,13 +347,35 @@ export default {
   .card-title {
     font-size: 20px;
   }
+  .event-date {
+  font-size: 20px;
 }
-@media (max-width: 768px) {
+.event-place {
+  font-size: 20px;
+}
+.card-content { 
+  padding: 30px 50px ;
+  max-height: 100px;
 
+}
+}
+@media (max-width: 1050px) {
+  .start-container {
+    max-height: 550px;
+  }
+  .main-title {
+    font-size: 30px;
+    -webkit-text-stroke: 2px #C80002;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
 
   .home-start {
     background-image: url('@/assets/images/плашка-мобайл.svg');
     margin: 24px auto;
+    height: 600px;
   }
   .hero-content {
     margin: 0;
@@ -351,17 +385,20 @@ export default {
     gap: 5px;
   }
   .main-title {
-    margin-top: 25px;
-    font-size: 22px;
+    margin-top: 30px;
     margin-right: 15px;
     -webkit-text-stroke: 1px #C80002;
+    font-size: clamp(20px, 3vw, 30px);
   }
   .subtitle {
-    font-size: 15px;
-
+    max-width: 400px;
+    margin-top: 15px;
+    font-size: clamp(14px, 3vw, 18px);
   }
   .tag-line {
-    font-size: 30px;
+    font-size: clamp(30px, 3vw, 50px);
+    top: -25px;
+    left: 25px;
   }
   .hero-img-section {
     width: 46%;
@@ -377,25 +414,37 @@ export default {
     display: block;
     margin: 0;
   }
+  .buttons-info-section {
+    position:absolute;
+    bottom: 0;
+    left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+  }
+  .buttons-info-section {
+    position:absolute;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+}
   .register-btn {
-  font-size: 13px;
+  font-size:clamp(14px, 2vw, 18px) ;
   padding: 15px 18px;
   border-radius: 20px;
+  display: flex;
 }
-.start-quest-btn {
-  font-size: 13px;
-  padding: 14px 20px;
-  border-radius: 20px;
-  border: 1px solid #C80002;
+.event-date {
+  font-size: clamp(10px, 3vw, 13px);
 }
-.event-info {
-  font-size: 15px;
-  max-width: 165px;
+.event-place {
+  font-size: clamp(10px, 3vw, 13px);
+  max-width: 120px;
 }
-  .brand-mark {
-    font-size: 30px;
-    bottom: 10px;
-  }
+
   .home-cards {
     padding-bottom: 29px;
   }
@@ -404,6 +453,8 @@ export default {
     grid-template-columns: 1fr 1fr;
     row-gap: 13px;
     column-gap: 28px;
+    padding: 10px 10px;
+    min-width: 30px;
 }
 .card-content {
   padding: 20px 30px;
@@ -411,7 +462,53 @@ export default {
   border: 1px solid #C80002;
 }
 .card-title {
+  min-width: 120px;
   font-size: 15px;
+  max-width: 160px;
+}
+}
+@media (max-width: 480px) {
+  .start-container{
+    max-height: 470px;
+  }
+  .home-start{
+    max-height: 470px;
+  }
+  .main-title {
+    margin-top: 15px;
+    margin-right: 15px;
+    -webkit-text-stroke: 1px #C80002;
+    font-size: clamp(14px, 3vw, 18px);
+  }
+  .subtitle {
+    padding: 0;
+    font-size: clamp(8px, 3vw, 14px);
+    max-width: 190px;
+  }
+  .brand-mark {
+    font-size: clamp(40px, 3vw, 60px);
+    display: flex;
+    bottom: 60px;
+  }
+  .buttons-info-section {
+    position:absolute;
+    bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+}
+  .register-btn {
+  font-size:clamp(10px, 2vw, 12px) ;
+  padding: 11px 13px;
+  border-radius: 20px;
+  display: flex;
+}
+.start-quest-btn {
+  font-size: 13px;
+  padding: 14px 20px;
+  border-radius: 20px;
+  border: 1px solid #C80002;
 }
 }
 </style>

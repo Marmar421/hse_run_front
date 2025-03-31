@@ -1,16 +1,25 @@
 <!-- src/components/Quest/QuestHowToParticipate.vue -->
 <template>
-    <section class="HomeParticipation">
+    <section id="participation" class="HomeParticipation">
       <h2>{{ $t('participation.titlemain') }}</h2>
         <div class="participation-content-wrapper">
           <div class="participation-left-section">
-            <img src="@/assets/images/vetka.png" alt="vetka" class="participation-left-section-image">
+            <VetkaLine 
+              class="participation-left-section-image" 
+            />
           </div>
 
           <div class="participation-middle-section">
-            <div v-for="index in 5" :key="index" class="step">
+            <div 
+              v-for="index in 5" 
+              :key="index" 
+              class="step"
+            >
               <div class="step__content">
-                <h3>{{ $t(`participation.steps[${index-1}].point`) }}</h3>
+                <div class="step__header">
+                  <CirclePoint class="step__circle" />
+                  <h3>{{ $t(`participation.steps[${index-1}].point`) }}</h3>
+                </div>
                 <p>{{ $t(`participation.steps[${index-1}].description`) }}</p>
               </div>
             </div>
@@ -26,12 +35,31 @@
   </template>
   
   <script>
-  import LanguageSwitcher from '../UI/LanguageSwitcher.vue';
+  import VetkaLine from '../UI/VetkaLine.vue';
+  import CirclePoint from '../UI/CirclePoint.vue';
   export default {
     name: "HomeParticipation",
     components: {
-    LanguageSwitcher
+    VetkaLine,
+    CirclePoint
   },
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.handleResize);
+      this.forceUpdate();
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+  },
+  methods: {
+    handleResize() {
+      this.forceUpdate();
+    },
+    forceUpdate() {
+      this.$forceUpdate();
+    }
+  }
   };
   </script>
   
@@ -64,16 +92,24 @@
     justify-content: space-between;
   }
   .participation-left-section {
+    position: relative;
+    width: 66px;
     max-height: 1212px;
   }
+
   .participation-left-section-image {
-    max-height: 1212px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 66px;
   }
 
   .participation-middle-section {
     display: flex;
     flex-direction: column;
-    gap: 80px;
+    gap: 70px;
   }
   .participation-right-section {
     flex: 1;
@@ -82,23 +118,12 @@
   }
   
   .step {
+    position: relative;
     display: flex;
     align-items: flex-start;
     gap: 15px;
   }
-  
-  .step__number {
-    width: 30px;
-    height: 30px;
-    background-color: #ff0000;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    flex-shrink: 0;
-  }
+
   
   .step__content {
     text-align: left;
@@ -108,10 +133,24 @@
     gap: 9px;
   }
   
+  .step__header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .step__circle {
+    position: absolute;
+    left: -96px;
+    width: 66px;
+    height: 66px;
+    z-index: 2;
+  }
+  
   .step__content h3 {
+    margin: 0;
     font-family: 'InvolveBold';
     font-size: 33px;
-    margin: 0;
     color: #333030;
   }
   
@@ -163,6 +202,9 @@
     .HomeParticipation h2 {
       font-size: 22px;
     }
+    .step__header {
+      gap: 10px;
+    }
     .step__content h3 {
       font-size: 18px;
     }
@@ -170,13 +212,18 @@
       font-size: 15px;
     }
     .participation-left-section {
-    max-height: 950px;
-  }
-  .participation-left-section-image {
-    max-height: 950px;
-  }
-  .step__content h3 {
-    max-width: 270px;
+      width: 40px;
+    }
+    .participation-left-section-image {
+      width: 40px;
+    }
+    .step__circle {
+      width: 40px;
+      height: 40px;
+      left: -58px;
+    }
+    .step__content h3 {
+      max-width: 270px;
       min-width: 209px;
     }
     .step__content p {
@@ -184,15 +231,29 @@
       min-width: 209px;
     }
     .step {
-    gap: 5px;
+      padding-left: 15px;
+    }
+    .participation-content-wrapper {
+      justify-content: start;
+      gap: 20px;
+    }
+    .participation-middle-section {
+      gap: 55px;
+    }
   }
-  .participation-content-wrapper {
-    justify-content:start;
-    gap: 20px;
-  }
-  .participation-middle-section {
-    gap: 55px;
-  }
+  
+  @media (max-width: 480px) {
+    .participation-left-section {
+      width: 35px;
+    }
+    .participation-left-section-image {
+      width: 14px;
+    }
+    .step__circle {
+      width: 35px;
+      height: 35px;
+      left: -50px;
+    }
   }
   
   
