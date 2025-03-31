@@ -100,7 +100,7 @@
   .participation-left-section-image {
     position: absolute;
     top: 0;
-    left: 50%;
+    left: 100%;
     transform: translateX(-50%);
     z-index: 1;
     width: 66px;
@@ -145,6 +145,7 @@
     width: 66px;
     height: 66px;
     z-index: 2;
+    transition: all 0.3s ease;
   }
   
   .step__content h3 {
@@ -193,7 +194,11 @@
       max-width: 350px;
       min-width: 300px;
     }
-    
+    .step__circle {
+      width: 50px;
+      height: 50px;
+      left: -80px;
+    }
   }
   @media (max-width: 768px) {
     .participation-right-section {
@@ -244,14 +249,14 @@
   
   @media (max-width: 480px) {
     .participation-left-section {
-      width: 35px;
+      width: 30px;
     }
     .participation-left-section-image {
-      width: 14px;
+      width: 30px;
     }
     .step__circle {
-      width: 35px;
-      height: 35px;
+      width: 30px;
+      height: 30px;
       left: -50px;
     }
   }

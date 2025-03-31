@@ -5,6 +5,9 @@
     <main>
       <HomeStart/>
       <HomeParticipation />
+      <div class="runrun-section">
+        <img class='runrun-img':src="require('@/assets/images/runrun.svg')" alt="описание">
+      </div>
       <HomePartners/>
       <HomeFAQ/>
     </main>
@@ -36,4 +39,15 @@ export default {
 </script>
 
 <style scoped>
+.home {
+  overflow: hidden;
+}
+.runrun-section{
+  margin-top: 80px;
+  z-index: 1000;
+}
+.runrun-img {
+width: 100%;
+z-index: 1000;
+}
 </style>

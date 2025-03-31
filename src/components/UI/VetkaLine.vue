@@ -1,7 +1,7 @@
 <template>
   <svg 
     class="vetka-line"
-    viewBox="0 0 66 1212"
+    viewBox="0 0 66 1095"
     fill="none" 
     xmlns="http://www.w3.org/2000/svg"
   >
@@ -19,7 +19,7 @@
         x1="33"
         y1="0" 
         x2="33"
-        y2="1212" 
+        y2="1095" 
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.7" stop-color="#C80002"/>
@@ -48,7 +48,6 @@ export default {
 <style scoped>
 .vetka-line {
   width: 66px;
-  height: 100%;
 }
 
 @media (max-width: 768px) {
@@ -58,7 +57,7 @@ export default {
 }
 
 svg {
-  max-width: 100%;
+  max-width: 1100px;
   height: auto;
 }
 </style> 

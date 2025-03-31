@@ -300,7 +300,7 @@ export default {
 
 @media (max-width: 1360px) {
   .home-start {
-    height: 44.11%;
+    height: 40%;
   }
   .start-container{
     max-height: 580px;
@@ -309,6 +309,9 @@ export default {
     font-size: 40px;
     -webkit-text-stroke: 2px #C80002;
     margin-top: 40px;
+  }
+  .buttons-info-section{
+    margin-top: 2%;
   }
   .buttons-container{
     flex-direction: column;
@@ -358,6 +361,9 @@ export default {
   max-height: 100px;
 
 }
+.buttons-info-section{
+    margin-top: 3%;
+  }
 }
 @media (max-width: 1050px) {
   .start-container {
@@ -382,21 +388,21 @@ export default {
   }
   .hero-title-section {
     margin-left: 15px;
-    gap: 5px;
+    gap: 30px;
   }
   .main-title {
     margin-top: 30px;
     margin-right: 15px;
     -webkit-text-stroke: 1px #C80002;
-    font-size: clamp(20px, 3vw, 30px);
+    font-size: clamp(25px, 3vw, 30px);
   }
   .subtitle {
     max-width: 400px;
-    margin-top: 15px;
-    font-size: clamp(14px, 3vw, 18px);
+    font-size: clamp(15x, 3vw, 18px);
+    margin-bottom: 10px;
   }
   .tag-line {
-    font-size: clamp(30px, 3vw, 50px);
+    font-size: clamp(40px, 3vw, 50px);
     top: -25px;
     left: 25px;
   }
@@ -415,32 +421,27 @@ export default {
     margin: 0;
   }
   .buttons-info-section {
-    position:absolute;
-    bottom: 0;
+    margin-top: 3%;
+    bottom: 100px;
     left: 15px;
     display: flex;
     flex-direction: column;
     gap: 5px;
     justify-content: center;
   }
-  .buttons-info-section {
-    position:absolute;
-    top: 90px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    justify-content: center;
-}
   .register-btn {
+    margin-left: 15px;
   font-size:clamp(14px, 2vw, 18px) ;
   padding: 15px 18px;
   border-radius: 20px;
   display: flex;
 }
 .event-date {
+  margin-left: 26px;
   font-size: clamp(10px, 3vw, 13px);
 }
 .event-place {
+  margin-left: 26px;
   font-size: clamp(10px, 3vw, 13px);
   max-width: 120px;
 }
@@ -478,12 +479,12 @@ export default {
     margin-top: 15px;
     margin-right: 15px;
     -webkit-text-stroke: 1px #C80002;
-    font-size: clamp(14px, 3vw, 18px);
+    font-size: clamp(16px, 3vw, 18px);
   }
   .subtitle {
     padding: 0;
-    font-size: clamp(8px, 3vw, 14px);
-    max-width: 190px;
+    font-size: clamp(12px, 3vw, 15px);
+    max-width: 250px;
   }
   .brand-mark {
     font-size: clamp(40px, 3vw, 60px);
@@ -492,23 +493,30 @@ export default {
   }
   .buttons-info-section {
     position:absolute;
-    bottom: 100px;
+    bottom: 150px;
     display: flex;
     flex-direction: column;
     gap: 5px;
     justify-content: center;
 }
   .register-btn {
-  font-size:clamp(10px, 2vw, 12px) ;
+  font-size:clamp(15px, 2vw, 18px) ;
   padding: 11px 13px;
   border-radius: 20px;
   display: flex;
+  margin-left: 0;
 }
 .start-quest-btn {
   font-size: 13px;
   padding: 14px 20px;
   border-radius: 20px;
   border: 1px solid #C80002;
+}
+.event-place {
+  margin-left: 11px;
+}
+.event-date {
+  margin-left: 11px;
 }
 }
 </style>
