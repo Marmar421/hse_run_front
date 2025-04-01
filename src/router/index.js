@@ -5,6 +5,7 @@ import ProfileView from "@/views/ProfileView.vue";
 import PreviousView from "@/views/PreviousView.vue";
 import RegistrationView from "@/views/RegistrationView.vue";
 import QuestView from "@/views/QuestView.vue";
+import BlocksView from "@/views/BlocksView.vue";
 
 const routes = [
   {
@@ -19,7 +20,12 @@ const routes = [
      component: QuestView,
      meta: { title: "Прохождение квеста" }
    },
-  
+  {
+    path: "/quest/:id",
+    name: "questBlock",
+    component: BlocksView,
+    meta: { title: "Блок квеста" }
+  },
    {
      path: "/profile",
      name: "profile",
@@ -36,7 +42,7 @@ const routes = [
     path: "/registration",
     name: "registration",
     component: RegistrationView,
-    meta: { title: "Предыдущие квесты" }
+    meta: { title: "Регистрация на квест" }
   }
 ];
 

@@ -1,15 +1,15 @@
 <template>
     <div class = "/quest">
-      <QuestBlocks />
+      <Quest />
     </div>
 </template>
 
 <script>
-import QuestBlocks from '@/components/Quest/QuestBlocks.vue';
+import Quest from '@/components/Quest/Quest.vue';
 export default {
 name: 'QuestView',
 components: {
-  QuestBlocks
+  Quest
 }
 };
 </script>

@@ -3,15 +3,29 @@ module.exports = defineConfig({
   transpileDependencies: true,
   productionSourceMap: false,
   devServer: {
-    // host: 'localhost.local',
-    // port: 80,
+    host: 'localhost.local',
+    port: 80,
     proxy: {
       '^/api': {
         target: 'http://localhost:8000',
         changeOrigin: false,
         ws: false,
-        pathRewrite: {
-          '^/api': ''
+        pathRewrite: { '^/api': '/api' },
+      },
+      '^/static': {
+        target: 'http://localhost:8000',
+        changeOrigin: false,
+        ws: false,
+        pathRewrite: { '^/static': '/static' },
+      },
+      '^/admin': {
+        target: 'http://localhost:8000',
+        changeOrigin: false,
+        ws: false,
+        pathRewrite: { '^/admin': '/admin' },
+        bypass: function(req, res, proxyOptions) {
+          // Пропускаем все запросы к /admin через прокси без изменений
+          return req.originalUrl;
         }
       }
     }

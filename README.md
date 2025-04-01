@@ -63,7 +63,7 @@ npx eslint . --ext .js,.vue
 
 by yourself and explore the issues.
 
-Запуск на 80 порту. От имени админа!
+Запуск фронта на 80 порту. От имени админа!
 ```
 sudo npm run serve -- --port 80
 ```

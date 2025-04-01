@@ -1,56 +1,24 @@
 <template>
   <div class="profile-info">
-    <div class="info-card">
-      <div class="info-header">
-        <h3>{{ $t('profile.personalInfo') }}</h3>
-        <button @click="editMode = !editMode" class="edit-button">
-          <span>P</span>
+    <div class="profile-card">
+      <div class="profile-header">
+        <h3>Личная информация</h3>
+        <button @click="toggleEditMode" class="edit-btn">
+          {{ isEditing ? 'Сохранить' : 'Редактировать' }}
         </button>
       </div>
       
-      <div class="info-content">
-        <div v-if="!editMode" class="info-fields">
-          <div class="info-field">
-            <label>{{ $t('profile.fullName') }}:</label>
-            <span>{{ userData.full_name }}</span>
-          </div>
-          
-          <div class="info-field">
-            <label>{{ $t('profile.birthDate') }}:</label>
-            <span>{{ userData.birth_date || $t('profile.notSpecified') }}</span>
-          </div>
-          
-          <div class="info-field">
-            <label>{{ $t('profile.workPlace') }}:</label>
-            <span>{{ userData.work_place || $t('profile.notSpecified') }}</span>
-          </div>
-        </div>
-        
-        <form v-else @submit.prevent="savePersonalInfo" class="edit-form">
-          <div class="form-field">
-            <label for="full-name">{{ $t('profile.fullName') }}:</label>
-            <input type="text" id="full-name" v-model="form.full_name" required>
-          </div>
-          
-          <div class="form-field">
-            <label for="birth-date">{{ $t('profile.birthDate') }}:</label>
-            <input type="date" id="birth-date" v-model="form.birth_date">
-          </div>
-          
-          <div class="form-field">
-            <label for="work-place">{{ $t('profile.workPlace') }}:</label>
-            <input type="text" id="work-place" v-model="form.work_place">
-          </div>
-          
-          <div class="form-actions">
-            <button type="button" @click="cancelEdit" class="cancel-button">
-              {{ $t('common.cancel') }}
-            </button>
-            <button type="submit" class="save-button">
-              {{ $t('common.save') }}
-            </button>
-          </div>
-        </form>
+      <div class="info-display">
+        <p v-if="!isEditing">
+          ФИО: <span>{{ userData.full_name || 'Не указано' }}</span>
+        </p>
+        <p v-else class="edit-field">
+          ФИО: <input 
+            type="text" 
+            v-model="editedFullName" 
+            placeholder="Введите ваше полное имя"
+          >
+        </p>
       </div>
     </div>
   </div>
@@ -67,13 +35,9 @@ export default {
   },
   data() {
     return {
-      editMode: false,
-      form: {
-        full_name: '',
-        birth_date: '',
-        work_place: ''
-      },
-      error: null
+      isEditing: false,
+      editedFullName: '',
+      isSaving: false
     };
   },
   watch: {
@@ -81,38 +45,45 @@ export default {
       immediate: true,
       handler(newValue) {
         if (newValue) {
-          this.form.full_name = newValue.full_name || '';
-          this.form.birth_date = newValue.birth_date || '';
-          this.form.work_place = newValue.work_place || '';
+          this.editedFullName = newValue.full_name || '';
         }
       }
     }
   },
   methods: {
-    cancelEdit() {
-      this.editMode = false;
-      this.form.full_name = this.userData.full_name || '';
-      this.form.birth_date = this.userData.birth_date || '';
-      this.form.work_place = this.userData.work_place || '';
+    toggleEditMode() {
+      if (this.isEditing) {
+        // Если уже в режиме редактирования, то сохраняем данные
+        this.saveChanges();
+      } else {
+        // Иначе переходим в режим редактирования
+        this.isEditing = true;
+      }
     },
     
-    async savePersonalInfo() {
+    async saveChanges() {
+      if (this.isSaving) return;
+      
+      this.isSaving = true;
       try {
-        const response = await fetch('/api/auth/update-profile', {
+        const response = await fetch('/api/auth/update_profile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
+          body: JSON.stringify({ full_name: this.editedFullName })
         });
         
         if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.detail || 'Ошибка при обновлении профиля');
+          const error = await response.json();
+          throw new Error(error.detail || 'Ошибка при сохранении данных');
         }
         
-        this.editMode = false;
-        this.$emit('update'); // Уведомляем родительский компонент о необходимости обновления данных
+        // Оповещаем родительский компонент об изменениях
+        this.$emit('update', { full_name: this.editedFullName });
+        this.isEditing = false;
       } catch (error) {
-        this.error = error.message;
+        alert(`Ошибка: ${error.message}`);
+      } finally {
+        this.isSaving = false;
       }
     }
   }
@@ -124,119 +95,77 @@ export default {
   margin-bottom: 30px;
 }
 
-.info-card {
-  border: 1px solid #d0e1f9;
+.profile-card {
+  background-color: #f9f9f9;
   border-radius: 8px;
-  overflow: hidden;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.info-header {
+.profile-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background-color: #f0f7ff;
-  border-bottom: 1px solid #d0e1f9;
+  margin-bottom: 15px;
 }
 
-.info-header h3 {
-  color: #4369AC;
+.profile-header h3 {
+  color: #333;
   margin: 0;
 }
 
-.edit-button {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
+.edit-btn {
   background-color: #4369AC;
   color: white;
   border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 6px 12px;
+  border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
-}
-
-.info-content {
-  padding: 20px;
-  background-color: white;
-}
-
-.info-fields {
-  display: grid;
-  gap: 15px;
-}
-
-.info-field {
-  display: flex;
-  flex-direction: column;
-}
-
-.info-field label {
   font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
 }
 
-.info-field span {
+.info-display p {
+  margin: 8px 0;
   font-size: 16px;
-  color: #333;
 }
 
-.edit-form {
-  display: grid;
-  gap: 15px;
+.info-display span {
+  font-weight: 500;
 }
 
-.form-field {
+.edit-field {
   display: flex;
-  flex-direction: column;
+  align-items: center;
 }
 
-.form-field label {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.form-field input {
-  padding: 10px;
+.edit-field input {
+  margin-left: 8px;
+  padding: 6px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
+  flex: 1;
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.cancel-button {
-  padding: 8px 15px;
-  background-color: #e0e0e0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.save-button {
-  padding: 8px 15px;
-  background-color: #4369AC;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
+/* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
-  .form-actions {
+  .profile-header {
     flex-direction: column;
+    align-items: flex-start;
   }
   
-  .cancel-button, .save-button {
+  .edit-btn {
+    margin-top: 10px;
+  }
+  
+  .edit-field {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .edit-field input {
+    margin-left: 0;
+    margin-top: 5px;
     width: 100%;
   }
 }

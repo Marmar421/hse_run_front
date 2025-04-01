@@ -2,24 +2,30 @@
   <div class="profile-team">
     <div class="team-card">
       <div class="team-header">
-        <h3>{{ $t('profile.team') }}</h3>
-        <button v-if="team" @click="showSettings = !showSettings" class="settings-button">
-          <span>⚙️</span>
-        </button>
+        <h3>Команда</h3>
+        <div v-if="team" class="dropdown">
+          <button @click="toggleTeamDropdown" class="settings-btn">⚙️</button>
+          <div v-show="isTeamDropdownVisible" class="dropdown-content">
+            <a v-if="isUserCaptain" href="#" @click.prevent="handleCopyQrLink">Пригласить</a>
+            <a v-if="isUserCaptain" href="#" @click.prevent="showEditTeamModal">Редактировать</a>
+            <a v-if="isUserCaptain" href="#" @click.prevent="showDeleteTeamModal">Удалить команду</a>
+            <a v-if="!isUserCaptain" href="#" @click.prevent="handleLeaveTeam">Выйти из команды</a>
+          </div>
+        </div>
       </div>
       
       <!-- Если команды нет - показываем форму создания -->
       <div v-if="!team" class="team-creation">
-        <p class="no-team-message">{{ $t('profile.noTeamMessage') }}</p>
+        <p class="no-team-message">У вас нет команды. Создайте свою или присоединитесь к существующей.</p>
         
         <form @submit.prevent="handleCreateTeam" class="team-form">
           <div class="form-field">
-            <label for="team-name">{{ $t('profile.teamName') }}:</label>
-            <input type="text" id="team-name" v-model="teamName" :placeholder="$t('profile.teamNamePlaceholder')" required>
+            <label for="team-name">Название команды:</label>
+            <input type="text" id="team-name" v-model="newTeamName" placeholder="Введите название команды" required>
           </div>
           
           <button type="submit" class="create-button">
-            {{ $t('profile.createTeam') }}
+            Создать команду
           </button>
         </form>
         
@@ -29,36 +35,56 @@
       <!-- Если команда есть - показываем информацию о ней -->
       <div v-else class="team-info">
         <div class="team-details">
-          <h4 class="team-name">{{ team.name }}</h4>
-          <p class="team-members-count">{{ $t('profile.teamMembers') }}: {{ team.members_count || 0 }}/6</p>
-        </div>
-        
-        <div class="team-members">
-          <div v-for="(member, index) in members" :key="index" class="team-member">
-            <div class="member-role" v-if="member.is_captain">👑</div>
-            <div class="member-name">{{ member.name }}</div>
+          <p>Название: <span>{{ team.name }} ({{ team.participants ? team.participants.length : 0 }}/6)</span></p>
+          <h4>Участники:</h4>
+          <div class="team-participants">
+            <p v-for="participant in team.participants" :key="participant.id">
+              {{ participant.role === 'captain' ? 'Капитан: ' : '' }}{{ participant.full_name }}
+            </p>
           </div>
         </div>
-        
-        <!-- Настройки команды (отображаются по клику на шестеренку) -->
-        <div v-if="showSettings" class="team-settings">
-          <button @click="confirmLeaveTeam" class="leave-button">
-            {{ $t('profile.leaveTeam') }}
-          </button>
-          
-          <div v-if="isCaptain" class="captain-options">
-            <button class="invite-button">
-              {{ $t('profile.inviteMembers') }}
-            </button>
+      </div>
+    </div>
+    
+    <!-- Модальное окно для редактирования команды -->
+    <div v-if="isEditTeamModalVisible" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="hideModals">&times;</span>
+        <h3>Редактировать команду</h3>
+        <form @submit.prevent="handleEditTeam">
+          <label for="edit-team-name">Название команды:</label>
+          <input v-model="editedTeamName" type="text" id="edit-team-name" required>
+          <h4>Участники команды:</h4>
+          <div class="edit-team-participants">
+            <div v-for="participant in team.participants" :key="participant.id" class="participant-item">
+              {{ participant.role === 'captain' ? 'Капитан: ' : '' }}{{ participant.full_name }}
+              <button 
+                v-if="isUserCaptain && participant.role !== 'captain' && participant.id !== userData.id" 
+                type="button" 
+                class="remove-btn" 
+                @click="handleRemoveParticipant(participant.id)"
+              >✕</button>
+            </div>
           </div>
-        </div>
+          <button type="submit" class="submit-btn">Сохранить</button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Модальное окно для подтверждения удаления команды -->
+    <div v-if="isDeleteTeamModalVisible" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="hideModals">&times;</span>
+        <h3>Удалить команду</h3>
+        <p>Вы уверены, что хотите удалить команду? Это действие нельзя отменить.</p>
+        <button @click="handleDeleteTeam" class="delete-btn">Удалить</button>
+        <button @click="hideModals" class="cancel-btn">Отмена</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { teamAPI } from '@/api';
 export default {
   name: 'ProfileTeam',
   props: {
@@ -66,32 +92,28 @@ export default {
       type: Object,
       default: null
     },
-    username: {
-      type: String,
+    userData: {
+      type: Object,
       required: true
     },
-    error: {
+    qrLink: {
       type: String,
-      default: null
+      default: ''
     }
   },
   data() {
     return {
-      teamName: '',
-      showSettings: false,
-      members: [] // В реальном приложении здесь будут данные из API
+      newTeamName: '',
+      editedTeamName: '',
+      isTeamDropdownVisible: false,
+      isEditTeamModalVisible: false,
+      isDeleteTeamModalVisible: false,
+      error: null
     };
   },
   computed: {
-    isCaptain() {
-      // Проверка является ли текущий пользователь капитаном
-      // В реальном приложении это будет определяться по данным из API
-      return this.team && this.team.captain_id === this.userId;
-    },
-    userId() {
-      // Получение ID текущего пользователя 
-      // В реальном приложении это будет определяться по данным из API
-      return 1;
+    isUserCaptain() {
+      return this.team && this.team.role === 'captain';
     }
   },
   watch: {
@@ -99,33 +121,114 @@ export default {
       immediate: true,
       handler(newTeam) {
         if (newTeam) {
-          // Тут должна быть загрузка членов команды с сервера
-          // Эмулируем данные для примера
-          this.members = [
-            { name: this.username, is_captain: true },
-            { name: 'Пушкин Александр Сергеевич', is_captain: false }
-          ];
+          this.editedTeamName = newTeam.name || '';
         }
       }
     }
   },
   methods: {
+    toggleTeamDropdown(event) {
+      event.stopPropagation();
+      this.isTeamDropdownVisible = !this.isTeamDropdownVisible;
+    },
+    
+    hideModals() {
+      this.isEditTeamModalVisible = false;
+      this.isDeleteTeamModalVisible = false;
+      this.isTeamDropdownVisible = false;
+    },
+    
+    showEditTeamModal() {
+      this.isEditTeamModalVisible = true;
+      this.isTeamDropdownVisible = false;
+    },
+    
+    showDeleteTeamModal() {
+      this.isDeleteTeamModalVisible = true;
+      this.isTeamDropdownVisible = false;
+    },
+    
+    handleCopyQrLink() {
+      this.$emit('copy-qr-link');
+      this.isTeamDropdownVisible = false;
+    },
+    
     async handleCreateTeam() {
       try {
-        await teamAPI.create({ name: this.teamName });
-        this.$emit('teamCreated');
+        this.error = null;
+        await this.makeRequest('/api/auth/command/create', 'POST', {
+          name: this.newTeamName
+        });
+        
+        this.$emit('team-created');
+        this.newTeamName = '';
       } catch (error) {
-        this.error = error.response?.data?.detail || 'Ошибка при создании команды';
+        this.error = error.message;
       }
     },
-
-    async handleLeaveTeam() {
+    
+    async handleEditTeam() {
       try {
-        await teamAPI.leave();
-        this.$emit('teamLeft');
+        await this.makeRequest('/api/auth/command/rename', 'POST', {
+          name: this.editedTeamName
+        });
+        
+        this.hideModals();
+        this.$emit('team-updated');
       } catch (error) {
-        this.error = error.response?.data?.detail || 'Ошибка при выходе из команды';
+        alert(error.message);
       }
+    },
+    
+    async handleDeleteTeam() {
+      try {
+        await this.makeRequest('/api/auth/command/delete', 'POST');
+        this.hideModals();
+        this.$emit('team-deleted');
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    
+    async handleLeaveTeam() {
+      if (confirm('Вы уверены, что хотите выйти из команды?')) {
+        try {
+          await this.makeRequest('/api/auth/command/leave', 'POST');
+          this.$emit('team-left');
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+    },
+    
+    async handleRemoveParticipant(userId) {
+      if (confirm('Вы уверены, что хотите исключить этого участника из команды?')) {
+        try {
+          await this.makeRequest('/api/auth/command/remove_user', 'POST', {
+            user_id: userId
+          });
+          
+          this.hideModals();
+          this.$emit('team-updated');
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+    },
+    
+    async makeRequest(url, method, body) {
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Ошибка запроса');
+      }
+      
+      return response.json();
     }
   }
 };
@@ -137,35 +240,59 @@ export default {
 }
 
 .team-card {
-  border: 1px solid #d0e1f9;
+  background-color: #f9f9f9;
   border-radius: 8px;
-  overflow: hidden;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .team-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background-color: #f0f7ff;
-  border-bottom: 1px solid #d0e1f9;
+  margin-bottom: 15px;
 }
 
 .team-header h3 {
-  color: #4369AC;
+  color: #333;
   margin: 0;
 }
 
-.settings-button {
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.settings-btn {
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
 }
 
-.team-creation, .team-info {
-  padding: 20px;
+.dropdown-content {
+  position: absolute;
+  right: 0;
   background-color: white;
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.team-creation, .team-info {
+  padding: 0;
 }
 
 .no-team-message {
@@ -199,7 +326,7 @@ export default {
 
 .create-button {
   padding: 10px;
-  background-color: #4369AC;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
@@ -217,59 +344,94 @@ export default {
   margin-bottom: 20px;
 }
 
-.team-name {
-  font-size: 20px;
-  color: #4369AC;
-  margin: 0 0 5px 0;
+.team-participants {
+  margin-bottom: 20px;
 }
 
-.team-members-count {
-  color: #666;
-  margin: 0;
+.team-participants p {
+  margin: 5px 0;
 }
 
-.team-members {
-  display: grid;
-  gap: 10px;
-}
-
-.team-member {
+/* Модальные окна */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-radius: 4px;
-  background-color: #f8f9fa;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.member-role {
-  margin-right: 10px;
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
 }
 
-.team-settings {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
 }
 
-.leave-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #e74c3c;
+.edit-team-participants {
+  margin-bottom: 20px;
+}
+
+.participant-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.remove-btn {
+  background-color: #dc3545;
   color: white;
   border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 10px;
 }
 
-.captain-options {
-  margin-top: 10px;
-}
-
-.invite-button {
+.submit-btn {
+  margin-top: 15px;
   width: 100%;
-  padding: 10px;
-  background-color: #4369AC;
+  padding: 8px 16px;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
@@ -277,14 +439,18 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .team-member {
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .participant-item {
     flex-direction: column;
     align-items: flex-start;
   }
   
-  .member-role {
-    margin-right: 0;
-    margin-bottom: 5px;
+  .remove-btn {
+    margin-top: 5px;
   }
 }
 </style>

@@ -22,13 +22,13 @@
                 </BaseButton>
               </router-link>
               
-              <!-- <router-link to="/quest">
+              <router-link to="/quest">
                 <BaseButton 
                   class="start-quest-btn" 
                   type="outlined">
                   {{ $t('start.startquest') }}
                 </BaseButton>
-              </router-link> -->
+              </router-link>
             </div>
             <p class="event-date">{{ $t('start.eventdate') }}</p>
             <p class="event-place">{{ $t('start.eventplace') }}</p>

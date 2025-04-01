@@ -8,25 +8,22 @@
       <div class="profile-details">
         <h3 class="profile-name">{{ userName }}</h3>
         <p class="profile-username">@{{ userUsername }}</p>
-        <p class="profile-team">{{ $t('profile.team') }}: {{ teamName }}</p>
+        <p class="profile-team">Команда: {{ teamName }}</p>
       </div>
       
-      <div id="qr-code-container" class="profile-qr" @click="showQrModal = true">
-        <img :src="qrCodeUrl" alt="QR код">
-        <button id="copy-link-btn" @click.stop="handleCopyLink" class="copy-link-button">
-          {{ copyButtonText }}
-        </button>
+      <div id="qr-code-container" class="profile-qr" @click="showQrModal = true" v-if="qrCodeData">
+        <img :src="'data:image/png;base64,' + qrCodeData.qr_image" alt="QR код">
       </div>
     </div>
 
     <div v-else class="loading-state">
-      {{ $t('common.loading') || 'Загрузка...' }}
+      Загрузка...
     </div>
     
-    <div class="qr-modal" v-if="showQrModal" @click="showQrModal = false">
+    <div class="qr-modal" v-if="showQrModal && qrCodeData" @click="showQrModal = false">
       <div class="qr-modal-content" @click.stop>
         <button class="close-btn" @click="showQrModal = false">&times;</button>
-        <img :src="qrCodeUrl" alt="QR код (увеличенный)">
+        <img :src="'data:image/png;base64,' + qrCodeData.qr_image" alt="QR код (увеличенный)">
         <p class="qr-modal-description">{{ $t('profile.qrdescription') }}</p>
       </div>
     </div>
@@ -39,14 +36,11 @@ export default {
   props: {
     userData: {
       type: Object,
-      required: true,
-      default: () => ({
-        full_name: '',
-        telegram_username: '',
-        avatar: '',
-        team: null,
-        id: null
-      })
+      required: true
+    },
+    qrCodeData: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -57,21 +51,19 @@ export default {
   },
   computed: {
     userName() {
-      return this.userData?.full_name || 'Имя не указано'
+      return this.userData?.full_name || 'Имя не указано';
     },
     userUsername() {
-      return this.userData?.telegram_username || 'username'
+      return this.userData?.telegram_username || 'username';
     },
     userAvatar() {
-      return this.userData?.avatar || '/default-avatar.png'
+      return this.userData?.avatar || '/default-avatar.png';
     },
     teamName() {
-      return this.userData?.team?.name || this.$t('profile.noTeam')
-    },
-    qrCodeUrl() {
-      return this.userData?.id 
-        ? `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=user_id:${this.userData.id}`
-        : '';
+      if (this.userData?.commands && this.userData.commands.length > 0) {
+        return this.userData.commands[0].name;
+      }
+      return 'Нет команды';
     }
   },
   watch: {
@@ -101,16 +93,16 @@ export default {
   border: 2px solid #4369AC;
   border-radius: 25px;
   padding: 20px;
-  gap: 60px;
+  gap: 25px;
 }
 
 .profile-avatar {
   width: 100%;
   height: 100%;
-  max-width: 250px;
-  max-height: 250px;
-  min-width: 200px;
-  min-height: 200px;
+  max-width: 200px;
+  max-height: 200px;
+  min-width: 150px;
+  min-height: 150px;
   border-radius: 8%;
   overflow: hidden;
   background-color: #b8c9e5;
@@ -151,25 +143,22 @@ export default {
 }
 
 .profile-qr {
-  max-width: 250px;
-  max-height: 250px;
-  min-width: 200px;
-  min-height: 200px;
+  max-width: 150px;
+  max-height: 150px;
+  min-width: 120px;
+  min-height: 120px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-right: 20px;
 }
 
 .profile-qr img {
-  aspect-ratio: 1/1;
-  max-width: 250px;
-  max-height: 250px;
-  min-width: 200px;
-  min-height: 200px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
@@ -179,59 +168,48 @@ export default {
     gap: 10px;
     border: 1px solid #4369AC;
   }
+  
   .profile-avatar {
-  width: 100%;
-  height: 100%;
-  max-width: 120px;
-  max-height: 120px;
-  min-width: 100px;
-  min-height: 100px;
-  border-radius: 20%;
-  overflow: hidden;
-  background-color: #b8c9e5;
-  aspect-ratio: 1/1;
-  margin-right: 0;
-  margin-bottom: 0;
-}
+    width: 100%;
+    height: 100%;
+    max-width: 120px;
+    max-height: 120px;
+    min-width: 100px;
+    min-height: 100px;
+    border-radius: 20%;
+    overflow: hidden;
+    background-color: #b8c9e5;
+    aspect-ratio: 1/1;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
 
-.profile-name {
-  font-size: 18px;
-  font-weight: 500;
-  white-space: wrap;
-}
+  .profile-name {
+    font-size: 18px;
+    font-weight: 500;
+    white-space: wrap;
+  }
 
-.profile-username {
-  font-size: 16px;
-}
+  .profile-username {
+    font-size: 16px;
+  }
 
-.profile-team {
-  font-size: 16px;
-  color: #666;
-  margin: 0;
-}
-.profile-qr{
-  margin-right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 120px;
-  min-width: 120px;
-}
-.profile-qr img{
-  max-width: 120px;
-  max-height: 120px;
-  min-width: 100px;
-  min-height: 100px;
-  margin-bottom: 0;
-  margin-top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .profile-team {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+  }
   
   .profile-details {
     margin-bottom: 15px;
     margin-top: 15px;
+  }
+  
+  .profile-qr {
+    max-width: 120px;
+    max-height: 120px;
+    min-width: 100px;
+    min-height: 100px;
   }
 }
 
@@ -263,6 +241,9 @@ export default {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   /* Скругление углов */
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Анимация появления */
@@ -299,9 +280,6 @@ export default {
   color: #666;
   margin-top: 10px;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   white-space: wrap;
   max-width: 400px;
 }
