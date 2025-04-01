@@ -1,22 +1,13 @@
 <template>
   <div class="profile-view">
     <HomeHeader />
-      <div class="header-actions">
-      </div>
-    
     <div v-if="loading" class="loading">Загрузка...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
     
     <div v-if="userData" class="profile-content">
       <h2 class="profile-title">{{ $t('profile.title') }}</h2>
-      
-      <!-- Основной блок с личной информацией -->
       <ProfileMain :userData="userData" />
-      
-      <!-- Блок с дополнительной персональной информацией -->
       <ProfileInfo :userData="userData" @update="fetchUserData" />
-      
-      <!-- Блок с информацией о команде -->
       <ProfileTeam 
         :team="userData.team" 
         :username="userData.full_name"
@@ -25,14 +16,11 @@
         :error="teamError" 
       />
     </div>
-    
-    <div class="logout-container">
-      <button @click="logout" class="logout-btn-bottom">{{ $t('profile.logout') }}</button>
-    </div>
   </div>
 </template>
 
 <script>
+import { authAPI } from '@/api';
 import HomeHeader from '@/components/Home/HomeHeader.vue';
 import ProfileMain from '@/components/Profile/ProfileMain.vue';
 import ProfileInfo from '@/components/Profile/ProfileInfo.vue';
@@ -63,85 +51,34 @@ export default {
     async fetchUserData() {
       try {
         this.loading = true;
-        const res = await fetch('/api/auth/me/');
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.detail || 'Ошибка загрузки данных');
-        }
-        this.userData = await res.json();
+        const response = await authAPI.getMe();
+        this.userData = response.data;
+      } catch (error) {
+        this.error = error.response?.data?.detail || 'Ошибка загрузки данных';
+      } finally {
         this.loading = false;
-      } catch (e) {
-        console.error('Ошибка при получении данных пользователя:', e);
-        this.error = null;
-        this.loading = false;
-        
-        this.userData = {
-          id: 1,
-          full_name: 'Пупкин Василий Васильевич',
-          telegram_username: 'vasilypupkin',
-          birth_date: '1990-01-01',
-          work_place: 'НИУ ВШЭ',
-          team: {
-            id: 1,
-            name: 'Ананасики',
-            members_count: 2,
-            captain_id: 1
-          }
-        };
       }
     },
     
     async logout() {
       try {
-        await fetch('/api/auth/logout', { method: 'POST' });
+        await authAPI.logout();
         this.$router.push('/');
       } catch (error) {
         this.error = 'Ошибка при выходе из системы';
       }
     },
-    
-    async createTeam(teamName) {
-      this.teamError = null;
-      try {
-        const response = await fetch('/api/teams/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: teamName })
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Ошибка при создании команды');
-        }
-        
-        this.fetchUserData(); // Обновляем данные для отображения созданной команды
-        return true;
-      } catch (error) {
-        this.teamError = error.message;
-        return false;
-      }
+
+    async createTeam() {
+      // Implementation of createTeam method
     },
-    
+
     async leaveTeam() {
-      if (!this.userData.team) return;
-      
-      try {
-        const response = await fetch(`/api/teams/${this.userData.team.id}/leave`, {
-          method: 'POST'
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Ошибка при выходе из команды');
-        }
-        
-        this.fetchUserData(); // Обновляем данные
-        return true;
-      } catch (error) {
-        this.teamError = error.message;
-        return false;
-      }
+      // Implementation of leaveTeam method
     }
+  },
+  created() {
+    this.fetchUserData();
   }
 };
 </script>

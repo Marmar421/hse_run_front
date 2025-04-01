@@ -1,52 +1,137 @@
 <template>
-    <section class="HomeFooter">
-    <router-link to="/" class="nav-link">{{ $t('header.about') }}</router-link>
-    <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link>
-    <router-link to="/registration" class="nav-link">{{ $t('header.registration') }}</router-link>
-    <p>{{ $t('footer.coordinator') }}</p>
-    <p> {{ $t('footer.copyright') }}</p> 
-    </section>
-    
+  <section class="HomeFooter">
+    <div class="footer-content">
+      <div class="nav-links">
+        <router-link to="/" class="nav-link">{{ $t('header.about') }}</router-link>
+        <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link>
+        <router-link to="/registration" class="nav-link">{{ $t('header.signin') }}</router-link>
+      </div>
+
+      <div class="auth-block">
+        <div class="auth-buttons">
+          <a href="#" class="auth-button telegram">
+            <img src="@/assets/images/tg-mini-logo.svg" alt="Telegram" />
+          </a>
+          <a href="#" class="auth-button vk">
+            <img src="@/assets/images/vk-mini-logo.svg" alt="VK" />
+          </a>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p>{{ $t('footer.copyright') }}</p>
+      </div>
+    </div>
+  </section>
 </template>
 
-<script>  
+<script>
 import LanguageSwitcher from '@/components/UI/LanguageSwitcher.vue';
 export default {
-    name: 'HomeFooter',
-    components: {
-        LanguageSwitcher,
-    },
+  name: 'HomeFooter',
+  components: {
+    LanguageSwitcher,
+  },
 }
 </script>
 
 <style scoped>
 .HomeFooter {
-    padding-top: 143px;
+  padding: 60px 20px;
+  background-color: #F3F3F3;
+}
 
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    max-width: 1360px;
-    margin: 0 auto;
-    background-color: #F3F3F3;
-    font-size: 32px;
-    gap: 12px;
-    font-family: 'InvolveMedium';
+.footer-content {
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .nav-link {
-    color: #000000;
-    text-decoration: none;
-    transition: font-family 0.3s;
+  color: #000000;
+  text-decoration: none;
+  font-size: 32px;
+  font-family: 'InvolveMedium';
+  transition: font-family 0.3s;
 }
 
 .nav-link:hover {
-    font-family: 'InvolveBold';
+  font-family: 'InvolveBold';
 }
 
-p {
-    margin: 0;
-    color: #666;
-    font-size: 14px;
+.auth-block {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 80px;
+}
+
+.auth-button {
+  width: 75px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background-color: #F3F3F3;
+  transition: transform 0.3s ease;
+  border: 2px solid #4369AC;
+}
+
+.auth-button:hover {
+  transform: scale(1.05);
+}
+
+.auth-button img {
+  width: 50px;
+  height: 50px;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-family: 'InvolveMedium';
+}
+
+@media (max-width: 768px) {
+  .HomeFooter {
+    padding: 40px 20px;
+  }
+
+  .nav-link {
+    font-size: 24px;
+  }
+
+  .auth-title {
+    font-size: 20px;
+  }
+
+  .auth-button {
+    width: 50px;
+    height: 50px;
+  }
+
+  .auth-button img {
+    width: 25px;
+    height: 25px;
+  }
 }
 </style>

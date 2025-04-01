@@ -55,4 +55,12 @@ select:focus {
   outline: none;
   border-color: #4369AC;
 }
+@media (max-width: 768px) {
+  .language-switcher {
+    font-size: 16px;
+  }
+  select {
+    font-size: 14px;
+  }
+}
 </style>

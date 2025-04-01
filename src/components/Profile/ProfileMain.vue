@@ -1,6 +1,5 @@
 <template>
   <div class="profile-main">
-    <!-- Добавляем проверку на загрузку данных -->
     <div v-if="isDataLoaded" class="profile-card">
       <div class="profile-avatar">
         <img :src="userAvatar" alt="Avatar">
@@ -12,17 +11,18 @@
         <p class="profile-team">{{ $t('profile.team') }}: {{ teamName }}</p>
       </div>
       
-      <div class="profile-qr" @click="showQrModal = true">
+      <div id="qr-code-container" class="profile-qr" @click="showQrModal = true">
         <img :src="qrCodeUrl" alt="QR код">
+        <button id="copy-link-btn" @click.stop="handleCopyLink" class="copy-link-button">
+          {{ copyButtonText }}
+        </button>
       </div>
     </div>
 
-    <!-- Добавляем состояние загрузки -->
     <div v-else class="loading-state">
       {{ $t('common.loading') || 'Загрузка...' }}
     </div>
     
-    <!-- Модальное окно для увеличенного QR-кода -->
     <div class="qr-modal" v-if="showQrModal" @click="showQrModal = false">
       <div class="qr-modal-content" @click.stop>
         <button class="close-btn" @click="showQrModal = false">&times;</button>

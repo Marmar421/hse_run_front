@@ -8,9 +8,9 @@
       </div>
       <nav class="navigation">
         <LanguageSwitcher />
-        <a @click="scrollToParticipation" class="nav-link">{{ $t('header.participation') }}</a>
+        <a @click="scrollToParticipation" class="nav-link-participation">{{ $t('header.participation') }}</a>
        <!-- <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link> -->
-       <a href="#" class="nav-link">FAQ</a>
+       <a href="#" class="nav-link-faq">FAQ</a>
         <div class="language-selector">
           <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link> 
         </div>
@@ -24,10 +24,6 @@
         </div>
       </nav>
     </div>
-    <SlideMenu 
-      :isOpen="isMenuOpen" 
-      @close="closeMenu"
-    />
   </header>
 </template>
 
@@ -92,6 +88,8 @@ export default {
   align-items: center;
   height: 100%;
   max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .navigation {
@@ -99,6 +97,7 @@ export default {
   gap: 20px;
   font-family: 'InvolveMedium';
   font-size: 20px;
+  color: #333;
 }
 
 .nav-link {
@@ -108,61 +107,48 @@ export default {
   transition: color 0.3s ease;
   cursor: pointer;
 }
+.nav-link-faq{
+  color: #333;
+}
 
 .nav-link:hover {
+  color: #4369AC;
+}
+.nav-link-faq:hover {
+  color: #4369AC;
+}
+.nav-link-participation:hover {
   color: #4369AC;
 }
 .down-button-mobile{
   display: none;
 }
 
-@media screen and (max-width: 1600px) {
+@media (max-width: 768px) {
   .sticky-header {
     width: 100%;
+    height: 70px;
   }
-  .bm-burger-button{
-    display: none;
+  .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
   }
-  .mobile-menu-icon{
-    display: none;
-  }
-}
-@media (max-width: 768px) {
-  .logo {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
   .logo img {
-    width: auto;
+    max-width: 100px;
   }
-
+  .language-selector{
+    max-width: 10px;
+}
+  .nav-link-participation{
+    display: none;
+  }
+  .nav-link-faq{
+    display: none;
+  }
   .nav-link{
-    display: none;
+    font-size: 14px;
   }
-  .language-switcher{
-    display: none;
-  }
-  .down-button-mobile{
-    display: block;
-    height: 30px;
-    width: 30px;
-    cursor: pointer;
-  }
-  .mobile-menu-icon{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-.down-button-mobile {
-  display: none;
-  transition: transform 0.3s ease;
-}
-
-.down-button-mobile.rotated {
-  transform: rotate(180deg);
 }
 </style>

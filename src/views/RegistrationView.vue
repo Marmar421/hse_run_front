@@ -1,5 +1,8 @@
 <template>
   <div class="registration-container">
+    <div class="background-image">
+      <div class="color-overlay"></div>
+    </div>
     <div class="registration-content">
       <!-- Логотип HSE Run -->
       <div class="logo">
@@ -11,7 +14,6 @@
       <p class="registration-address">{{ $t('registration.address') }}</p>
       
       <TelegramLogin @auth="handleAuth" botName="test_burlak1n_bot"/>
-
     </div>
   </div>
 </template>
@@ -35,43 +37,79 @@ export default {
 
 <style scoped>
 .registration-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #F3F3F3;
-  padding: 20px;
+  overflow: hidden;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('@/assets/images/map-reg3.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  opacity: 0.8;
+  margin: 0;
+  padding: 0;
 }
 
 .registration-content {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 400px;
   width: 100%;
+  border-radius: 20px;
+  padding: 20px;
+  background-color: rgba(243, 243, 243, 0.95);
 }
 
 .logo {
   margin-bottom: 40px;
+  margin-left: 10px;
 }
 
 .registration-title {
-  color: #4369AC;
+  color: #333;
   font-size: 48px;
   font-weight: 300;
-  margin-bottom: 10px;
   text-align: center;
+  font-family: 'InvolveMedium';
 }
 
 .registration-address {
-  color: #4369AC;
+  color: #333;
   font-size: 24px;
   font-weight: 300;
   margin-bottom: 40px;
+  margin-top: 0;
   text-align: center;
+  font-family: 'InvolveMedium';
+}
+:root {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 @media (max-width: 480px) {
+  .registration-container {
+    padding: 15px;
+  }
+  .logo {
+    margin-bottom: 0;
+  }
+
   .registration-title {
     font-size: 36px;
   }
@@ -80,9 +118,10 @@ export default {
     font-size: 20px;
   }
   
-  .telegram-button {
-    font-size: 16px;
-    padding: 10px 20px;
+  .background-image {
+    background-position: center;
+    margin-left: 0;
+    width: 100%;
   }
 }
 </style>

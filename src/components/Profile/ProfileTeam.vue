@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { teamAPI } from '@/api';
 export default {
   name: 'ProfileTeam',
   props: {
@@ -110,17 +111,20 @@ export default {
   },
   methods: {
     async handleCreateTeam() {
-      const success = await this.$emit('createTeam', this.teamName);
-      if (success) {
-        this.teamName = '';
+      try {
+        await teamAPI.create({ name: this.teamName });
+        this.$emit('teamCreated');
+      } catch (error) {
+        this.error = error.response?.data?.detail || 'Ошибка при создании команды';
       }
     },
-    
-    confirmLeaveTeam() {
-      const confirmed = confirm(this.$t('profile.confirmLeaveTeam'));
-      if (confirmed) {
-        this.$emit('leaveTeam');
-        this.showSettings = false;
+
+    async handleLeaveTeam() {
+      try {
+        await teamAPI.leave();
+        this.$emit('teamLeft');
+      } catch (error) {
+        this.error = error.response?.data?.detail || 'Ошибка при выходе из команды';
       }
     }
   }
