@@ -58,6 +58,8 @@ export default {
     team: 'Команда',
     teamMembers: 'Участники команды',
     logout: 'Выйти',
+    error: 'Ошибка загрузки данных',
+    logoutError: 'Ошибка при выходе из системы'
   },
   faq: {
     title: 'ОСТАЛИСЬ ВОПРОСЫ?',

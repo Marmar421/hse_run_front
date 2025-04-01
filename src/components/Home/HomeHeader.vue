@@ -91,7 +91,6 @@ export default {
   margin: 0 auto;
   padding: 0 20px;
 }
-
 .navigation {
   display: flex;
   gap: 20px;

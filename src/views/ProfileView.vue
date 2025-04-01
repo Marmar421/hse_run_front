@@ -54,7 +54,7 @@ export default {
         const response = await authAPI.getMe();
         this.userData = response.data;
       } catch (error) {
-        this.error = error.response?.data?.detail || 'Ошибка загрузки данных';
+        this.error = error.response?.data?.detail || this.$t('profile.error');
       } finally {
         this.loading = false;
       }
@@ -65,7 +65,7 @@ export default {
         await authAPI.logout();
         this.$router.push('/');
       } catch (error) {
-        this.error = 'Ошибка при выходе из системы';
+        this.error = this.$t('profile.logoutError');
       }
     },
 
