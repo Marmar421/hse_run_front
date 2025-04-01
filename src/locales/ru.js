@@ -49,9 +49,15 @@ export default {
     ]
   },
   profile: {
-    title: 'Профиль',
+    title: 'Ваш профиль',
+    qrdescription: 'Это QR-код для входа на площадку и начисления баллов за программу и квест',
+    personalInfo: 'Персональная информация',
+    fullName: 'ФИО',
+    workPlace: 'Место работы',
     name: 'Имя',
     team: 'Команда',
+    teamMembers: 'Участники команды',
+    logout: 'Выйти',
   },
   faq: {
     title: 'ОСТАЛИСЬ ВОПРОСЫ?',

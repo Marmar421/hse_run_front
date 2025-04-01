@@ -14,7 +14,6 @@
       
       <div class="profile-qr" @click="showQrModal = true">
         <img :src="qrCodeUrl" alt="QR код">
-        <p class="qr-description">Это QR-код для входа на площадку и начисления баллов за программу и квест</p>
       </div>
     </div>
 
@@ -28,7 +27,7 @@
       <div class="qr-modal-content" @click.stop>
         <button class="close-btn" @click="showQrModal = false">&times;</button>
         <img :src="qrCodeUrl" alt="QR код (увеличенный)">
-        <p class="qr-modal-description">Это QR-код для входа на площадку и начисления баллов за программу и квест</p>
+        <p class="qr-modal-description">{{ $t('profile.qrdescription') }}</p>
       </div>
     </div>
   </div>
@@ -98,38 +97,45 @@ export default {
 .profile-card {
   display: flex;
   align-items: center;
-  background-color: #f0f7ff;
-  border: 1px solid #d0e1f9;
-  border-radius: 8px;
+  background-color: #F3F3F3;
+  border: 2px solid #4369AC;
+  border-radius: 25px;
   padding: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  gap: 60px;
 }
 
 .profile-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  max-width: 250px;
+  max-height: 250px;
+  min-width: 200px;
+  min-height: 200px;
+  border-radius: 8%;
   overflow: hidden;
   background-color: #b8c9e5;
-  margin-right: 20px;
-  flex-shrink: 0;
+  aspect-ratio: 1/1;
 }
 
 .profile-avatar img {
-  width: 100%;
-  height: 100%;
+  width: 90%;
   object-fit: cover;
 }
 
 .profile-details {
   flex-grow: 1;
+  font-family: 'InvolveMedium';
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .profile-name {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 500;
   color: #333;
   margin: 0 0 5px 0;
+  white-space: nowrap;
 }
 
 .profile-username {
@@ -145,55 +151,98 @@ export default {
 }
 
 .profile-qr {
-  width: 140px;
-  height: 140px;
+  max-width: 250px;
+  max-height: 250px;
+  min-width: 200px;
+  min-height: 200px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer; /* Указывает, что элемент кликабельный */
+  cursor: pointer;
+  margin-right: 20px;
 }
 
 .profile-qr img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.qr-description {
-  font-size: 12px;
-  color: #666;
-  margin-top: 5px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  aspect-ratio: 1/1;
+  max-width: 250px;
+  max-height: 250px;
+  min-width: 200px;
+  min-height: 200px;
 }
 
 @media (max-width: 768px) {
   .profile-card {
     flex-direction: column;
     text-align: center;
+    gap: 10px;
+    border: 1px solid #4369AC;
   }
-  
   .profile-avatar {
-    margin-right: 0;
-    margin-bottom: 15px;
-  }
+  width: 100%;
+  height: 100%;
+  max-width: 120px;
+  max-height: 120px;
+  min-width: 100px;
+  min-height: 100px;
+  border-radius: 20%;
+  overflow: hidden;
+  background-color: #b8c9e5;
+  aspect-ratio: 1/1;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: 500;
+  white-space: wrap;
+}
+
+.profile-username {
+  font-size: 16px;
+}
+
+.profile-team {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+.profile-qr{
+  margin-right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+  min-width: 120px;
+}
+.profile-qr img{
+  max-width: 120px;
+  max-height: 120px;
+  min-width: 100px;
+  min-height: 100px;
+  margin-bottom: 0;
+  margin-top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
   
   .profile-details {
     margin-bottom: 15px;
+    margin-top: 15px;
   }
 }
 
-/* Стили для модального окна */
+/* Оверлей для модального окна */
 .qr-modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5); /* полупрозрачный фон */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -203,24 +252,58 @@ export default {
 .qr-modal-content {
   background-color: white;
   padding: 20px;
-  border-radius: 8px;
   position: relative;
   max-width: 90%;
   max-height: 90%;
+  /* Центрирование */
+  margin: auto;
+  /* Анимация появления */
+  animation: modalAppear 0.3s ease;
+  /* Тень для выделения */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  /* Скругление углов */
+  border-radius: 8px;
+}
+
+/* Анимация появления */
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+  .qr-modal-content {
+    width: 95%;
+    padding: 15px;
+  }
 }
 
 .qr-modal-content img {
   max-width: 100%;
   max-height: 100%;
-  width: 400px;
-  height: 400px;
+  width: 200px;
+  height: 200px;
+  padding: 20px;
 }
 
 .qr-modal-description {
+  font-family: 'InvolveMedium';
   font-size: 14px;
   color: #666;
   margin-top: 10px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: wrap;
+  max-width: 400px;
 }
 
 .close-btn {
@@ -229,7 +312,7 @@ export default {
   right: 10px;
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 45px;
   cursor: pointer;
   color: #333;
 }

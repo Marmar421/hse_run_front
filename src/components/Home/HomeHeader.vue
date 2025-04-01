@@ -12,7 +12,7 @@
        <!-- <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link> -->
        <a href="#" class="nav-link">FAQ</a>
         <div class="language-selector">
-         <!-- <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link> -->
+          <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link> 
         </div>
         <div class="mobile-menu-icon" @click="toggleMenu">
           <img 

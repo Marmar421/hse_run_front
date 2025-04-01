@@ -49,6 +49,7 @@ export default {
     
   profile: {
     title: 'Profile',
+    qrdescription: 'This QR code is for the entering and earning points for the program and quest',
     name: 'Name',
     team: 'Team',
   },

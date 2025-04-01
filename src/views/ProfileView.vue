@@ -165,9 +165,10 @@ h1 {
 
 .profile-title {
   text-align: center;
-  color: #4369AC;
+  color: #191A1E;
   margin: 20px 0;
-  font-size: 28px;
+  font-size: 33px;
+  font-family: 'InvolveMedium';
 }
 
 .back-link {
@@ -223,6 +224,11 @@ h1 {
   }
   
   h1 {
+    margin-bottom: 10px;
+  }
+
+  .profile-title {
+    font-size: 24px;
     margin-bottom: 10px;
   }
   
