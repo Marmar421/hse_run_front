@@ -366,6 +366,9 @@ export default {
   }
 }
 @media (max-width: 1050px) {
+  .main-content{
+    padding-bottom: 0px;
+  }
   .start-container {
     max-height: 550px;
   }
@@ -374,6 +377,36 @@ export default {
     -webkit-text-stroke: 2px #C80002;
     margin-top: 20px;
   }
+  .hero-img {
+    border-radius: 0px 0px 49px 0px;
+  }
+  .card-content {
+    padding: 30px 36px;
+  }
+  
+}
+
+@media (max-width: 870px){
+  .main-title{
+    font-size: clamp(25px, 3vw, 30px);
+  }
+  .subtitle {
+    font-size: clamp(15px, 3vw, 17px);
+    z-index: 10;
+  }
+  .buttons-info-section{
+    margin-top: 10px;
+  }
+  .register-btn{
+    font-size: clamp(15px, 3vw, 17px);
+    padding: 20px 28px;
+  }
+  .event-date {
+    font-size: clamp(15px, 3vw, 17px);
+  }
+  .event-place {
+    font-size: clamp(15px, 3vw, 17px);
+  }
 }
 
 @media (max-width: 768px) {
@@ -381,14 +414,14 @@ export default {
   .home-start {
     background-image: url('@/assets/images/плашка-мобайл.svg');
     margin: 24px auto;
-    height: 600px;
+    height: 607px;
   }
   .hero-content {
     margin: 0;
   }
   .hero-title-section {
     margin-left: 15px;
-    gap: 30px;
+    gap: 20px;
   }
   .main-title {
     margin-top: 30px;

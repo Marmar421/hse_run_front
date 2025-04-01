@@ -114,7 +114,7 @@
   .participation-right-section {
     flex: 1;
     position: relative;
-    min-width: 490px;
+    min-width: 340px;
   }
   
   .step {
@@ -197,9 +197,12 @@
     .step__circle {
       width: 50px;
       height: 50px;
-      left: -80px;
+      left: -87px;
     }
+    .participation-left-section{
+      margin-left: 10px;
   }
+}
   @media (max-width: 768px) {
     .participation-right-section {
       display: none;

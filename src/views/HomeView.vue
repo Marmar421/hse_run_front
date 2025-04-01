@@ -44,7 +44,9 @@ export default {
 }
 .runrun-section{
   margin-top: 80px;
-  z-index: 1000;
+  max-width: 1360px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .runrun-img {
 width: 100%;

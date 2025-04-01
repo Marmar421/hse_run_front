@@ -46,25 +46,4 @@ export default {
   transform-origin: center;
   transition: all 0.3s ease;
 }
-
-@media (max-width: 1360px) {
-  .circle-point {
-    width: 50px;
-    height: 50px;
-  }
-}
-
-@media (max-width: 768px) {
-  .circle-point {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-@media (max-width: 480px) {
-  .circle-point {
-    width: 30px;
-    height: 30px;
-  }
-}
 </style> 

@@ -106,8 +106,10 @@ export default {
   gap: 64px;
   margin-top: 70px;
   padding: 40px 150px;
-  max-width: 1360px;
-
+  max-width: 1660px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 h2 {
@@ -124,6 +126,7 @@ h2 {
   align-items: center;
   width: 100%;
   justify-content: space-between;
+  max-width: 1360px;
 }
 
 .partners-logos {
