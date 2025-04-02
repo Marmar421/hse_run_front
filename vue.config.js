@@ -1,4 +1,11 @@
 const { defineConfig } = require("@vue/cli-service");
+
+const proxyConfig = {
+  target: 'http://127.0.0.1:8000',
+  changeOrigin: false,
+  ws: false
+};
+
 module.exports = defineConfig({
   transpileDependencies: true,
   productionSourceMap: false,
@@ -6,24 +13,9 @@ module.exports = defineConfig({
     host: 'localhost.local',
     port: 80,
     proxy: {
-      '^/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: false,
-        ws: false,
-        pathRewrite: { '^/api': '/api' },
-      },
-      '^/static': {
-        target: 'http://localhost:8000',
-        changeOrigin: false,
-        ws: false,
-        pathRewrite: { '^/static': '/static' },
-      },
-      '^/admin': {
-        target: 'http://localhost:8000',
-        changeOrigin: false,
-        ws: false,
-        pathRewrite: { '^/admin': '/admin' },
-      }
+      '^/api': { ...proxyConfig, pathRewrite: { '^/api': '/api' } },
+      '^/static': { ...proxyConfig, pathRewrite: { '^/static': '/static' } },
+      '^/admin': { ...proxyConfig, pathRewrite: { '^/admin': '/admin' } }
     }
   }
 });

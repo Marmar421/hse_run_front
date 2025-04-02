@@ -35,7 +35,7 @@
       <!-- Если команда есть - показываем информацию о ней -->
       <div v-else class="team-info">
         <div class="team-details">
-          <p>Название: <span>{{ team.name }} ({{ team.participants ? team.participants.length : 0 }}/6)</span></p>
+          <p><span>{{ team.name }} ({{ team.participants ? team.participants.length : 0 }}/6)</span></p>
           <h4>Участники:</h4>
           <div class="team-participants">
             <p v-for="participant in team.participants" :key="participant.id">

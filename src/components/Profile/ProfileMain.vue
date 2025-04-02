@@ -8,7 +8,7 @@
       <div class="profile-details">
         <h3 class="profile-name">{{ userName }}</h3>
         <p class="profile-username">@{{ userUsername }}</p>
-        <p class="profile-team">Команда: {{ teamName }}</p>
+        <p class="profile-team">{{ teamName }}</p>
       </div>
       
       <div id="qr-code-container" class="profile-qr" @click="showQrModal = true" v-if="qrCodeData">
