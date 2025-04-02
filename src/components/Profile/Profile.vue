@@ -2,12 +2,11 @@
   <div class="profile-container">
     <h1>HSE RUN</h1>
     <router-link to="/" class="back-link">Назад</router-link>
+    <div v-if="isOrganizer" class="admin-panel-container">
+        <a href="/admin" class="admin-btn">Админ-панель</a>
+    </div>
     <div class="container">
       <button @click="logout" class="logout-btn">Выйти</button>
-      
-      <div v-if="isOrganizer" class="admin-panel-container">
-        <a href="/admin" class="admin-btn">Админ-панель</a>
-      </div>
       
       <h2>Профиль</h2>
       

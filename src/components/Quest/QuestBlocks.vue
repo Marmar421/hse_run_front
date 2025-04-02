@@ -1,84 +1,76 @@
 <template>
-  <div>
-    <h1>HSE RUN</h1>
-    <button class="back-button" @click="goBack">← Назад</button>
-    <div class="team-stats">
-      <span>Счёт: <span>{{ teamScore }}</span></span>
-      <span>Монеты: <span>{{ teamCoins }}</span></span>
-      <button @click="showQR" style="margin-left: 20px;">Мой QR-код</button>
-    </div>
-    <h1>{{ blockTitle }}</h1>
+  <QuestShell :teamScore="teamScore" :teamCoins="teamCoins">
+    <button @click="$router.back()" class="back-btn">Назад</button>
+    <h2>{{ blockTitle }}</h2>
     
     <div v-if="loading" class="loading">Загрузка...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else>
+    <div v-else class="riddles-container">
       <div 
         v-for="(riddle, index) in riddles" 
         :key="riddle.id"
-        class="riddle" 
-        :style="{
-          backgroundColor: index % 2 === 0 ? '#f0f0f0' : '#e0e0e0',
-          padding: '20px',
-          margin: '10px auto',
-          borderRadius: '8px',
-          maxWidth: '600px',
-          textAlign: 'center',
-          border: riddle.has_insider_attempt ? '2px solid #4caf50' : 'none'
-        }"
+        class="riddle-block"
+        :class="{'insider-visited': riddle.has_insider_attempt}"
       >
-        <h3>{{ riddle.title || 'Загадка' }}</h3>
+        <h3 class="riddle-title">{{ riddle.title || '' }}</h3>
         
         <!-- Если загадка уже отвечена -->
         <template v-if="isAnswered(riddle)">
-          <p v-if="riddle.geo_answered">{{ riddle.geo_answered }}</p>
-          <p>{{ riddle.text_answered || 'Нет данных' }}</p>
-          <div v-if="riddle.image_path_answered" v-html="createFileHTML(riddle.image_path_answered)"></div>
+          <p v-if="riddle.geo_answered" class="riddle-text">{{ riddle.geo_answered }}</p>
+          <p class="riddle-text">{{ riddle.text_answered || 'Нет данных' }}</p>
+          <div v-if="riddle.image_path_answered" v-html="createFileHTML(riddle.image_path_answered, '100%')" class="riddle-image"></div>
         </template>
         
         <!-- Если загадка не отвечена -->
-    <template v-else>
-          <div v-if="riddle.image_path" v-html="createFileHTML(riddle.image_path, '300px', 'display: block; margin: 0 auto 20px;')"></div>
-          
-          <div style="margin-bottom: 20px;">
+        <template v-else>
+          <div class="hint-section">
             <button 
               @click="toggleHint(riddle.id, riddle.has_hint ? riddle.hint : '')"
-              :style="riddle.has_hint ? 'background-color: #4caf50;' : ''"
+              :class="['hint-button', {'active': riddle.has_hint}]"
               :id="`hint-button-${riddle.id}`"
             >
-              {{ riddle.has_hint ? 'Показать/скрыть подсказку' : 'Получить подсказку' }}
+              {{ 'Подсказка' }}
             </button>
           </div>
           
-          <div :id="`hint-container-${riddle.id}`" style="display: none; margin-bottom: 20px;">
-            <div v-if="riddle.has_hint" v-html="createFileHTML(riddle.hint, '300px', 'border: 2px dashed #2196f3; padding: 10px;')"></div>
+          <div :id="`hint-container-${riddle.id}`" class="hint-container">
+            <div v-if="riddle.has_hint" v-html="createFileHTML(riddle.hint, '100%', 'border: 2px dashed #2196f3;')"></div>
           </div>
           
-          <div :id="`hint-error-${riddle.id}`" style="display: none; color: red; padding: 10px; border: 1px solid red; border-radius: 4px; margin-bottom: 20px;"></div>
+          <div v-if="riddle.image_path" v-html="createFileHTML(riddle.image_path, '100%', 'display: block; margin: 0 auto 20px;')" class="riddle-image"></div>
           
-          <form @submit.prevent="handleRiddleSubmit($event, riddle.id)" style="margin-top: 20px;">
-            <input placeholder="Введите ваш ответ" required style="padding: 8px; margin-right: 10px;">
-            <button type="submit">Проверить ответ</button>
+          <form @submit.prevent="handleRiddleSubmit($event, riddle.id)" class="answer-form">
+            <input placeholder="Введите ваш ответ" required class="answer-input">
+            <button type="submit" class="submit-button">Ок</button>
           </form>
-    </template>
+
+          <div :id="`hint-error-${riddle.id}`" class="hint-error"></div>
+          
+
+        </template>
         
-        <div v-if="riddle.has_insider_attempt" style="color: #4caf50; margin-top: 10px;">Отсканировано инсайдером</div>
-        <div v-if="riddle.has_hint && !isAnswered(riddle)" style="color: #2196f3; margin-top: 10px;">Подсказка запрошена</div>
+        <div v-if="riddle.has_insider_attempt" class="insider-badge">Отсканировано инсайдером</div>
       </div>
     </div>
     
-    <!-- Модальное окно для QR-кода -->
-    <div class="qr-modal" v-if="qrModalVisible">
-      <div class="qr-modal-content">
-        <img :src="qrImageSrc" alt="QR Code">
-        <button @click="closeQR">Закрыть</button>
+    <!-- Модальное окно для просмотра изображений -->
+    <div v-if="showImageModal" class="image-modal" @click="closeImageModal">
+      <div class="modal-content" @click.stop>
+        <span class="modal-close" @click="closeImageModal">&times;</span>
+        <img :src="modalImageSrc" class="modal-image">
       </div>
     </div>
-  </div>
+  </QuestShell>
 </template>
 
 <script>
+import QuestShell from './QuestShell.vue'
+
 export default {
   name: 'QuestBlocks',
+  components: {
+    QuestShell
+  },
   data() {
     return {
       blockId: null,
@@ -88,17 +80,49 @@ export default {
       teamCoins: 0,
       loading: true,
       error: null,
-      qrModalVisible: false,
-      qrImageSrc: ''
+      showImageModal: false,
+      modalImageSrc: ''
     }
   },
   created() {
     this.blockId = this.$route.params.id;
     this.loadBlock();
   },
+  mounted() {
+    // Добавляем делегированный обработчик кликов на изображения
+    document.addEventListener('click', this.handleImageClick);
+    // Добавляем обработчик нажатия клавиш для закрытия модального окна
+    document.addEventListener('keydown', this.handleKeyDown);
+  },
+  beforeDestroy() {
+    // Удаляем обработчики при уничтожении компонента
+    document.removeEventListener('click', this.handleImageClick);
+    document.removeEventListener('keydown', this.handleKeyDown);
+  },
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    
+    // Обработчик клика по изображению
+    handleImageClick(event) {
+      const target = event.target;
+      if (target.tagName === 'IMG' && !target.closest('.modal-content')) {
+        this.openImageModal(target.src);
+      }
+    },
+    
+    // Открыть модальное окно с изображением
+    openImageModal(imgSrc) {
+      this.modalImageSrc = imgSrc;
+      this.showImageModal = true;
+      document.body.style.overflow = 'hidden'; // Блокируем прокрутку
+    },
+    
+    // Закрыть модальное окно
+    closeImageModal() {
+      this.showImageModal = false;
+      document.body.style.overflow = ''; // Возвращаем прокрутку
     },
     
     // Загрузка блока и загадок
@@ -217,25 +241,6 @@ export default {
       });
     },
     
-    // Отображение QR-кода
-    async showQR() {
-      try {
-        const response = await fetch('/api/auth/qr');
-        if (!response.ok) throw new Error('Ошибка загрузки QR-кода');
-        
-        const blob = await response.blob();
-        this.qrImageSrc = URL.createObjectURL(blob);
-        this.qrModalVisible = true;
-      } catch (error) {
-        alert('Ошибка при загрузке QR-кода');
-      }
-    },
-    
-    // Закрытие модального окна с QR-кодом
-    closeQR() {
-      this.qrModalVisible = false;
-    },
-    
     // Переключение видимости подсказки
     toggleHint(riddleId, hintPath) {
       // Если подсказка еще не запрошена, запрашиваем ее
@@ -288,7 +293,7 @@ export default {
       
       // Создаем HTML в зависимости от типа файла
       if (fileType === 'image') {
-        html = '<img src="' + fileSrc + '" style="max-width: ' + maxWidth + '; ' + additionalStyle + '">';
+        html = '<img src="' + fileSrc + '" style="max-width: ' + maxWidth + '; cursor: pointer; ' + additionalStyle + '">';
       } else if (fileType === 'video') {
         html = '<video controls style="max-width: ' + maxWidth + '; ' + additionalStyle + '">' +
                '<source src="' + fileSrc + '" type="video/' + extension + '">' +
@@ -339,138 +344,289 @@ export default {
       }
       
       return html;
+    },
+    
+    // Обработчик нажатия клавиш
+    handleKeyDown(event) {
+      // Закрываем модальное окно при нажатии Escape
+      if (event.key === 'Escape' && this.showImageModal) {
+        this.closeImageModal();
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-.back-button {
-  padding: 8px 16px;
-  background-color: #f1f1f1;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin: 10px;
-  font-size: 16px;
-}
-
-.back-button:hover {
-  background-color: #e0e0e0;
-}
-
-.team-stats {
+.riddles-container {
   display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 700px;
+  align-self: center;
+}
+
+.riddle-block {
+  border: 2px solid #ff5252;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  transition: transform 0.2s ease;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin: 15px;
+  text-align: center;
+}
+
+.insider-visited {
+  border-color: #4caf50;
+}
+
+.riddle-title {
   font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 3px;
+  text-align: center;
+  width: 100%;
 }
 
-.team-stats span {
-  margin-right: 15px;
+.riddle-text {
+  margin: 5px 0;
+  text-align: center;
+  width: 100%;
 }
 
-.team-stats button {
-  background-color: #007bff;
+.riddle-image {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 10px 0;
+}
+
+.riddle-image img {
+  max-width: 90%;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
+.hint-section {
+  margin: 5px 0;
+  text-align: center;
+  width: 100%;
+}
+
+.hint-button {
+  font-family: 'Involve', Arial, sans-serif;
+  background-color: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+  width: 80%;
+  max-width: 300px;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e0e0e0;
+}
+
+.hint-button.active {
+  background-color: white;
+  color: black;
+  border: 2px solid #1976d2;
+}
+
+.hint-button:hover {
+  opacity: 0.9;
+}
+
+.hint-container {
+  display: none;
+  margin: 10px auto;
+  border-radius: 5px;
+  width: 90%;
+  max-width: 600px;
+}
+
+.hint-error {
+  display: none;
+  color: red;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 4px;
+  margin: 10px 0;
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.answer-form {
+  
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  width: 90%;
+  max-width: 600px;
+  align-items: center;
+}
+
+.answer-input {
+  font-family: 'Involve', Arial, sans-serif;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
+}
+
+.submit-button {
+  font-family: 'Involve', Arial, sans-serif;
+  background-color: #4285f4;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 5px;
+  padding: 8px 15px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  white-space: nowrap;
 }
 
-.team-stats button:hover {
-  background-color: #0056b3;
+.submit-button:hover {
+  background-color: #3367d6;
+}
+
+.insider-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.insider-badge {
+  color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4caf50;
+}
+
+.hint-badge {
+  color: #2196f3;
+  background-color: rgba(33, 150, 243, 0.1);
+  border: 1px solid #2196f3;
 }
 
 .loading, .error {
   text-align: center;
   padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.loading {
   color: #666;
 }
 
 .error {
   color: #e74c3c;
+  border: 1px solid #e74c3c;
 }
 
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-}
 
-button:hover {
-  background-color: #0056b3;
-}
 
-h1 {
-  text-align: center;
-  color: #333;
-}
-
-.qr-modal {
-  display: block;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.8);
-}
-
-.qr-modal-content {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.qr-modal-content img {
-  max-width: 300px;
-}
-
-.qr-modal-content button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background: #007bff;
+.back-btn {
+  background-color: #4285f4;
   color: white;
   border: none;
   border-radius: 5px;
+  padding: 10px 20px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+  margin-bottom: 15px;
 }
 
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-  .riddle {
-    width: 90%;
-  }
-  
-  .qr-modal-content img {
-    max-width: 250px;
-  }
-  
-  .team-stats {
-    flex-wrap: wrap;
-  }
+.back-btn:hover {
+  background-color: #3367d6;
 }
 
-@media (max-width: 480px) {
-  .team-stats {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .team-stats button {
-    margin-left: 0;
-    margin-top: 10px;
-  }
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content {
+  position: relative;
+  background-color: transparent;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: zoomIn 0.3s ease;
+}
+
+.modal-close {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  color: white;
+  font-size: 36px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1001;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+}
+
+.modal-image {
+  max-width: 100%;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
 </style>
