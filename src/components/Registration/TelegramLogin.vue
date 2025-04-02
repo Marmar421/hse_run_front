@@ -38,23 +38,22 @@ export default {
       telegramUserData: null
     }
   },
-  // created() {
-  //   // Проверяем сессию при загрузке компонента
-  //   this.checkSession();
-  // },
+  created() {
+    // Проверяем сессию при загрузке компонента
+    this.checkSession();
+  },
   methods: {
     // Проверка существующей сессии
     async checkSession() {
-      return;
-      // try {
-      //   const res = await fetch('/api/auth/me/');
-      //   if (res.ok) {
-      //     this.$router.push('/profile');
-      //   }
-      // } catch (e) {
-      //   // Если ошибка, просто продолжаем показ страницы регистрации
-      //   console.log('Нет активной сессии:', e);
-      // }
+      try {
+        const res = await fetch('/api/auth/me/');
+        if (res.ok) {
+          this.$router.push('/profile');
+        }
+      } catch (e) {
+        // Если ошибка, просто продолжаем показ страницы регистрации
+        console.log('Нет активной сессии:', e);
+      }
     },
     
     // Отображение ошибкиd
@@ -112,11 +111,6 @@ export default {
       
       console.log(`Logged in as ${user.first_name} ${user.last_name} (ID: ${user.id})`);
       this.telegramUserData = user;
-      
-      // Сохраняем URL фотографии в localStorage
-      if (user.photo_url) {
-        localStorage.setItem('telegramPhotoUrl', user.photo_url);
-      }
       
       try {
         const res = await fetch('/api/auth/telegram', {
