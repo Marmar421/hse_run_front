@@ -169,6 +169,11 @@ export default {
     
     async handleEditTeam() {
       try {
+        if (this.editedTeamName === this.team.name) {
+          this.hideModals();
+          return;
+        }
+        
         await this.makeRequest('/api/auth/command/rename', 'POST', {
           name: this.editedTeamName
         });

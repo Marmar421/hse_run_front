@@ -23,10 +23,6 @@ module.exports = defineConfig({
         changeOrigin: false,
         ws: false,
         pathRewrite: { '^/admin': '/admin' },
-        bypass: function(req, res, proxyOptions) {
-          // Пропускаем все запросы к /admin через прокси без изменений
-          return req.originalUrl;
-        }
       }
     }
   }

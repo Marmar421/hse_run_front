@@ -46,7 +46,8 @@ export default {
   data() {
     return {
       showQrModal: false,
-      isDataLoaded: false
+      isDataLoaded: false,
+      telegramPhotoUrl: null
     };
   },
   computed: {
@@ -57,7 +58,8 @@ export default {
       return this.userData?.telegram_username || 'username';
     },
     userAvatar() {
-      return this.userData?.avatar || '/default-avatar.png';
+      // Используем фото из Telegram, если оно доступно, иначе используем аватар из userData
+      return this.telegramPhotoUrl || this.userData?.avatar || '/default-avatar.png';
     },
     teamName() {
       if (this.userData?.commands && this.userData.commands.length > 0) {
@@ -77,6 +79,9 @@ export default {
   mounted() {
     // Проверяем наличие данных при монтировании
     this.isDataLoaded = !!this.userData && Object.keys(this.userData).length > 0;
+    
+    // Получаем URL фотографии из localStorage
+    this.telegramPhotoUrl = localStorage.getItem('telegramPhotoUrl');
   }
 };
 </script>
@@ -107,10 +112,14 @@ export default {
   overflow: hidden;
   background-color: #b8c9e5;
   aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-avatar img {
-  width: 90%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 

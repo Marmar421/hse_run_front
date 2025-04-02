@@ -64,6 +64,13 @@ export default {
     async saveChanges() {
       if (this.isSaving) return;
       
+      // Проверяем, были ли внесены изменения
+      if (this.editedFullName === this.userData.full_name) {
+        // Если данные не изменились, просто выходим из режима редактирования
+        this.isEditing = false;
+        return;
+      }
+      
       this.isSaving = true;
       try {
         const response = await fetch('/api/auth/update_profile', {
