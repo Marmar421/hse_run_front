@@ -38,25 +38,26 @@ export default {
       telegramUserData: null
     }
   },
-  created() {
-    // Проверяем сессию при загрузке компонента
-    this.checkSession();
-  },
+  // created() {
+  //   // Проверяем сессию при загрузке компонента
+  //   this.checkSession();
+  // },
   methods: {
     // Проверка существующей сессии
     async checkSession() {
-      try {
-        const res = await fetch('/api/auth/me/');
-        if (res.ok) {
-          this.$router.push('/profile');
-        }
-      } catch (e) {
-        // Если ошибка, просто продолжаем показ страницы регистрации
-        console.log('Нет активной сессии:', e);
-      }
+      return;
+      // try {
+      //   const res = await fetch('/api/auth/me/');
+      //   if (res.ok) {
+      //     this.$router.push('/profile');
+      //   }
+      // } catch (e) {
+      //   // Если ошибка, просто продолжаем показ страницы регистрации
+      //   console.log('Нет активной сессии:', e);
+      // }
     },
     
-    // Отображение ошибки
+    // Отображение ошибкиd
     showError(message) {
       this.errorMessage = message;
       setTimeout(() => {

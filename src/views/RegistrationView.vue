@@ -6,14 +6,16 @@
     <div class="registration-content">
       <!-- Логотип HSE Run -->
       <div class="logo">
-        <img src="@/assets/images/hserun_logo.svg" alt="HSE Run Logo" class="hserun_logo">
+        <a href="/">
+          <img src="@/assets/images/hserun_logo.svg" alt="Логотип" />
+        </a>
       </div>
       
       <h1 class="registration-title">{{ $t('registration.title') }}</h1>
       
       <p class="registration-address">{{ $t('registration.address') }}</p>
       
-      <TelegramLogin @auth="handleAuth" botName="test_burlak1n_bot"/>
+      <!-- <TelegramLogin @auth="handleAuth" botName="test_burlak1n_bot"/> -->
     </div>
   </div>
 </template>

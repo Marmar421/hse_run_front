@@ -62,16 +62,16 @@ export default {
       qrImageSrc: '',
     }
   },
-  created() {
-    this.fetchUserData()
+  // created() {
+  //   this.fetchUserData()
     
-    // Обновление данных при возвращении на страницу
-    document.addEventListener('visibilitychange', this.handleVisibilityChange)
-  },
-  beforeUnmount() {
-    // Очистка слушателя событий
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange)
-  },
+  //   // Обновление данных при возвращении на страницу
+  //   document.addEventListener('visibilitychange', this.handleVisibilityChange)
+  // },
+  // beforeUnmount() {
+  //   // Очистка слушателя событий
+  //   document.removeEventListener('visibilitychange', this.handleVisibilityChange)
+  // },
   methods: {
     async fetchUserData() {
       try {
