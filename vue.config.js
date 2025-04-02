@@ -15,7 +15,8 @@ module.exports = defineConfig({
     proxy: {
       '^/api': { ...proxyConfig, pathRewrite: { '^/api': '/api' } },
       '^/static': { ...proxyConfig, pathRewrite: { '^/static': '/static' } },
-      '^/admin': { ...proxyConfig, pathRewrite: { '^/admin': '/admin' } }
+      '^/admin': { ...proxyConfig, pathRewrite: { '^/admin': '/admin' } },
+      '^/qr/verify': { ...proxyConfig, pathRewrite: { '^/qr/verify': '/qr/verify' } }
     }
   }
 });
