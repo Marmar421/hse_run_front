@@ -46,7 +46,7 @@ export default {
     // Проверка существующей сессии
     async checkSession() {
       try {
-        const res = await fetch('/api/auth/me/');
+        const res = await fetch('/api/auth/me');
         if (res.ok) {
           this.$router.push('/profile');
         }
