@@ -116,10 +116,9 @@ export default {
 .profile-avatar {
   width: 100%;
   height: 100%;
-  max-width: 200px;
-  max-height: 200px;
-  min-width: 150px;
-  min-height: 150px;
+  width: 150px;
+  height: 150px;
+
   border-radius: 8%;
   overflow: hidden;
   background-color: #b8c9e5;
