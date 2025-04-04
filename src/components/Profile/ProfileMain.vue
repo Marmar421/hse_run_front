@@ -51,6 +51,7 @@ export default {
     };
   },
   computed: {
+    
     userName() {
       return this.userData?.full_name || 'Имя не указано';
     },
@@ -58,8 +59,19 @@ export default {
       return this.userData?.telegram_username || 'username';
     },
     userAvatar() {
-      // Используем фото из Telegram, если оно доступно, иначе используем аватар из userData
-      return this.telegramPhotoUrl || this.userData?.avatar || '/default-avatar.png';
+      const checkImage = (url) => {
+        const img = new Image();
+        img.src = url;
+        return img.complete && img.naturalHeight !== 0;
+      };
+
+      if (this.telegramPhotoUrl && checkImage(this.telegramPhotoUrl)) {
+        return this.telegramPhotoUrl;
+      }
+      if (this.userData?.avatar && checkImage(this.userData.avatar)) {
+        return this.userData.avatar;
+      }
+      return require('@/assets/images/default-avatar.png');
     },
     teamName() {
       if (this.userData?.commands && this.userData.commands.length > 0) {
@@ -104,10 +116,9 @@ export default {
 .profile-avatar {
   width: 100%;
   height: 100%;
-  max-width: 200px;
-  max-height: 200px;
-  min-width: 150px;
-  min-height: 150px;
+  width: 150px;
+  height: 150px;
+
   border-radius: 8%;
   overflow: hidden;
   background-color: #b8c9e5;

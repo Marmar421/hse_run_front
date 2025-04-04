@@ -78,7 +78,7 @@ export default {
       try {
         // Загружаем данные пользователя и QR код параллельно
         const [userRes, qrRes] = await Promise.all([
-          fetch('/api/auth/me/'),
+          fetch('/api/auth/me'),
           fetch('/api/auth/qr')
         ]);
 

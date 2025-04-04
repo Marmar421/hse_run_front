@@ -12,11 +12,11 @@
         class="riddle-block"
         :class="{'insider-visited': riddle.has_insider_attempt}"
       >
-        <h3 class="riddle-title">{{ riddle.title || '' }}</h3>
+        <h3 class="riddle-title" v-html="riddle.title || ''"></h3>
         
         <!-- Если загадка уже отвечена -->
         <template v-if="isAnswered(riddle)">
-          <p v-if="riddle.geo_answered" class="riddle-text">{{ riddle.geo_answered }}</p>
+          <p v-if="riddle.geo_answered" class="riddle-text" v-html="riddle.geo_answered"></p>
           <p class="riddle-text">{{ riddle.text_answered || 'Нет данных' }}</p>
           <div v-if="riddle.image_path_answered" v-html="createFileHTML(riddle.image_path_answered, '100%')" class="riddle-image"></div>
         </template>

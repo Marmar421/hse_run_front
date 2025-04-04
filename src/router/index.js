@@ -18,13 +18,13 @@ const routes = [
      path: "/quest",
      name: "quest",
      component: QuestView,
-     meta: { title: "Прохождение квеста" }
+     meta: { title: "Прохождение квеста", requiresActiveEvent: true }
    },
   {
     path: "/quest/:id",
     name: "questBlock",
     component: BlocksView,
-    meta: { title: "Блок квеста" }
+    meta: { title: "Блок квеста", requiresActiveEvent: true }
   },
    {
      path: "/profile",
@@ -51,9 +51,28 @@ const router = createRouter({
   routes,
 });
 
-// Update page title
-router.beforeEach((to, from, next) => {
+// Update page title and check event status
+router.beforeEach(async (to, from, next) => {
   document.title = to.meta.title || "HSE RUN - Культурно-исторический квест";
+  
+  // Проверяем, требуется ли активный квест для маршрута
+  if (to.meta.requiresActiveEvent) {
+    try {
+      const response = await fetch('/api/auth/event/status');
+      const data = await response.json();
+      
+      if (!data.is_active) {
+        // Если квест не активен, перенаправляем на главную
+        alert('Квест ещё не начался или уже закончился');
+        return next('/');
+      }
+    } catch (error) {
+      console.error('Ошибка при проверке статуса события:', error);
+      // При ошибке также перенаправляем на главную
+      return next('/');
+    }
+  }
+  
   next();
 });
 
