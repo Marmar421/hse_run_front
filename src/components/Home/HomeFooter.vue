@@ -9,10 +9,11 @@
 
       <div class="auth-block">
         <div class="auth-buttons">
-          <a href="#" class="auth-button telegram">
+            <a href="https://t.me/+pieUILI_L_RjODk6" target="_blank" rel="noopener noreferrer" class="auth-button telegram">
             <img src="@/assets/images/tg-mini-logo.svg" alt="Telegram" />
           </a>
-          <a href="#" class="auth-button vk">
+          <a href="https://vk.com/hserun?utm_source=vkontakte&utm_medium=cpc&utm_campaign=%7Bcampaign_id%7D&utm_content=%7Bad_id%7D
+" target="_blank" rel="noopener noreferrer" class="auth-button vk">
             <img src="@/assets/images/vk-mini-logo.svg" alt="VK" />
           </a>
         </div>

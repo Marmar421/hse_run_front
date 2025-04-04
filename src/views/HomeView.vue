@@ -6,7 +6,7 @@
       <HomeStart/>
       <HomeParticipation />
       <div class="runrun-section">
-        <img class='runrun-img':src="require('@/assets/images/runrun.svg')" alt="описание">
+        <img class='runrun-img' :src="require('@/assets/images/runrun.svg')" alt="описание">
       </div>
       <HomePartners/>
       <HomeFAQ/>

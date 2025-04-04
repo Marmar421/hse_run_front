@@ -454,15 +454,25 @@ export default {
     margin: 0;
   }
   .buttons-info-section {
-    margin-top: 3%;
-    bottom: 100px;
-    left: 15px;
-    display: flex;
+    position: absolute;
+    top: 70%;
+    left: 5%;
+    transform: translateY(-50%);
+    width: 80%;
+  }
+  .buttons-container {
+    margin-top: 0;
     flex-direction: column;
-    gap: 5px;
-    justify-content: center;
+    width: 100%;
   }
   .register-btn {
+    margin-left: 15px;
+  font-size:clamp(13px, 2vw, 17px) ;
+  padding: 15px 18px;
+  border-radius: 20px;
+  display: flex;
+}
+.start-quest-btn {
     margin-left: 15px;
   font-size:clamp(14px, 2vw, 18px) ;
   padding: 15px 18px;
@@ -525,24 +535,23 @@ export default {
     bottom: 60px;
   }
   .buttons-info-section {
-    position:absolute;
-    bottom: 150px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    justify-content: center;
-}
+    position: absolute;
+    top: 55%;
+    left: 5%;
+    transform: translateY(-50%);
+    width: 70%;
+  }
   .register-btn {
-  font-size:clamp(15px, 2vw, 18px) ;
+  font-size:clamp(11px, 2vw, 18px) ;
   padding: 11px 13px;
-  border-radius: 20px;
+  border-radius: 8px;
   display: flex;
   margin-left: 0;
 }
 .start-quest-btn {
-  font-size: 13px;
-  padding: 14px 20px;
-  border-radius: 20px;
+  font-size:clamp(11px, 2vw, 18px) ;
+  padding: 11px 13px;
+  border-radius: 8px;
   border: 1px solid #C80002;
 }
 .event-place {
