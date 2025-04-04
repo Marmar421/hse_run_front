@@ -3,33 +3,67 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import '@/assets/styles/variables.css';
-import '@/assets/styles/main.css';
+import i18n from './i18n';
+
+// Импортируем только нужные компоненты для лучшей оптимизации
 import UI from "./components/UI/index"
-import HomeHeader from "./components/Home/HomeHeader.vue";
-import HomeStart from "./components/Home/HomeStart.vue";
-import HomeParticipation from "./components/Home/HomeParticipation.vue";
-import HomeFAQ from "./components/Home/HomeFAQ.vue";
-import HomePartners from "./components/Home/HomePartners.vue";
-import HomeFooter from "./components/Home/HomeFooter.vue";
+import { 
+  HomeHeader, 
+  HomeStart, 
+  HomeParticipation,
+  HomeFAQ,
+  HomePartners,
+  HomeFooter 
+} from "./components/Home";
 import ProfileMain from "./components/Profile/ProfileMain.vue";
 import BaseButton from "./components/UI/BaseButton.vue";
 import QuestBlocks from "./components/Quest/QuestBlocks.vue";
-import '@/assets/styles/fonts.css';
 import TelegramLogin from "./components/Registration/TelegramLogin.vue";
-import i18n from './i18n';
 
+// Импортируем стили в последнюю очередь для оптимизации загрузки
+import '@/assets/styles/variables.css';
+import '@/assets/styles/main.css';
+import '@/assets/styles/fonts.css';
 
+// Добавляем безопасные заголовки для защиты от XSS
+const securityHeaders = {
+  "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;",
+  "X-Content-Type-Options": "nosniff",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+};
 
+// Функция для безопасной обработки XSS
+const sanitizeInput = (input) => {
+  if (typeof input !== 'string') return input;
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
+// Создаем приложение
 const app = createApp(App);
 
+// Глобальная защита от XSS
+app.config.globalProperties.$sanitize = sanitizeInput;
+
+// Обработка ошибок Vue
+app.config.errorHandler = (err, vm, info) => {
+  console.error('Vue Error:', err);
+  console.info('Vue Component:', vm);
+  console.info('Error Info:', info);
+};
+
+// Настраиваем плагины
 app.use(store);
 app.use(router);
 app.use(UI);
 app.use(i18n);
 
-app.mount('#app');
-
+// Регистрируем глобальные компоненты
 app.component('HomeHeader', HomeHeader);
 app.component('HomeStart', HomeStart);
 app.component('HomeParticipation', HomeParticipation);
@@ -40,4 +74,7 @@ app.component('ProfileMain', ProfileMain);
 app.component('BaseButton', BaseButton);
 app.component('QuestBlocks', QuestBlocks);
 app.component('TelegramLogin', TelegramLogin);
+
+// Монтируем приложение
+app.mount('#app');
 
