@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:80/api',
+  baseURL: process.env.VUE_APP_API_URL || '/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -32,6 +32,13 @@ export const teamAPI = {
   leave: () => api.post('/auth/command/leave'),
   delete: () => api.post('/auth/command/delete'),
   removeUser: (userId) => api.post('/auth/command/remove_user', { user_id: userId }),
+  join: (token) => api.post('/auth/command/join', { token }),
+};
+
+// Добавляем методы для работы с QR
+export const qrAPI = {
+  verify: (token) => api.post('/auth/qr/verify', { token }),
+  generate: () => api.get('/auth/qr/generate'),
 };
 
 export default api; 

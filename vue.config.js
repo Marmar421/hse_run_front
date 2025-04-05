@@ -2,8 +2,9 @@ const { defineConfig } = require("@vue/cli-service");
 
 const proxyConfig = {
   target: 'http://127.0.0.1:8000',
-  changeOrigin: false,
-  ws: false
+  changeOrigin: true,
+  ws: false,
+  secure: true
 };
 
 module.exports = defineConfig({
@@ -16,15 +17,6 @@ module.exports = defineConfig({
       '^/api': { ...proxyConfig, pathRewrite: { '^/api': '/api' } },
       '^/static': { ...proxyConfig, pathRewrite: { '^/static': '/static' } },
       '^/admin': { ...proxyConfig, pathRewrite: { '^/admin': '/admin' } },
-      '^/qr/verify': { ...proxyConfig, pathRewrite: { '^/qr/verify': '/qr/verify' } },
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': '/api'
-        },
-        secure: false
-      }
     },
     headers: {
       'X-Content-Type-Options': 'nosniff',
