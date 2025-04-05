@@ -20,9 +20,14 @@ html, body {
 }
 
 #app {
+  background-image: url('@/assets/images/quest_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Минимальная высота на весь экран */
+  
 }
 
 /* ... остальные стили ... */
