@@ -13,15 +13,18 @@ api.interceptors.response.use(
   response => response,
   error => {
     if (error.response?.status === 401) {
-      // Неавторизован - редирект на страницу логина
-      window.location.href = '/login';
+      // Проверяем, не находимся ли мы на странице QR-верификации
+      if (!window.location.pathname.includes('/qr/verify')) {
+        // Только в этом случае делаем редирект на регистрацию
+        window.location.href = '/registration';
+      }
     }
     return Promise.reject(error);
   }
 );
 
 export const authAPI = {
-  login: (data) => api.post('/auth/login', data),
+  login: (data) => api.post('/auth/registration', data),
   logout: () => api.post('/auth/logout'),
   getMe: () => api.get('/auth/me'),
   updateProfile: (data) => api.post('/auth/update_profile', data),

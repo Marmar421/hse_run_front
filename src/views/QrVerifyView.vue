@@ -1,52 +1,58 @@
 <template>
-  <div class="container">
-    <h1>QR-код</h1>
-    <StatusDisplay :status-text="statusText" :status-color="statusColor" />
+  <div class="qr-page">
+    <router-link to="/" class="logo-link">
+      <img src="@/assets/images/hserun_logo.svg" alt="HSE RUN Logo" class="logo">
+    </router-link>
     
-    <div v-if="qrData" class="result-container">
-      <!-- Информация о пользователе (для организаторов) -->
-      <UserInfo v-if="isOrganizer" :user="qrData.user" />
+    <div class="container">
+      <h1>QR-код</h1>
+      <StatusDisplay :status-text="statusText" :status-color="statusColor" />
       
-      <!-- Информация о команде (для организаторов) -->
-      <CommandInfo v-if="isOrganizer" :command="qrData.command" />
+      <div v-if="qrData" class="result-container">
+        <!-- Информация о пользователе (для организаторов) -->
+        <UserInfo v-if="isOrganizer" :user="qrData.user" />
+        
+        <!-- Информация о команде (для организаторов) -->
+        <CommandInfo v-if="isOrganizer" :command="qrData.command" />
+        
+        <!-- Для организаторов и инсайдеров -->
+        <ParticipantList 
+          v-if="isOrganizer || isInsider" 
+          :participants="qrData.command.participants" 
+        />
+        
+        <!-- Кнопки действий для организаторов и инсайдеров -->
+        <ActionButtons 
+          v-if="isOrganizer || isInsider" 
+          :is-organizer="isOrganizer" 
+          :command-name="qrData.command.name" 
+          @change-points="changePoints"
+          @mark-attendance="markAttendance"
+        />
+      </div>
       
-      <!-- Для организаторов и инсайдеров -->
-      <ParticipantList 
-        v-if="isOrganizer || isInsider" 
-        :participants="qrData.command.participants" 
+      <!-- Сообщение для гостя -->
+      <GuestMessage 
+        v-if="guestMessage" 
+        :message="guestMessage" 
       />
       
-      <!-- Кнопки действий для организаторов и инсайдеров -->
-      <ActionButtons 
-        v-if="isOrganizer || isInsider" 
-        :is-organizer="isOrganizer" 
-        :command-name="qrData.command.name" 
-        @change-points="changePoints"
-        @mark-attendance="markAttendance"
+      <!-- Подтверждение присоединения -->
+      <JoinConfirmation 
+        v-if="showJoinBox" 
+        :command-name="qrData.command_name" 
+        :captain-name="qrData.captain_name"
+        :is-joining="isJoining"
+        @join="joinTeam"
+        @cancel="cancelJoin"
+      />
+      
+      <!-- Сообщение об ошибке -->
+      <ErrorMessage 
+        v-if="errorMessage" 
+        :message="errorMessage"
       />
     </div>
-    
-    <!-- Сообщение для гостя -->
-    <GuestMessage v-if="guestMessage" :message="guestMessage" />
-    
-    <!-- Подтверждение присоединения -->
-    <JoinConfirmation 
-      v-if="showJoinBox" 
-      :command-name="qrData.command_name" 
-      :captain-name="qrData.captain_name"
-      :is-joining="isJoining"
-      @join="joinTeam"
-      @cancel="cancelJoin"
-    />
-    
-    <!-- Сообщение об ошибке -->
-    <ErrorMessage 
-      v-if="errorMessage" 
-      :message="errorMessage"
-      :show-help="true"
-      :show-retry="showRetryButton"
-      @retry="retry"
-    />
   </div>
 </template>
 
@@ -82,8 +88,10 @@ export default {
       errorMessage: null,
       guestMessage: null,
       showJoinBox: false,
-      showRetryButton: false,
-      isJoining: false
+      isJoining: false,
+      redirectTimeout: null,
+      redirectCounter: 5,
+      redirectInterval: null
     }
   },
   computed: {
@@ -105,7 +113,24 @@ export default {
       this.verifyToken();
     }
   },
+  beforeDestroy() {
+    // Очищаем все таймеры при уничтожении компонента
+    this.clearRedirectTimers();
+  },
   methods: {
+    // Очистка таймеров перенаправления
+    clearRedirectTimers() {
+      if (this.redirectTimeout) {
+        clearTimeout(this.redirectTimeout);
+        this.redirectTimeout = null;
+      }
+      
+      if (this.redirectInterval) {
+        clearInterval(this.redirectInterval);
+        this.redirectInterval = null;
+      }
+    },
+    
     async verifyToken() {
       if (!this.token) return;
       
@@ -116,7 +141,6 @@ export default {
         this.errorMessage = null;
         this.guestMessage = null;
         this.showJoinBox = false;
-        this.showRetryButton = false;
 
         // Используем qrAPI для проверки токена
         const response = await qrAPI.verify(this.token);
@@ -134,7 +158,6 @@ export default {
         // Настраиваем отображение ошибки
         this.statusText = 'Ошибка';
         this.statusColor = '#f8d7da'; // Красный фон
-        this.showRetryButton = true;
         
         // Общее сообщение об ошибке
         let errorMessage = 'Произошла ошибка при обработке запроса. Пожалуйста, попробуйте позже.';
@@ -174,7 +197,6 @@ export default {
       this.statusColor = '#f8d7da'; // Красный фон
       
       this.errorMessage = 'Произошла ошибка на сервере. Пожалуйста, обратитесь к организаторам.';
-      this.showRetryButton = true;
     },
     
     async handleExpiredToken(response) {
@@ -193,11 +215,24 @@ export default {
       this.statusText = 'Ошибка';
       this.statusColor = '#f8d7da'; // Красный фон
       
-      this.errorMessage = 'Для продолжения необходимо авторизоваться. Сейчас вы будете перенаправлены на страницу регистрации.';
-      // Перенаправление через 3 секунды
+      // Добавляем обратный отсчет
+      let countdown = 5;
+      this.errorMessage = `Для продолжения необходимо авторизоваться. Перенаправление через ${countdown} секунд...`;
+      
+      // Обновляем сообщение каждую секунду
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        this.errorMessage = `Для продолжения необходимо авторизоваться. Перенаправление через ${countdown}...`;
+        
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+      
+      // Перенаправление через 7 секунд
       setTimeout(() => {
-        this.$router.push('/register');
-      }, 3000);
+        this.$router.push('/registration');
+      }, 5000);
     },
     
     checkForAuthErrors(errorMessage, statusCode) {
@@ -225,7 +260,6 @@ export default {
       } else {
         // Для других ошибок показываем общий формат ошибки
         this.errorMessage = result.message || 'Неизвестная ошибка при проверке QR-кода';
-        this.showRetryButton = true;
       }
     },
     
@@ -251,7 +285,25 @@ export default {
         return;
       }
       
-      // Для ошибок и других сообщений
+      // Проверяем причину невозможности присоединения
+      if (this.qrData.join_reason) {
+        switch(this.qrData.join_reason) {
+          case 'already_in_team':
+            this.guestMessage = "Вы уже состоите в команде и не можете присоединиться к другой";
+            break;
+          case 'not_captain':
+            this.guestMessage = "Только QR-код капитана команды позволяет присоединиться";
+            break;
+          case 'team_full':
+            this.guestMessage = "В команде уже максимальное количество участников (6/6)";
+            break;
+          default:
+            this.guestMessage = "Невозможно присоединиться к команде";
+        }
+        return;
+      }
+      
+      // Для других сообщений
       if (this.qrData.message) {
         this.guestMessage = this.qrData.message;
       }
@@ -286,8 +338,24 @@ export default {
           // В случае успешного присоединения
           this.statusText = 'Успешно';
           this.statusColor = '#d4edda'; // Зеленый фон
-          this.guestMessage = 'Вы успешно присоединились к команде!';
+          this.redirectCounter = 5;
+          this.guestMessage = `Вы успешно присоединились к команде! Перенаправление в профиль через ${this.redirectCounter} секунд...`;
           this.showJoinBox = false;
+          
+          // Запускаем интервал для обновления счетчика
+          this.redirectInterval = setInterval(() => {
+            this.redirectCounter--;
+            this.guestMessage = `Вы успешно присоединились к команде! Перенаправление в профиль через ${this.redirectCounter} секунд...`;
+            
+            if (this.redirectCounter <= 0) {
+              clearInterval(this.redirectInterval);
+            }
+          }, 1000);
+          
+          // Запускаем таймер для перенаправления
+          this.redirectTimeout = setTimeout(() => {
+            this.$router.push('/profile');
+          }, 5000);
         } else {
           // В случае ошибки
           this.statusText = 'Ошибка';
@@ -334,28 +402,65 @@ export default {
         // Заглушка для будущего API
         alert('Функциональность отметки посещения будет добавлена позднее');
       }
-    },
-    
-    retry() {
-      this.errorMessage = null;
-      this.showRetryButton = false;
-      this.verifyToken();
     }
   }
 }
 </script>
 
 <style scoped>
+.qr-page {
+  font-family: 'Involve', Arial, sans-serif;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0 0 30px 0;
+  background-image: url('@/assets/images/quest_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.logo-link {
+  text-decoration: none;
+  margin: 20px 0 5px;
+}
+
+.logo {
+  font-size: 38px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  color: #ff5252;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
 .container {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
+
 .result-container {
   margin-top: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 15px;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* Адаптивность для мобильных устройств */
@@ -363,5 +468,12 @@ export default {
   .container {
     padding: 10px;
   }
+}
+
+@font-face {
+  font-family: 'Involve';
+  src: url('@/assets/fonts/Involve-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
 }
 </style> 
