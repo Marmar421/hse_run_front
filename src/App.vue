@@ -26,6 +26,7 @@ html, body {
 }
 
 #app {
+  
   background-image: url('@/assets/images/quest_bg.png');
   background-size: cover;
   background-position: center;

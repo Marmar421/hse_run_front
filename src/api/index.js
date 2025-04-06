@@ -12,11 +12,13 @@ const api = axios.create({
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 || error.response?.status === 403) {
       // Проверяем, не находимся ли мы на странице QR-верификации
       if (!window.location.pathname.includes('/qr/verify')) {
-        // Только в этом случае делаем редирект на регистрацию
-        window.location.href = '/registration';
+        // Получаем текущий URL для возврата после авторизации
+        const currentUrl = window.location.href;
+        // Перенаправляем на регистрацию с параметром redirect_url
+        window.location.href = `/registration?redirect_url=${encodeURIComponent(currentUrl)}`;
       }
     }
     return Promise.reject(error);

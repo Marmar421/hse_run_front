@@ -159,25 +159,31 @@ export default {
         this.statusText = 'Ошибка';
         this.statusColor = '#f8d7da'; // Красный фон
         
-        // Общее сообщение об ошибке
-        let errorMessage = 'Произошла ошибка при обработке запроса. Пожалуйста, попробуйте позже.';
+        // Получаем данные ответа, если они есть
+        const responseData = error.response?.data;
         
-        // Проверяем, не связана ли ошибка с истечением срока действия токена
-        if (error.message && (
-          error.message.includes('401') || 
-          error.message.includes('Unauthorized')
-        )) {
-          errorMessage = 'Срок действия ссылки истек или QR-код недействителен. Пожалуйста, получите новую ссылку в профиле.';
-          this.handleUnauthorizedError();
+        // Если ошибка 403 - требуется авторизация
+        if (error.response?.status === 403) {
+          this.handleAuthRequired();
+          return;
+        }
+        
+        // Если ошибка 401 - недействительный QR-код
+        if (error.response?.status === 401) {
+          this.statusText = 'Ошибка QR-кода';
+          this.errorMessage = responseData?.detail || 
+            'Срок действия ссылки истек или QR-код недействителен. Пожалуйста, получите новую ссылку в профиле.';
           return;
         }
         
         // Если это 500 ошибка - серверная ошибка
-        if (error.message && error.message.includes('500')) {
-          errorMessage = 'Произошла ошибка на сервере. Пожалуйста, обратитесь к организаторам.';
+        if (error.response?.status === 500) {
+          this.errorMessage = 'Произошла ошибка на сервере. Пожалуйста, обратитесь к организаторам.';
+          return;
         }
         
-        this.errorMessage = errorMessage;
+        // Для других ошибок
+        this.errorMessage = 'Произошла ошибка при обработке запроса. Пожалуйста, попробуйте позже.';
       }
     },
     
@@ -187,6 +193,9 @@ export default {
       
       // Сохраняем результат
       this.qrData = result;
+      
+      // Отладочная информация
+      console.log('QR данные:', this.qrData);
       
       // Определяем, какое отображение показать
       this.determineUserView();
@@ -207,8 +216,20 @@ export default {
       const result = response.data;
       this.errorMessage = result?.detail || 'Срок действия QR-кода или ссылки истек. Пожалуйста, получите новую ссылку в профиле.';
       
-      // Проверяем, связана ли ошибка с неавторизованным пользователем
-      this.checkForAuthErrors(result?.detail, response.status);
+      // Проверяем, связана ли ошибка с QR-кодом
+      const isQrExpiredError = 
+        this.errorMessage.includes('QR') || 
+        this.errorMessage.includes('qr') || 
+        this.errorMessage.includes('истек') ||
+        this.errorMessage.includes('Недействительный') ||
+        this.errorMessage.includes('недействительный') ||
+        this.errorMessage.includes('Недействительная');
+        
+      // Если это не ошибка QR-кода, а связана с авторизацией,
+      // то проверяем, нужно ли перенаправить на страницу регистрации
+      if (!isQrExpiredError) {
+        this.checkForAuthErrors(result?.detail, response.status);
+      }
     },
     
     handleUnauthorizedError(response = null) {
@@ -217,7 +238,7 @@ export default {
       
       // Добавляем обратный отсчет
       let countdown = 5;
-      this.errorMessage = `Для продолжения необходимо авторизоваться. Перенаправление через ${countdown} секунд...`;
+      this.errorMessage = `Для продолжения необходимо авторизоваться. Перенаправление через ${countdown}`;
       
       // Обновляем сообщение каждую секунду
       const countdownInterval = setInterval(() => {
@@ -229,22 +250,63 @@ export default {
         }
       }, 1000);
       
-      // Перенаправление через 7 секунд
+      // Сохраняем текущий URL с токеном для возврата после регистрации
+      const currentUrl = window.location.href;
+      
+      // Перенаправление через 5 секунд с параметром redirect_url
       setTimeout(() => {
-        this.$router.push('/registration');
+        this.$router.push(`/registration?redirect_url=${encodeURIComponent(currentUrl)}`);
+      }, 5000);
+    },
+    
+    // Новый метод для обработки ошибки 403 - требуется авторизация
+    handleAuthRequired() {
+      this.statusText = 'Необходима авторизация';
+      this.statusColor = '#f8d7da'; // Красный фон
+      
+      // Добавляем обратный отсчет
+      let countdown = 5;
+      this.errorMessage = `Для проверки QR-кода необходимо авторизоваться. Перенаправление через ${countdown} секунд...`;
+      
+      // Обновляем сообщение каждую секунду
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        this.errorMessage = `Для проверки QR-кода необходимо авторизоваться. Перенаправление через ${countdown}...`;
+        
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+      
+      // Сохраняем текущий URL с токеном для возврата после регистрации
+      const currentUrl = window.location.href;
+      
+      // Перенаправление через 5 секунд с параметром redirect_url
+      setTimeout(() => {
+        this.$router.push(`/registration?redirect_url=${encodeURIComponent(currentUrl)}`);
       }, 5000);
     },
     
     checkForAuthErrors(errorMessage, statusCode) {
-      if (statusCode === 401 || 
-          (errorMessage && (
+      // Если ошибка не связана с QR-кодом, а просто с авторизацией
+      if (statusCode === 401 && 
+          errorMessage && 
+          !(
+            errorMessage.includes('QR') || 
+            errorMessage.includes('qr') || 
+            errorMessage.includes('истек') || 
+            errorMessage.includes('Недействительный') || 
+            errorMessage.includes('недействительный') ||
+            errorMessage.includes('Недействительная')
+          ) && 
+          (
             errorMessage.includes('Unauthorized') || 
             errorMessage.includes('unauthorized') || 
             errorMessage.includes('авторизац') ||
             errorMessage.includes('Необходима авторизация') ||
             errorMessage.includes('login') ||
             errorMessage.includes('войти')
-          ))
+          )
       ) {
         this.handleUnauthorizedError();
       }
@@ -266,26 +328,13 @@ export default {
     determineUserView() {
       if (!this.qrData) return;
       
-      // Если пользователь уже в команде - показать сообщение об этом
-      if (this.qrData.scanner_is_in_team) {
-        this.guestMessage = "Вы уже состоите в команде и не можете присоединиться к другой";
-        return;
-      }
+      console.log('Определение отображения для пользователя:', {
+        can_join: this.qrData.can_join,
+        message: this.qrData.message,
+        join_reason: this.qrData.join_reason
+      });
       
-      // Если можно присоединиться к команде (для любой роли)
-      if (this.qrData.can_join) {
-        // Показываем кнопку присоединения
-        this.showJoinBox = true;
-        return;
-      }
-      
-      // Если успешно добавились в команду
-      if (this.qrData.message === "Вы успешно добавлены в команду") {
-        this.guestMessage = this.qrData.message;
-        return;
-      }
-      
-      // Проверяем причину невозможности присоединения
+      // Устанавливаем сообщение для гостя на основе join_reason, если оно есть
       if (this.qrData.join_reason) {
         switch(this.qrData.join_reason) {
           case 'already_in_team':
@@ -298,14 +347,33 @@ export default {
             this.guestMessage = "В команде уже максимальное количество участников (6/6)";
             break;
           default:
-            this.guestMessage = "Невозможно присоединиться к команде";
+            this.guestMessage = `Невозможно присоединиться к команде. Причина: ${this.qrData.join_reason}`;
         }
+        console.log('Установлено сообщение по join_reason:', this.guestMessage);
+        return;
+      }
+      
+      // Если можно присоединиться к команде (для любой роли)
+      if (this.qrData.can_join) {
+        console.log('Показываем форму присоединения');
+        // Показываем кнопку присоединения
+        this.showJoinBox = true;
+        return;
+      }
+      
+      // Если успешно добавились в команду
+      if (this.qrData.message === "Вы успешно добавлены в команду") {
+        console.log('Показываем сообщение об успешном добавлении');
+        this.guestMessage = this.qrData.message;
         return;
       }
       
       // Для других сообщений
       if (this.qrData.message) {
+        console.log('Показываем общее сообщение');
         this.guestMessage = this.qrData.message;
+      } else {
+        console.log('Нет данных для отображения');
       }
     },
     
@@ -442,6 +510,33 @@ export default {
   border-radius: 5px;
   padding: 15px;
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.info-box {
+  margin: 15px 0;
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-left: 4px solid #007bff;
+  border-radius: 4px;
+}
+
+.info-box p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.debug-info {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+}
+
+.debug-info p {
+  margin: 0;
+  font-family: monospace;
+  font-size: 14px;
 }
 
 /* Адаптивность для мобильных устройств */
