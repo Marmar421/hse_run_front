@@ -261,7 +261,6 @@ export default {
 }
 
 .home-cards {
-  background-color: #F3F3F3;
   padding: 40px 0px;
   color: white;
   position: relative;

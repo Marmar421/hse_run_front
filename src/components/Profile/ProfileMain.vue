@@ -2,7 +2,8 @@
   <div class="profile-main">
     <div v-if="isDataLoaded" class="profile-card">
       <div class="profile-avatar">
-        <img :src="userAvatar" alt="Avatar">
+        <img :src="require('@/assets/images/default-avatar.png')" class="default-avatar" alt="Default Avatar">
+        <img v-if="showUserAvatar" :src="userAvatar" class="user-avatar" alt="User Avatar">
       </div>
       
       <div class="profile-details">
@@ -47,7 +48,8 @@ export default {
     return {
       showQrModal: false,
       isDataLoaded: false,
-      telegramPhotoUrl: null
+      telegramPhotoUrl: null,
+      showUserAvatar: false
     };
   },
   computed: {
@@ -59,16 +61,10 @@ export default {
       return this.userData?.telegram_username || 'username';
     },
     userAvatar() {
-      const checkImage = (url) => {
-        const img = new Image();
-        img.src = url;
-        return img.complete && img.naturalHeight !== 0;
-      };
-
-      if (this.telegramPhotoUrl && checkImage(this.telegramPhotoUrl)) {
+      if (this.telegramPhotoUrl) {
         return this.telegramPhotoUrl;
       }
-      if (this.userData?.avatar && checkImage(this.userData.avatar)) {
+      if (this.userData?.avatar) {
         return this.userData.avatar;
       }
       return require('@/assets/images/default-avatar.png');
@@ -94,6 +90,31 @@ export default {
     
     // Получаем URL фотографии из localStorage
     this.telegramPhotoUrl = localStorage.getItem('telegramPhotoUrl');
+    
+    // Проверяем доступность фото Telegram
+    if (this.telegramPhotoUrl) {
+      const img = new Image();
+      img.onload = () => {
+        // Фото загружено успешно - показываем аватар
+        this.showUserAvatar = true;
+      };
+      img.onerror = () => {
+        // Ошибка загрузки - сбрасываем URL
+        console.log('Ошибка загрузки фото из Telegram');
+        this.telegramPhotoUrl = null;
+      };
+      img.src = this.telegramPhotoUrl;
+    } else if (this.userData?.avatar) {
+      const img = new Image();
+      img.onload = () => {
+        // Фото из userData загружено успешно
+        this.showUserAvatar = true;
+      };
+      img.onerror = () => {
+        console.log('Ошибка загрузки фото из userData');
+      };
+      img.src = this.userData.avatar;
+    }
   }
 };
 </script>
@@ -118,20 +139,32 @@ export default {
   height: 100%;
   width: 150px;
   height: 150px;
-
   border-radius: 8%;
   overflow: hidden;
-  background-color: #b8c9e5;
+  position: relative;
   aspect-ratio: 1/1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.profile-avatar img {
+.profile-avatar .default-avatar {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.profile-avatar .user-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .profile-details {

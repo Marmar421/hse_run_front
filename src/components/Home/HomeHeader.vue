@@ -2,9 +2,7 @@
   <header class="sticky-header">
     <div class="header-content">
       <div class="logo">
-        <a href="/">
-          <img src="@/assets/images/hserun_logo.svg" alt="Логотип" />
-        </a>
+        <LogoComponent externalLink="https://t.me/+pieUILI_L_RjODk6"/>
       </div>
       <nav class="navigation">
         <LanguageSwitcher />
@@ -34,12 +32,14 @@
 <script>
 import LanguageSwitcher from '../UI/LanguageSwitcher.vue';
 import SlideMenu from '../UI/SlideMenu.vue';
+import LogoComponent from '@/components/UI/LogoComponent.vue';
 
 export default {
   name: 'HomeHeader',
   components: {
     LanguageSwitcher,
-    SlideMenu
+    SlideMenu,
+    LogoComponent
   },
   data() {
     return {

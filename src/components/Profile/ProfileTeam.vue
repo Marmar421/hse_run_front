@@ -39,7 +39,7 @@
           <h4>Участники:</h4>
           <div class="team-participants">
             <p v-for="participant in team.participants" :key="participant.id">
-              {{ participant.role === 'captain' ? 'Капитан: ' : '' }}{{ participant.full_name }}
+              {{ participant.full_name }}{{ participant.role === 'captain' ? ' 👑' : '' }}
             </p>
           </div>
         </div>
@@ -57,7 +57,7 @@
           <h4>Участники команды:</h4>
           <div class="edit-team-participants">
             <div v-for="participant in team.participants" :key="participant.id" class="participant-item">
-              {{ participant.role === 'captain' ? 'Капитан: ' : '' }}{{ participant.full_name }}
+              {{ participant.full_name }}{{ participant.role === 'captain' ? ' 👑' : '' }}
               <button 
                 v-if="isUserCaptain && participant.role !== 'captain' && participant.id !== userData.id" 
                 type="button" 

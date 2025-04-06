@@ -6,6 +6,7 @@ import PreviousView from "@/views/PreviousView.vue";
 import RegistrationView from "@/views/RegistrationView.vue";
 import QuestView from "@/views/QuestView.vue";
 import BlocksView from "@/views/BlocksView.vue";
+import QrVerifyView from "@/views/QrVerifyView.vue";
 
 const routes = [
   {
@@ -43,6 +44,12 @@ const routes = [
     name: "registration",
     component: RegistrationView,
     meta: { title: "Регистрация на квест" }
+  },
+  {
+    path: "/qr/verify",
+    name: "qrVerify",
+    component: QrVerifyView,
+    meta: { title: "QR-код" }
   }
 ];
 
@@ -54,6 +61,11 @@ const router = createRouter({
 // Update page title and check event status
 router.beforeEach(async (to, from, next) => {
   document.title = to.meta.title || "HSE RUN - Культурно-исторический квест";
+  
+  // Если путь /qr/verify - добавим обработку чтобы фронтенд обрабатывал этот маршрут
+  if (to.path === '/qr/verify') {
+    return next();
+  }
   
   // Проверяем, требуется ли активный квест для маршрута
   if (to.meta.requiresActiveEvent) {

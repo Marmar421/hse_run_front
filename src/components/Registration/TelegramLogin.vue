@@ -35,10 +35,15 @@ export default {
       errorMessage: null,
       showRegistrationForm: false,
       fullName: '',
-      telegramUserData: null
+      telegramUserData: null,
+      redirectUrl: null
     }
   },
   created() {
+    // Получаем параметр redirect_url из URL, если он есть
+    const urlParams = new URLSearchParams(window.location.search);
+    this.redirectUrl = urlParams.get('redirect_url');
+    
     // Проверяем сессию при загрузке компонента
     this.checkSession();
   },
@@ -48,7 +53,12 @@ export default {
       try {
         const res = await fetch('/api/auth/me');
         if (res.ok) {
-          this.$router.push('/profile');
+          // Если пользователь уже авторизован, перенаправляем на страницу redirect_url или в профиль
+          if (this.redirectUrl) {
+            window.location.href = this.redirectUrl;
+          } else {
+            this.$router.push('/profile');
+          }
         }
       } catch (e) {
         // Если ошибка, просто продолжаем показ страницы регистрации
@@ -131,8 +141,12 @@ export default {
         }
         
         if (data.user.is_active) {
-          // Если пользователь уже активен, перенаправляем в профиль
-          this.$router.push('/profile');
+          // Если пользователь уже активен, перенаправляем в профиль или на указанный URL
+          if (this.redirectUrl) {
+            window.location.href = this.redirectUrl;
+          } else {
+            this.$router.push('/profile');
+          }
         } else {
           // Иначе показываем форму для завершения регистрации
           this.showRegistrationForm = true;
@@ -156,8 +170,12 @@ export default {
           throw new Error(error.message || 'Ошибка завершения регистрации');
         }
         
-        // Перенаправляем в профиль после успешной регистрации
-        this.$router.push('/profile');
+        // Перенаправляем в профиль или на указанный URL после успешной регистрации
+        if (this.redirectUrl) {
+          window.location.href = this.redirectUrl;
+        } else {
+          this.$router.push('/profile');
+        }
       } catch (error) {
         this.showError(error.message || 'Не удалось завершить регистрацию');
       }

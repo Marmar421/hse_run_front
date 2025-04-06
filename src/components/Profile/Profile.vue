@@ -1,6 +1,7 @@
 <template>
+  <LogoComponent />
   <div class="profile-container">
-    <h1>HSE RUN</h1>
+    
     <router-link to="/" class="back-link">Назад</router-link>
     <div v-if="isOrganizer" class="admin-panel-container">
         <a href="/admin" class="admin-btn">Админ-панель</a>
@@ -48,13 +49,15 @@
 import ProfileMain from './ProfileMain.vue';
 import ProfileInfo from './ProfileInfo.vue';
 import ProfileTeam from './ProfileTeam.vue';
+import LogoComponent from '@/components/UI/LogoComponent.vue';
 
 export default {
   name: 'Profile',
   components: {
     ProfileMain,
     ProfileInfo,
-    ProfileTeam
+    ProfileTeam,
+    LogoComponent
   },
   data() {
     return {

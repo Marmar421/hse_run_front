@@ -6,9 +6,7 @@
     <div class="registration-content">
       <!-- Логотип HSE Run -->
       <div class="logo">
-        <a href="/">
-          <img src="@/assets/images/hserun_logo.svg" alt="Логотип" />
-        </a>
+        <LogoComponent />
       </div>
       
       <h1 class="registration-title">{{ $t('registration.title') }}</h1>
@@ -22,11 +20,13 @@
 
 <script>
 import TelegramLogin from "@/components/Registration/TelegramLogin.vue";
+import LogoComponent from "@/components/UI/LogoComponent.vue";
 
 export default {
   name: "RegistrationView",
   components: {
     TelegramLogin,
+    LogoComponent
   },
   methods: {
     handleAuth(user) {

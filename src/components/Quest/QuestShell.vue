@@ -1,8 +1,6 @@
 <template>
   <div class="quest-page">
-    <router-link to="/" class="logo-link">
-      <img src="@/assets/images/hserun_logo.svg" alt="HSE RUN Logo" class="logo">
-    </router-link>
+    <LogoComponent />
     <div class="container">
       <div class="stats-bar">
         <div class="stats-item">Счёт: {{ teamScore }}</div>
@@ -26,9 +24,13 @@
 
 <script>
 import { qrCodeMixin } from './QuestMixins.js'
+import LogoComponent from '@/components/UI/LogoComponent.vue';
 
 export default {
   name: 'QuestShell',
+  components: {
+    LogoComponent
+  },
   mixins: [qrCodeMixin],
   props: {
     teamScore: {
@@ -63,24 +65,7 @@ export default {
   overflow-x: hidden;
 }
 
-.logo-link {
-  text-decoration: none;
-  margin: 20px 0 5px;
-}
 
-.logo {
-  font-size: 38px;
-  font-weight: bold;
-  text-align: center;
-  margin: 0;
-  color: #ff5252;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-  transition: transform 0.2s ease;
-}
-
-.logo:hover {
-  transform: scale(1.05);
-}
 
 h1 {
   font-size: 28px;
