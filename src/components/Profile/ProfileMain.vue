@@ -180,7 +180,9 @@ export default {
   font-weight: 500;
   color: #333;
   margin: 0 0 5px 0;
-  white-space: nowrap;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
 }
 
 .profile-username {

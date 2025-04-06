@@ -24,6 +24,11 @@
             <input type="text" id="team-name" v-model="newTeamName" placeholder="Введите название команды" required>
           </div>
           
+          <select v-model="selectedLanguage" class="language-select">
+            <option value="1">Русский</option>
+            <option value="2">English</option>
+          </select>
+          
           <button type="submit" class="create-button">
             Создать команду
           </button>
@@ -36,6 +41,7 @@
       <div v-else class="team-info">
         <div class="team-details">
           <p><span>{{ team.name }} ({{ team.participants ? team.participants.length : 0 }}/6)</span></p>
+          <p>Язык: {{ team.language_id === 1 ? 'Русский' : 'English' }}</p>
           <h4>Участники:</h4>
           <div class="team-participants">
             <p v-for="participant in team.participants" :key="participant.id">
@@ -54,6 +60,13 @@
         <form @submit.prevent="handleEditTeam">
           <label for="edit-team-name">Название команды:</label>
           <input v-model="editedTeamName" type="text" id="edit-team-name" required>
+          
+          <label for="edit-team-language">Язык команды:</label>
+          <select v-model="editedTeamLanguage" id="edit-team-language" required>
+            <option value="1">Русский</option>
+            <option value="2">English</option>
+          </select>
+          
           <h4>Участники команды:</h4>
           <div class="edit-team-participants">
             <div v-for="participant in team.participants" :key="participant.id" class="participant-item">
@@ -104,7 +117,9 @@ export default {
   data() {
     return {
       newTeamName: '',
+      selectedLanguage: 1,
       editedTeamName: '',
+      editedTeamLanguage: 1,
       isTeamDropdownVisible: false,
       isEditTeamModalVisible: false,
       isDeleteTeamModalVisible: false,
@@ -122,6 +137,7 @@ export default {
       handler(newTeam) {
         if (newTeam) {
           this.editedTeamName = newTeam.name || '';
+          this.editedTeamLanguage = newTeam.language_id || 1;
         }
       }
     }
@@ -157,7 +173,8 @@ export default {
       try {
         this.error = null;
         await this.makeRequest('/api/auth/command/create', 'POST', {
-          name: this.newTeamName
+          name: this.newTeamName,
+          language_id: this.selectedLanguage
         });
         
         this.$emit('team-created');
@@ -169,13 +186,9 @@ export default {
     
     async handleEditTeam() {
       try {
-        if (this.editedTeamName === this.team.name) {
-          this.hideModals();
-          return;
-        }
-        
         await this.makeRequest('/api/auth/command/rename', 'POST', {
-          name: this.editedTeamName
+          name: this.editedTeamName,
+          language_id: this.editedTeamLanguage
         });
         
         this.hideModals();
