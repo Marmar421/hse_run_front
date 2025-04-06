@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'home-route': isHomePage }">
     <router-view />
   </div>
 </template>
@@ -8,7 +8,13 @@
 import { RouterView } from 'vue-router';
 
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    isHomePage() {
+      console.log('Текущий путь:', this.$route.path);
+      return this.$route.path === '/' || this.$route.path === '';
+    }
+  }
 }
 </script>
 
@@ -27,7 +33,19 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Минимальная высота на весь экран */
-  
+}
+
+#app.home-route {
+  background-image: none !important;
+}
+
+/* Для маршрутов, отличных от главной страницы */
+.quest-route #app,
+.profile-route #app,
+.registration-route #app,
+.previous-route #app,
+.qrVerify-route #app {
+  background-image: url('@/assets/images/quest_bg.png') !important;
 }
 
 /* ... остальные стили ... */

@@ -2,7 +2,7 @@
   <header class="sticky-header">
     <div class="header-content">
       <div class="logo">
-        <LogoComponent />
+        <LogoComponent externalLink="https://t.me/+pieUILI_L_RjODk6"/>
       </div>
       <nav class="navigation">
         <LanguageSwitcher />

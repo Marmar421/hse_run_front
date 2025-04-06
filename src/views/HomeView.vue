@@ -35,8 +35,24 @@ export default {
     HomeFooter,
     ProfileMain
   },
+  mounted() {
+    document.body.classList.add('home-page');
+  },
+  beforeUnmount() {
+    document.body.classList.remove('home-page');
+  }
 };
 </script>
+
+<style>
+/* Глобальные стили без scoped */
+body.home-page {
+  background-image: none !important;
+}
+body.home-page #app {
+  background-image: none !important;
+}
+</style>
 
 <style scoped>
 .home {

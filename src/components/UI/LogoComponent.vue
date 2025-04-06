@@ -1,6 +1,9 @@
 <template>
-  <router-link to="/" class="logo-link" :class="customClass">
-    <img src="@/assets/images/hserun_logo.svg" :alt="altText" class="logo">
+  <a v-if="externalLink" :href="externalLink" rel="noopener noreferrer" class="logo-link">
+    <img src="@/assets/images/hserun_logo.svg" class="logo">
+  </a>
+  <router-link v-else :to="defaultLink" class="logo-link">
+    <img src="@/assets/images/hserun_logo.svg" class="logo">
   </router-link>
 </template>
 
@@ -8,13 +11,17 @@
 export default {
   name: 'LogoComponent',
   props: {
-    altText: {
-      type: String,
-      default: 'HSE RUN Logo'
-    },
-    customClass: {
+    externalLink: {
       type: String,
       default: ''
+    },
+    defaultLink: {
+      type: String,
+      default: '/'
+    },
+    altText: {
+        type: String,
+        default: 'HSE RUN'
     }
   }
 }
