@@ -10,14 +10,14 @@ export default {
     tagline: 'solve every riddle',
     maintitle: 'MOSCOW CULTURAL HISTORICAL QUEST',
     subtitle1: "You don't have to run at all! ",
-    subtitle2: 'The main thing is to solve as many riddles as possible during the quest.',
+    subtitle2: 'The main thing is to solve as many riddles as\u00A0possible during the quest.',
     registration: 'REGISTRATION',
     startquest: 'START QUEST',
-    eventdate: 'April 27, 12:00',
+    eventdate: 'April 27, 10:00',
     eventplace: 'Khitrovsky Lane, 2/8, building 5',
-    card1: '2-6 participants in a team',
-    card2: 'prizes from partners',
-    card3: 'the quest takes 4 hours',
+    card1: '2-6 participants in\u00A0a\u00A0team',
+    card2: 'prizes from\u00A0partners',
+    card3: 'the quest takes\u00A04\u00A0hours',
     card4: 'an exciting festival program',
   },
 
@@ -26,23 +26,23 @@ export default {
     steps: [
       {
         point: "Create a Team",
-        description: "HSE RUN is designed for teams of 2 to 6 people. Gather your team and come up with a name."
+        description: "HSE RUN is designed for teams of\u00A02\u00A0to\u00A06\u00A0people, so hurry up and\u00A0invite your\u00A0friends!"
       },
       {
         point: "Choose Quest Language",
-        description: "We've prepared two versions of the quest — in Russian and English."
+        description: "We've prepared two versions of\u00A0the\u00A0quest — in\u00A0Russian and\u00A0English."
       },
       {
-        point: "Familiarize with the Rules",
-        description: "The quest takes place in Moscow and lasts 3 hours. It includes tasks to take photos in general."
+        point: "Dress Comfortably",
+        description: "Check the weather and get out exploring the streets! We advise you to wear comfortable shoes"
       },
       {
-        point: "Register and Get Your Unique Code",
-        description: "Visit our page to get all the necessary instructions."
+        point: "Come to the Opening and Get Energized for\u00A0the Entire Quest",
+        description: "Subscribe to our Telegram channel so you don't miss the\u00A0beginning of\u00A0the\u00A0quest."
       },
       {
-            point: "Solve the Puzzles — You Have 3 Hours",
-        description: "The winning team will be the one that completes the entire route fastest and finds all answers. Good luck!"
+            point: "Solve the Riddles, you have 4\u00A0hours",
+        description: "Solve the riddles, come to these places in\u00A0Moscow and\u00A0get extra points."
       }
     ]
   },
@@ -58,18 +58,18 @@ export default {
 
   faq: {
     title: 'FAQ',
-    question1: 'How to register?',
-    answer1: 'To register, you need to fill out the registration form on the website.',
-    question2: 'How many people can be in a team?',
-    answer2: 'A team can have from 2 to 6 people.',
-    question3: 'How long does the quest last?',
-    answer3: 'The quest lasts 4 hours.',
-    question4: 'Do I need to run fast to complete the quest successfully?',
-    answer4: 'No, running is not necessary. The main thing is to solve as many puzzles as possible.',
-    question5: 'What should I bring to the quest?',
-    answer5: 'We recommend bringing a charged phone with internet, comfortable shoes, and a good mood.',
-    question6: 'Will there be prizes for the winners?',
-    answer6: 'Yes, winners will receive prizes from our partners.'
+    question1: 'Do I need to run to\u00A0win the\u00A0quest?',
+    answer1: "At HSE RUN, you won’t have to run! During the quest, you’ll only need to explore Moscow and solve riddles!",
+    question2: 'Is the quest only for\u00A0HSE\u00A0students?',
+    answer2: 'HSE RUN is open to everyone who loves Moscow and\u00A0riddles!',
+    question3: 'How to earn points on\u00A0HSE\u00A0RUN?',
+    answer3: '4 points can be earned for each solved riddle, and 6\u00A0points for visiting an insider.',
+    question4: 'Can I take hints?',
+    answer4: 'For difficult riddles, you can take a hint — it costs 2 coins, but you can get no more than 5 points per riddle.',
+    question5: 'What should I bring to\u00A0the\u00A0quest?',
+    answer5: 'We recommend bringing a\u00A0charged phone with internet, comfortable shoes, and a good mood.',
+    question6: 'What language is HSE\u00A0RUN?',
+    answer6: 'HSE RUN is conducted in\u00A0Russian and\u00A0English.'
   },
   footer: {
     coordinator: 'Coordinator HSE RUN 29: Super Sonic',

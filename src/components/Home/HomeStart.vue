@@ -180,6 +180,7 @@ export default {
   margin-top: 40.5px;
   z-index: 1;
   position: relative;
+  max-width: 1275px;
 }
 
 .subtitle {
@@ -226,7 +227,7 @@ export default {
   color: #C80002;
   border: 2.5px solid #C80002;
   border-radius: 24px;
-  padding: 22px 32px;
+  padding: 15px 28px;
   font-size: 20px;
   font-family: 'InvolveMedium';
   outline: none;
@@ -281,7 +282,7 @@ export default {
   color: #333030;
   font-family: 'InvolveMedium';
   border: 2px solid #C80002;
-  padding: 30px 80px ;
+  padding: 30px 70px ;
   border-radius: 39px;
   max-height: 114px;
   display: flex;
@@ -290,7 +291,7 @@ export default {
   box-sizing: border-box;
 }
 .card-title {
-  max-width:  160px;
+  max-width:  140px;
   text-align: center;
   margin: 0;
 }
@@ -314,8 +315,11 @@ export default {
     margin-top: 2%;
   }
   .buttons-container{
-    flex-direction: column;
-    margin-top: 65px;
+    margin-top: 55px;
+  }
+  .start-quest-btn, .register-btn{
+    top: -7px;
+    font-size: 17px;
   }
   .hero-img-section{
     top: -7px;
@@ -362,7 +366,14 @@ export default {
 
 }
 .buttons-info-section{
-    margin-top: 3%;
+    margin-top: 2%;
+  }
+  .buttons-container{
+    margin-top: 40px;
+  }
+  .start-quest-btn, .register-btn{
+    top: -7px;
+    font-size: 16px;
   }
 }
 @media (max-width: 1050px) {
@@ -383,7 +394,21 @@ export default {
   .card-content {
     padding: 30px 36px;
   }
-  
+  .buttons-info-section{
+    margin-top: 1%;
+  }
+  .buttons-container{
+    margin-top: 20px;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .register-btn{
+    margin-bottom: 10px;
+  }
+  .start-quest-btn, .register-btn{
+    top: -7px;
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 870px){
@@ -395,7 +420,7 @@ export default {
     z-index: 10;
   }
   .buttons-info-section{
-    margin-top: 10px;
+    margin-top: 20px;
   }
   .register-btn{
     font-size: clamp(15px, 3vw, 17px);
@@ -435,9 +460,9 @@ export default {
     margin-bottom: 10px;
   }
   .tag-line {
-    font-size: clamp(40px, 3vw, 50px);
-    top: -25px;
-    left: 25px;
+    font-size: clamp(55px, 3vw, 60px);
+    top: -40px;
+    left: 45px;
   }
   .hero-img-section {
     width: 46%;

@@ -10,7 +10,7 @@
         <LanguageSwitcher />
         <a @click="scrollToParticipation" class="nav-link-participation">{{ $t('header.participation') }}</a>
        <!-- <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link> -->
-       <a href="#" class="nav-link-faq">FAQ</a>
+        <a @click="scrollToFAQ" class="nav-link-faq">FAQ</a>
         <div class="language-selector">
           <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link> 
         </div>
@@ -24,6 +24,10 @@
         </div>
       </nav>
     </div>
+    <SlideMenu 
+      :isOpen="isMenuOpen" 
+      @close="closeMenu"
+    />
   </header>
 </template>
 
@@ -60,6 +64,23 @@ export default {
               const participationElement = document.getElementById('participation');
               if (participationElement) {
                 participationElement.scrollIntoView({ behavior: 'smooth' });
+              }
+            }, 100);
+          });
+        }
+      });
+    },
+    scrollToFAQ() {
+      this.$nextTick(() => {
+        const element = document.getElementById('faq');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          this.$router.push('/').then(() => {
+            setTimeout(() => {
+              const faqElement = document.getElementById('faq');
+              if (faqElement) {
+                faqElement.scrollIntoView({ behavior: 'smooth' });
               }
             }, 100);
           });
@@ -140,10 +161,7 @@ export default {
   .language-selector{
     max-width: 10px;
 }
-  .nav-link-participation{
-    display: none;
-  }
-  .nav-link-faq{
+  .nav-link-participation, .nav-link-faq {
     display: none;
   }
   .nav-link{
