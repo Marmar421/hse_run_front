@@ -3,7 +3,6 @@
     <LogoComponent />
     
     <div class="container">
-      <h1>QR-код</h1>
       <StatusDisplay :status-text="statusText" :status-color="statusColor" />
       
       <div v-if="qrData" class="result-container">
