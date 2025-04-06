@@ -50,6 +50,34 @@ const routes = [
     name: "qrVerify",
     component: QrVerifyView,
     meta: { title: "QR-код" }
+  },
+  {
+    path: "/admin/stats",
+    name: "adminStats",
+    beforeEnter: async (to, from, next) => {
+      try {
+        // Проверяем права пользователя
+        const response = await fetch('/api/auth/me');
+        if (!response.ok) {
+          return next('/profile');
+        }
+        
+        const userData = await response.json();
+        if (!userData.role || userData.role.name !== 'organizer') {
+          alert('Доступ запрещен. Требуются права организатора.');
+          return next('/profile');
+        }
+        
+        // Если пользователь - организатор, перенаправляем на страницу статистики
+        // Используем прямой редирект с сохранением cookies
+        window.location.href = '/admin/stats';
+        return; // Предотвращаем выполнение next()
+      } catch (error) {
+        console.error('Ошибка при проверке прав доступа:', error);
+        next('/profile');
+      }
+    },
+    meta: { title: "Аналитика", requiresOrganizer: true }
   }
 ];
 
@@ -85,6 +113,7 @@ router.beforeEach(async (to, from, next) => {
     }
   }
   
+  // Проверка прав организатора теперь выполняется в beforeEnter для /admin/stats
   next();
 });
 

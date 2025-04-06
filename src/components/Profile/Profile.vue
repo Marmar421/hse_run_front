@@ -224,6 +224,11 @@ h2 {
   margin-top: 10px;
 }
 
+.stats-btn {
+  margin-left: 10px;
+  background-color: #28a745;
+}
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
   .profile-container {
