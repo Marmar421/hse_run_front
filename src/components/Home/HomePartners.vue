@@ -34,24 +34,24 @@ export default {
       currentIndex: 0,
       partners: [
         {
-          logo: require('@/assets/images/WKUP.png'),
-          url: 'https://wakeupnow.ru'
+          logo: require('@/assets/images/partners_logo/reshape_logo_1.png'),
+          url: 'https://reshape.global/'
         },
         {
-          logo: require('@/assets/images/Ahmad_Tea_logo.png'),
+          logo: require('@/assets/images/partners_logo/Ahmad_Tea_logo.png'),
           url: 'https://ahmadtea.ru'
         },
         {
-          logo: require('@/assets/images/sborka_logo.svg'),
+          logo: require('@/assets/images/partners_logo/sborka_logo.svg'),
           url: 'https://ecosborka.ru'
         },
         {
-          logo: require('@/assets/images/alfa-logo.jpg'),
-          url: 'https://alfabank.ru'
+          logo: require('@/assets/images/partners_logo/klausrt_logo.png'),
+          url: 'https://clck.ru/3CmmpF'
         },
         {
-          logo: require('@/assets/images/clothing_supply_logo.png'),
-          url: 'https://clothingsupply.ru'
+          logo: require('@/assets/images/partners_logo/kept_logo.png'),
+          url: 'https://kept.ru/career/?utm_source=hh.ru&utm_medium=referral&utm_campaign=hh.ru&utm_referrer=hh.ru'
         },
         // { name: "Партнер 6", logo: require('@/assets/images/partner-placeholder.png') },
         // { name: "Партнер 7", logo: require('@/assets/images/partner-placeholder.png') },
@@ -127,6 +127,15 @@ h2 {
   width: 100%;
   justify-content: space-between;
   max-width: 1360px;
+  min-height: 120px;
+  overflow: hidden; 
+  transition: transform 0.3s ease-in-out;
+}
+
+.carousel-slide {
+  min-width: 100%; /* Каждый слайд занимает всю ширину контейнера */
+  box-sizing: border-box;
+  /* Стили для ваших слайдов */
 }
 
 .partners-logos {
@@ -149,7 +158,9 @@ h2 {
   flex: 1;
   box-sizing: border-box;
   text-align: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease-in-out;
+  max-height: 110px;
+
 }
 
 
@@ -228,5 +239,9 @@ h2 {
   max-width: 200px;
 }
 }
-
+@media (max-width: 480px) {
+  h2 {
+  font-size: 16px;
+}
+}
 </style>

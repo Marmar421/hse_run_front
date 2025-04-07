@@ -217,7 +217,7 @@ export default {
   color: white;
   border: none;
   border-radius: 24px;
-  padding: 24px 32px;
+  padding: 22px 30px;
   font-size: 20px;
   font-family: 'InvolveMedium';
 }
@@ -225,9 +225,9 @@ export default {
 .start-quest-btn {
   background-color: white;
   color: #C80002;
-  border: 2.5px solid #C80002;
+  border: 2px solid #C80002;
   border-radius: 24px;
-  padding: 15px 28px;
+  padding: 20px 28px;
   font-size: 20px;
   font-family: 'InvolveMedium';
   outline: none;
@@ -391,7 +391,8 @@ export default {
     border-radius: 0px 0px 49px 0px;
   }
   .card-content {
-    padding: 30px 36px;
+    padding: 28px 30px;
+    margin-right: 5px;
   }
   .buttons-info-section{
     margin-top: 1%;
@@ -404,9 +405,18 @@ export default {
   .register-btn{
     margin-bottom: 10px;
   }
-  .start-quest-btn, .register-btn{
+  .register-btn{
     top: -7px;
-    font-size: 15px;
+    font-size: 18px;
+    padding: 19px 24px; 
+  }
+  .start-quest-btn {
+    top: -7px;
+    font-size: 18px;
+    padding: 17px 22px; 
+  }
+  .card-title {
+    font-size: 18px;
   }
 }
 
@@ -438,7 +448,7 @@ export default {
   .home-start {
     background-image: url('@/assets/images/плашка-мобайл.svg');
     margin: 24px auto;
-    height: 607px;
+    height: clamp(200px, 80vw, 615px);;
   }
   .hero-content {
     margin: 0;
@@ -479,8 +489,7 @@ export default {
   }
   .buttons-info-section {
     position: absolute;
-    top: 70%;
-    left: 5%;
+    top: 77%;
     transform: translateY(-50%);
     width: 80%;
   }
@@ -490,27 +499,20 @@ export default {
     width: 100%;
   }
   .register-btn {
-    margin-left: 15px;
-  font-size:clamp(13px, 2vw, 17px) ;
-  padding: 15px 18px;
+  padding: 18px 22px;
   border-radius: 20px;
   display: flex;
 }
 .start-quest-btn {
-    margin-left: 15px;
-  font-size:clamp(14px, 2vw, 18px) ;
-  padding: 15px 18px;
+  padding: 15.5px 19.5px;
   border-radius: 20px;
   display: flex;
 }
 .event-date {
-  margin-left: 26px;
-  font-size: clamp(10px, 3vw, 13px);
+  font-size: clamp(15px, 3vw, 17px);
 }
 .event-place {
-  margin-left: 26px;
-  font-size: clamp(10px, 3vw, 13px);
-  max-width: 120px;
+  font-size: clamp(15px, 3vw, 17px);
 }
 
   .home-cards {
@@ -521,13 +523,14 @@ export default {
     grid-template-columns: 1fr 1fr;
     row-gap: 13px;
     column-gap: 28px;
-    padding: 10px 10px;
+    padding: 10px 0px;
     min-width: 30px;
 }
 .card-content {
   padding: 20px 30px;
   border-radius: 20px;
   border: 1px solid #C80002;
+  height: 82px;
 }
 .card-title {
   min-width: 120px;
@@ -535,6 +538,51 @@ export default {
   max-width: 160px;
 }
 }
+
+@media (max-width: 600px) {
+  .buttons-info-section{
+    top: 73%;
+  }
+  .main-title{
+    font-size: clamp(25px, 2vw, 30px);
+    margin-top: 18px;
+  }
+  .subtitle{
+    font-size: clamp(15px, 2vw, 17px);
+  }
+  .tag-line{
+    font-size: clamp(45px, 2vw, 50px);
+    top: -35px;
+    left: 35px;
+  }
+  .register-btn{
+    font-size: clamp(15px, 2vw, 18px) ;
+    padding: 13px 12px;
+    border-radius: 15px;
+    display: flex;
+    margin-left: 0;
+  }
+  .start-quest-btn{
+    font-size: clamp(15px, 2vw, 18px) ;
+    padding: 11px 10px;
+    border-radius: 15px;
+    display: flex;
+    margin-left: 0;
+  }
+  .event-date{
+    margin-left: 11px;
+    font-size: clamp(14px, 2vw, 18px) ;
+  }
+  .event-place{
+    margin-left: 11px;
+    font-size: clamp(14px, 2vw, 18px) ;
+  }
+  .tag-line{
+    font-size: 30px;
+    top: -21px;
+  }
+}
+
 @media (max-width: 480px) {
   .start-container{
     max-height: 470px;
@@ -543,14 +591,14 @@ export default {
     max-height: 470px;
   }
   .main-title {
-    margin-top: 15px;
+    margin-top: 18px;
     margin-right: 15px;
     -webkit-text-stroke: 1px #C80002;
     font-size: clamp(16px, 3vw, 18px);
   }
   .subtitle {
     padding: 0;
-    font-size: clamp(12px, 3vw, 15px);
+    font-size: clamp(13px, 3vw, 15px);
     max-width: 250px;
   }
   .brand-mark {
@@ -560,22 +608,18 @@ export default {
   }
   .buttons-info-section {
     position: absolute;
-    top: 55%;
-    left: 5%;
     transform: translateY(-50%);
     width: 70%;
   }
   .register-btn {
-  font-size:clamp(11px, 2vw, 18px) ;
-  padding: 11px 13px;
-  border-radius: 8px;
+  font-size: clamp(13px, 3vw, 15px);
+  padding: 13px 11px;
   display: flex;
   margin-left: 0;
 }
 .start-quest-btn {
-  font-size:clamp(11px, 2vw, 18px) ;
-  padding: 11px 13px;
-  border-radius: 8px;
+  font-size: clamp(13px, 3vw, 15px);
+  padding: 12px 10px;
   border: 1px solid #C80002;
 }
 .event-place {
@@ -583,6 +627,55 @@ export default {
 }
 .event-date {
   margin-left: 11px;
+}
+.cards-container {
+  column-gap: 15px;;
+}
+.card-content {
+  padding: 14px 15px;
+}
+}
+@media (max-width: 390px) { 
+  .hero-title-section {
+    row-gap: 7px;
+  }
+  .main-title {
+    font-size: clamp(14px, 3vw, 16px);
+    margin-top: 12px;
+  }
+  .subtitle {
+    font-size: clamp(12px, 3vw, 14px);
+  }
+  .tag-line {
+    font-size: 22px;
+    top:-17px;
+  }
+  .buttons-info-section{
+    top: 75%;
+  }
+  .buttons-container {
+    row-gap: 0px;
+  }
+  .register-btn {
+  font-size: clamp(11px, 2vw, 13px);
+  padding: 10px 8px;
+  display: flex;
+  margin-left: 0;
+}
+.start-quest-btn {
+  font-size: clamp(11px, 2vw, 13px);
+  padding: 9px 7px;
+  border: 1px solid #C80002;
+}
+.cards-container {
+  column-gap: 5px;
+}
+.card-content {
+  padding: 9px 10px;
+}
+.card-title {
+  font-size: clamp(13px, 2vw, 15px);
+  min-width: 80px;
 }
 }
 </style>

@@ -210,14 +210,18 @@
     .HomeParticipation h2 {
       font-size: 22px;
     }
+    .participation-left-section-image {
+      left: 55%;
+  }
+
     .step__header {
       gap: 10px;
     }
     .step__content h3 {
-      font-size: 18px;
+      font-size: 20px;
     }
     .step__content p {
-      font-size: 15px;
+      font-size: 18px;
     }
     .participation-left-section {
       width: 40px;
@@ -231,11 +235,11 @@
       left: -58px;
     }
     .step__content h3 {
-      max-width: 270px;
+      max-width: 330px;
       min-width: 209px;
     }
     .step__content p {
-      max-width: 270px;
+      max-width: 330px;
       min-width: 209px;
     }
     .step {
@@ -249,18 +253,57 @@
       gap: 55px;
     }
   }
+  @media (max-width: 600px) {
+    .HomeParticipation h2 {
+      font-size: 22px;
+    }
+    .step__content h3 {
+      font-size: 18px;
+    }
+    .step__content p {
+      font-size: 15px;
+    }
+  }
   
   @media (max-width: 480px) {
+    .HomeParticipation {
+      padding: 10px 0px;
+      row-gap: 25px;
+    }
+    .HomeParticipation h2 {
+      font-size: 16px;
+    }
+    .HomeParticipation h3 {
+      font-size: 15px;
+    }
+     .participation-content-wrapper {
+      min-width: 325px;
+      column-gap: 10px;
+     }
     .participation-left-section {
       width: 30px;
     }
     .participation-left-section-image {
       width: 30px;
+      left: 50%;
     }
     .step__circle {
-      width: 30px;
-      height: 30px;
-      left: -50px;
+      width: 31px;
+      height: 31px;
+      left: -40px;
+    }
+    .step__content p {
+      min-width: 100px;
+      font-size: clamp(13px, 3vw, 15px);
+      max-width: 218px;
+    }
+    .step__content h3 {
+      min-width: 100px;
+      font-size: clamp(14px, 3vw, 15px);
+      max-width: 200px;
+    }
+    .step {
+      padding-left: 6px;
     }
   }
   

@@ -1,6 +1,14 @@
 const { defineConfig } = require("@vue/cli-service");
 
 const backendProxyConfig = {
+  target: 'http://localhost:8005',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api': ''  // Опционально, зависит от вашего API
+  }
+};
+
+const proxyConfig = {
   target: 'http://127.0.0.1:8000',
   changeOrigin: true,
   ws: false,
@@ -23,7 +31,7 @@ module.exports = defineConfig({
     proxy: {
       '^/admin/stats': { ...analyticsProxyConfig, pathRewrite: { '^/admin/stats': '/api/analytics/teams' } },
       '^/api/analytics': { ...analyticsProxyConfig, pathRewrite: { '^/api/analytics': '/api/analytics' } },
-      '^/api': { ...backendProxyConfig, pathRewrite: { '^/api': '/api' } },
+      '^/api': backendProxyConfig,
       '^/static': { ...backendProxyConfig, pathRewrite: { '^/static': '/static' } },
       '^/admin(?!/stats)': { ...backendProxyConfig, pathRewrite: { '^/admin': '/admin' } },
     },

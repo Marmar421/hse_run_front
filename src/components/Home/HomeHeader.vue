@@ -155,17 +155,24 @@ export default {
   align-items: center;
   height: 100%;
   }
-  .logo img {
+  .logo-link {
+    margin: 0;
+  }
+  .logo {
     max-width: 100px;
   }
   .language-selector{
-    max-width: 10px;
+    max-width: 9px;
+}
+.language-selector img {
+  max-width: 10px;
 }
   .nav-link-participation, .nav-link-faq {
     display: none;
   }
   .nav-link{
-    font-size: 14px;
+    font-size: 13px;
+    margin-bottom: 5px;
   }
 }
 </style>

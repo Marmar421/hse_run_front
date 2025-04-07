@@ -4,10 +4,11 @@
     viewBox="0 0 66 1095"
     fill="none" 
     xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="xMidYMin slice"
   >
     <!-- Красная линия с градиентом -->
     <path 
-      d="M33 0V1212"
+      d="M33 0V1025"
       stroke="url(#paint0_linear)"
       stroke-width="24"
     />
@@ -52,7 +53,19 @@ export default {
 
 @media (max-width: 768px) {
   .vetka-line {
-    width: 40px;
+    width: 60px;
+    height: 850px; /* Базовая видимая высота */
+    display: block;
+  }
+}
+@media (max-width: 600px) {
+  .vetka-line {
+    height: 720px;
+  }
+}
+@media (max-width: 480px) {
+  .vetka-line {
+    width: 20px;
   }
 }
 

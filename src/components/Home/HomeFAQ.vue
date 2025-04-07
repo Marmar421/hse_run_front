@@ -197,4 +197,20 @@ export default {
     border: solid 1px #C80002;
   }
 }
+@media (max-width: 480px) {
+  .HomeFAQ {
+    margin-top: 20px;
+  }
+  .homefaq-wrapper {
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .homefaq-wrapper h2 {
+    font-size: 16px;
+  }
+  .question-card__front h3,
+  .question-card__back p {
+    font-size: 15px;
+  }
+}
 </style>

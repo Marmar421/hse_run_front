@@ -1,9 +1,9 @@
 <template>
   <a v-if="externalLink" :href="externalLink" rel="noopener noreferrer" class="logo-link">
-    <img src="@/assets/images/hserun_logo.svg" class="logo">
+    <img src="@/assets/images/hserun_logo_stroke.svg" class="logo">
   </a>
   <router-link v-else :to="defaultLink" class="logo-link">
-    <img src="@/assets/images/hserun_logo.svg" class="logo">
+    <img src="@/assets/images/hserun_logo_stroke.svg" class="logo">
   </router-link>
 </template>
 
@@ -45,6 +45,7 @@ export default {
   color: #ff5252;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
   transition: transform 0.2s ease;
+  max-height: 90px;
 }
 
 .logo:hover {
@@ -54,12 +55,14 @@ export default {
 @media (max-width: 768px) {
   .logo {
     font-size: 32px;
+    max-height: 70px;
   }
 }
 
 @media (max-width: 480px) {
   .logo {
     font-size: 28px;
+    max-height: 60px;
   }
 }
 </style> 

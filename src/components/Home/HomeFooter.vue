@@ -135,4 +135,10 @@ export default {
     height: 25px;
   }
 }
+@media (max-width: 600px) {
+  .nav-link {
+    font-size: 15px;
+  }
+
+}
 </style>
