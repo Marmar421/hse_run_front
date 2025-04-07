@@ -76,7 +76,12 @@ export default {
     enterTeamName: 'Введите название команды',
     linkCopied: 'Ссылка скопирована в буфер обмена',
     leaveTeam: 'Выйти из команды',
-    notSpecified: 'Не указано'
+    notSpecified: 'Не указано',
+    lookingForTeam: 'Ищу команду',
+    lookingForTeammates: 'Ищу сокомандников',
+    showLookingStatus: 'Показывать статус в общем списке',
+    lookingStatusOn: 'Статус поиска активен',
+    lookingStatusOff: 'Статус поиска неактивен'
   },
   faq: {
     title: 'ОСТАЛИСЬ ВОПРОСЫ?',

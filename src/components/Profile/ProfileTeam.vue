@@ -37,6 +37,23 @@
         </form>
         
         <div v-if="error" class="team-error">{{ error }}</div>
+        
+        <!-- Статус "Ищу команду" -->
+        <div class="looking-status-container">
+          <div class="looking-status" :class="{ 'active': isLookingForTeam }">
+            <span>{{ $t('profile.lookingForTeam') }}</span>
+            <span class="status-indicator">{{ isLookingForTeam ? $t('profile.lookingStatusOn') : $t('profile.lookingStatusOff') }}</span>
+          </div>
+          <div class="looking-toggle">
+            <label class="switch">
+              <input type="checkbox" 
+                :checked="isLookingForTeam" 
+                @change="toggleLookingStatus">
+              <span class="slider round"></span>
+            </label>
+            <span class="toggle-label">{{ $t('profile.showLookingStatus') }}</span>
+          </div>
+        </div>
       </div>
       
       <!-- Если команда есть - показываем информацию о ней -->
@@ -74,6 +91,23 @@
                 class="remove-btn" 
                 @click="handleRemoveParticipant(participant.id)"
               >✕</button>
+            </div>
+          </div>
+          
+          <!-- Статус "Ищу сокомандников" только для капитана при редактировании -->
+          <div v-if="isEditing && isUserCaptain" class="looking-status-container">
+            <div class="looking-status" :class="{ 'active': isLookingForTeam }">
+              <span>{{ $t('profile.lookingForTeammates') }}</span>
+              <span class="status-indicator">{{ isLookingForTeam ? $t('profile.lookingStatusOn') : $t('profile.lookingStatusOff') }}</span>
+            </div>
+            <div class="looking-toggle">
+              <label class="switch">
+                <input type="checkbox" 
+                  :checked="isLookingForTeam" 
+                  @change="toggleLookingStatus">
+                <span class="slider round"></span>
+              </label>
+              <span class="toggle-label">{{ $t('profile.showLookingStatus') }}</span>
             </div>
           </div>
           
@@ -118,6 +152,10 @@ export default {
     qrLink: {
       type: String,
       default: ''
+    },
+    isLookingForTeam: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -290,6 +328,10 @@ export default {
       }
     },
     
+    toggleLookingStatus() {
+      this.$emit('toggle-looking-status');
+    },
+    
     async makeRequest(url, method, body) {
       const response = await fetch(url, {
         method,
@@ -317,6 +359,101 @@ export default {
 
 h4 {
   margin: 0;
+}
+
+/* Стили для переключателей и статуса */
+.looking-status-container {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.looking-status {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.looking-status.active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-indicator {
+  font-size: 12px;
+  font-style: italic;
+}
+
+.looking-toggle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.toggle-label {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Стили для переключателя (switch) */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #4369AC;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #4369AC;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 
 .copy-icon {

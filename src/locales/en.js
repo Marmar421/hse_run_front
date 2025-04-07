@@ -75,7 +75,12 @@ export default {
     enterTeamName: 'Enter team name',
     linkCopied: 'Link copied to clipboard',
     leaveTeam: 'Leave Team',
-    notSpecified: 'Not specified'
+    notSpecified: 'Not specified',
+    lookingForTeam: 'Looking for a team',
+    lookingForTeammates: 'Looking for teammates',
+    showLookingStatus: 'Show status in public list',
+    lookingStatusOn: 'Looking status is active',
+    lookingStatusOff: 'Looking status is inactive'
   },
 
   faq: {

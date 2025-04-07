@@ -30,11 +30,13 @@
         :team="userTeam" 
         :userData="userData" 
         :qrLink="qrLink" 
+        :isLookingForTeam="isLookingForTeam"
         @copy-qr-link="copyQrLink" 
         @update="updateUserData" 
         @team-created="fetchUserData" 
         @team-deleted="fetchUserData" 
-        @team-left="fetchUserData" 
+        @team-left="fetchUserData"
+        @toggle-looking-status="toggleLookingStatus"
       />
     </div>
     <a @click="logout" class="logout-btn">{{ $t('profile.logout') }}</a>
@@ -60,7 +62,8 @@ export default {
       userData: null,
       userTeam: null,
       qrCodeData: null,
-      qrLink: null
+      qrLink: null,
+      isLookingForTeam: false
     };
   },
   computed: {
@@ -88,6 +91,7 @@ export default {
         this.qrCodeData = await qrRes.json();
         
         this.qrLink = this.qrCodeData.qr_link;
+        this.isLookingForTeam = !!this.userData.is_looking_for_friends;
         
         // Обрабатываем данные о команде
         if (this.userData.commands && this.userData.commands.length > 0) {
@@ -173,6 +177,17 @@ export default {
       }
       
       return response.json();
+    },
+    
+    // Метод переключения статуса поиска команды
+    async toggleLookingStatus() {
+      try {
+        const response = await this.makeRequest('/api/auth/toggle_looking_for_team', 'POST');
+        this.isLookingForTeam = response.is_looking_for_friends;
+        this.userData = { ...this.userData, is_looking_for_friends: this.isLookingForTeam };
+      } catch (error) {
+        console.error('Ошибка при изменении статуса поиска:', error);
+      }
     }
   }
 };
