@@ -130,7 +130,9 @@ h2 {
   min-height: 120px;
   overflow: hidden; 
   transition: transform 0.3s ease-in-out;
+  min-width: 320px;
 }
+
 
 .carousel-slide {
   min-width: 100%; /* Каждый слайд занимает всю ширину контейнера */
