@@ -26,10 +26,13 @@
             <input type="text" id="team-name" v-model="newTeamName" :placeholder="$t('profile.enterTeamName')" required>
           </div>
           
-          <select v-model.number="selectedLanguage" class="language-select">
-            <option :value="1">{{ $t('profile.russian') }}</option>
-            <option :value="2">{{ $t('profile.english') }}</option>
-          </select>
+          <div class="form-field">
+            <label for="team-language">{{ $t('profile.teamLanguage') }}:</label>
+            <select id="team-language" v-model.number="selectedLanguage" class="language-select">
+              <option :value="1">{{ $t('profile.russian') }}</option>
+              <option :value="2">{{ $t('profile.english') }}</option>
+            </select>
+          </div>
           
           <button type="submit" class="create-button">
             {{ $t('profile.createTeam') }}
