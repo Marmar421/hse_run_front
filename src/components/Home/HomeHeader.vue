@@ -22,10 +22,6 @@
         </div>
       </nav>
     </div>
-    <SlideMenu 
-      :isOpen="isMenuOpen" 
-      @close="closeMenu"
-    />
   </header>
 </template>
 
@@ -173,6 +169,9 @@ export default {
   .nav-link{
     font-size: 13px;
     margin-bottom: 5px;
+  }
+  .burger-menu{
+    display: none;
   }
 }
 </style>

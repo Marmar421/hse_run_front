@@ -81,8 +81,7 @@
     font-size: 55px;
     font-weight: 300;
     color: #C80002;
-    -webkit-text-stroke: 3px #C80002;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   .participation-content-wrapper {

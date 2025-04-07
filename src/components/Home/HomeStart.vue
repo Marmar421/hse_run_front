@@ -431,10 +431,6 @@ export default {
   .buttons-info-section{
     margin-top: 20px;
   }
-  .register-btn{
-    font-size: clamp(15px, 3vw, 17px);
-    padding: 20px 28px;
-  }
   .event-date {
     font-size: clamp(15px, 3vw, 17px);
   }
@@ -461,11 +457,11 @@ export default {
     margin-top: 30px;
     margin-right: 15px;
     -webkit-text-stroke: 1px #C80002;
-    font-size: clamp(25px, 3vw, 30px);
+    font-size: clamp(30px, 3vw, 35px);
   }
   .subtitle {
     max-width: 400px;
-    font-size: clamp(15x, 3vw, 18px);
+    font-size: clamp(20px, 3vw, 25px);
     margin-bottom: 10px;
   }
   .tag-line {
@@ -582,7 +578,6 @@ export default {
     top: -21px;
   }
 }
-
 @media (max-width: 480px) {
   .start-container{
     max-height: 470px;
@@ -603,7 +598,7 @@ export default {
   }
   .brand-mark {
     font-size: clamp(40px, 3vw, 60px);
-    display: flex;
+    display: none;
     bottom: 60px;
   }
   .buttons-info-section {
@@ -624,9 +619,11 @@ export default {
 }
 .event-place {
   margin-left: 11px;
+  font-size: clamp(12px, 2vw, 18px) ;
 }
 .event-date {
   margin-left: 11px;
+  font-size: clamp(12px, 2vw, 18px) ;
 }
 .cards-container {
   column-gap: 15px;;
