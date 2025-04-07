@@ -2,10 +2,10 @@
   <div class="profile-team">
     <div class="profile-card">
       <div class="team-header">
-        <h3>Команда</h3>
+        <h3>{{ $t('profile.team') }}</h3>
         <div v-if="team" class="dropdown">
           <button v-if="isUserCaptain" @click="handleCopyQrLink" class="settings-btn">
-            <img src="@/assets/images/copy.svg" alt="Настройки" class="copy-icon">
+            <img src="@/assets/images/copy.svg" alt="Копировать" class="copy-icon">
           </button>
           <button v-if="isUserCaptain" @click="toggleEditMode" class="edit-btn">
             <img src="@/assets/images/edit-button-84380.svg" alt="Редактировать" class="edit-icon">
@@ -18,21 +18,21 @@
       
       <!-- Если команды нет - показываем форму создания -->
       <div v-if="!team" class="team-creation">
-        <p class="no-team-message">У вас нет команды. Создайте свою или присоединитесь к существующей.</p>
+        <p class="no-team-message">{{ $t('profile.noTeam') }}</p>
         
         <form @submit.prevent="handleCreateTeam" class="team-form">
           <div class="form-field">
-            <label for="team-name">Название команды:</label>
-            <input type="text" id="team-name" v-model="newTeamName" placeholder="Введите название команды" required>
+            <label for="team-name">{{ $t('profile.teamName') }}:</label>
+            <input type="text" id="team-name" v-model="newTeamName" :placeholder="$t('profile.enterTeamName')" required>
           </div>
           
           <select v-model.number="selectedLanguage" class="language-select">
-            <option :value="1">Русский</option>
-            <option :value="2">English</option>
+            <option :value="1">{{ $t('profile.russian') }}</option>
+            <option :value="2">{{ $t('profile.english') }}</option>
           </select>
           
           <button type="submit" class="create-button">
-            Создать команду
+            {{ $t('profile.createTeam') }}
           </button>
         </form>
         
@@ -43,28 +43,28 @@
       <div v-else class="team-info">
         <div class="team-details">
           <p v-if="!isEditing">
-            <span>Название: {{ team.name }}</span>
+            <span>{{ $t('profile.teamName') }}: {{ team.name }}</span>
           </p>
           <p v-else class="edit-field">
-            Название: <input 
+            {{ $t('profile.teamName') }}: <input 
               type="text" 
               v-model="editedTeamName" 
-              placeholder="Введите название команды"
+              :placeholder="$t('profile.enterTeamName')"
             >
           </p>
           
           <p v-if="!isEditing">
-            Язык: {{ team.language_id === 1 ? 'Русский' : 'English' }}
+            {{ $t('profile.teamLanguage') }}: {{ team.language_id === 1 ? $t('profile.russian') : $t('profile.english') }}
           </p>
           <p v-else class="edit-field">
-            Язык: 
+            {{ $t('profile.teamLanguage') }}: 
             <select v-model.number="editedTeamLanguage">
-              <option :value="1">Русский</option>
-              <option :value="2">English</option>
+              <option :value="1">{{ $t('profile.russian') }}</option>
+              <option :value="2">{{ $t('profile.english') }}</option>
             </select>
           </p>
           
-          <h4>Участники ({{ team.participants ? team.participants.length : 0 }}/6):</h4>
+          <h4>{{ $t('profile.participants') }} ({{ team.participants ? team.participants.length : 0 }}/6):</h4>
           <div class="team-participants">
             <div v-for="(participant, index) in team.participants" :key="participant.id" class="participant-item">
               <p>{{ index + 1 }}. {{ participant.full_name }}{{ participant.role === 'captain' ? ' 👑' : '' }}</p>
@@ -79,12 +79,12 @@
           
           <div v-if="isEditing && isUserCaptain" class="edit-actions">
             <button @click="showDeleteTeamModal" class="delete-team-btn">
-              Удалить команду
+              {{ $t('profile.deleteTeam') }}
             </button>
           </div>
           
           <div v-if="showCopyNotification" class="copy-notification">
-            Ссылка скопирована в буфер обмена
+            {{ $t('profile.linkCopied') }}
           </div>
         </div>
       </div>
@@ -94,10 +94,10 @@
     <div v-if="isDeleteTeamModalVisible" class="modal">
       <div class="modal-content">
         <span class="close" @click="hideModals">&times;</span>
-        <h3>Удалить команду</h3>
-        <p>Вы уверены, что хотите удалить команду? Это действие нельзя отменить.</p>
-        <button @click="handleDeleteTeam" class="delete-btn">Удалить</button>
-        <button @click="hideModals" class="cancel-btn">Отмена</button>
+        <h3>{{ $t('profile.deleteTeam') }}</h3>
+        <p>{{ $t('profile.confirmDeleteTeam') }}</p>
+        <button @click="handleDeleteTeam" class="delete-btn">{{ $t('profile.delete') }}</button>
+        <button @click="hideModals" class="cancel-btn">{{ $t('profile.cancel') }}</button>
       </div>
     </div>
   </div>
@@ -210,7 +210,7 @@ export default {
       const currentLanguageId = parseInt(this.editedTeamLanguage);
       
       if (this.editedTeamName === this.team.name && 
-          currentLanguageId === this.team.language_id) {
+          currentLanguageId === parseInt(this.team.language_id)) {
         this.isEditing = false;
         return;
       }
@@ -235,7 +235,7 @@ export default {
         
         // В случае ошибки, возвращаем исходные значения
         this.editedTeamName = this.team.name;
-        this.editedTeamLanguage = this.team.language_id;
+        this.editedTeamLanguage = parseInt(this.team.language_id) || 1;
       } finally {
         this.isSaving = false;
       }
@@ -253,10 +253,10 @@ export default {
     },
     
     async handleLeaveTeam() {
-      if (confirm('Вы уверены, что хотите выйти из команды?')) {
+      if (confirm(this.$t('profile.leaveTeam') + "?")) {
         try {
           await this.makeRequest('/api/auth/command/leave', 'POST');
-          // Отправляем отдельное событие для выхода из команды
+          // Отправляем отдельное событие для ухода из команды
           this.$emit('team-left');
         } catch (error) {
           alert(error.message);
@@ -264,25 +264,22 @@ export default {
       }
     },
     
-    async handleRemoveParticipant(userId) {
-      if (confirm('Вы уверены, что хотите исключить этого участника из команды?')) {
-        try {
-          await this.makeRequest('/api/auth/command/remove_user', 'POST', {
-            user_id: userId
-          });
+    async handleRemoveParticipant(participantId) {
+      try {
+        await this.makeRequest('/api/auth/command/kick', 'POST', {
+          participant_id: participantId
+        });
+        
+        // Обновляем список участников локально
+        if (this.team && this.team.participants) {
+          const updatedParticipants = this.team.participants.filter(
+            p => p.id !== participantId
+          );
           
-          // Обновляем список участников локально, если запрос прошел успешно
-          if (this.team && this.team.participants) {
-            const updatedParticipants = this.team.participants.filter(p => p.id !== userId);
-            
-            // Отправляем только обновленный список участников
-            this.$emit('update', { 
-              participants: updatedParticipants 
-            });
-          }
-        } catch (error) {
-          alert(error.message);
+          this.$emit('update', { participants: updatedParticipants });
         }
+      } catch (error) {
+        alert(error.message);
       }
     },
     
@@ -295,7 +292,7 @@ export default {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Ошибка запроса');
+        throw new Error(errorData.detail || this.$t('profile.error'));
       }
       
       return response.json();
@@ -310,7 +307,6 @@ export default {
 h4 {
   margin: 0;
 }
-
 
 .copy-icon {
   width: 20px;
@@ -446,9 +442,6 @@ h4 {
 .cancel-btn {
   margin-left: 5px;
 }
-
-
-
 
 .submit-btn {
   margin-top: 15px;

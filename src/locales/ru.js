@@ -49,9 +49,9 @@ export default {
     ]
   },
   profile: {
-    title: 'Ваш профиль',
+    title: 'Профиль',
     qrdescription: 'Это QR-код для входа на площадку и начисления баллов за программу и квест',
-    personalInfo: 'Персональная информация',
+    personalInfo: 'Личная информация',
     fullName: 'ФИО',
     workPlace: 'Место работы',
     name: 'Имя',
@@ -59,7 +59,24 @@ export default {
     teamMembers: 'Участники команды',
     logout: 'Выйти',
     error: 'Ошибка загрузки данных',
-    logoutError: 'Ошибка при выходе из системы'
+    logoutError: 'Ошибка при выходе из системы',
+    adminPanel: 'Админ-панель',
+    createTeam: 'Создать команду',
+    teamName: 'Название команды',
+    teamLanguage: 'Язык',
+    russian: 'Русский',
+    english: 'English',
+    editTeam: 'Редактировать команду',
+    deleteTeam: 'Удалить команду',
+    confirmDeleteTeam: 'Вы уверены, что хотите удалить команду? Это действие нельзя отменить.',
+    delete: 'Удалить',
+    cancel: 'Отмена',
+    participants: 'Участники',
+    noTeam: 'У вас нет команды. Создайте свою или присоединитесь к существующей.',
+    enterTeamName: 'Введите название команды',
+    linkCopied: 'Ссылка скопирована в буфер обмена',
+    leaveTeam: 'Выйти из команды',
+    notSpecified: 'Не указано'
   },
   faq: {
     title: 'ОСТАЛИСЬ ВОПРОСЫ?',

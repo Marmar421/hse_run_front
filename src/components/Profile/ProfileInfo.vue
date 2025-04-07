@@ -2,7 +2,7 @@
   <div class="profile-info">
     <div class="profile-card">
       <div class="profile-header">
-        <h3>Личная информация</h3>
+        <h3>{{ $t('profile.personalInfo') }}</h3>
         <button @click="toggleEditMode" class="edit-btn">
           <img src="@/assets/images/edit-button-84380.svg" alt="Редактировать" class="edit-icon">
         </button>
@@ -10,13 +10,13 @@
       
       <div class="info-display">
         <p v-if="!isEditing">
-          ФИО: <span>{{ userData.full_name || 'Не указано' }}</span>
+          {{ $t('profile.fullName') }}: <span>{{ userData.full_name || $t('profile.notSpecified') }}</span>
         </p>
         <p v-else class="edit-field">
-          ФИО: <input 
+          {{ $t('profile.fullName') }}: <input 
             type="text" 
             v-model="editedFullName" 
-            placeholder="Введите ваше полное имя"
+            :placeholder="$t('profile.fullName')"
           >
         </p>
       </div>
@@ -81,14 +81,14 @@ export default {
         
         if (!response.ok) {
           const error = await response.json();
-          throw new Error(error.detail || 'Ошибка при сохранении данных');
+          throw new Error(error.detail || this.$t('profile.error'));
         }
         
         // Оповещаем родительский компонент об изменениях
         this.$emit('update', { full_name: this.editedFullName });
         this.isEditing = false;
       } catch (error) {
-        alert(`Ошибка: ${error.message}`);
+        alert(`${this.$t('profile.error')}: ${error.message}`);
       } finally {
         this.isSaving = false;
       }

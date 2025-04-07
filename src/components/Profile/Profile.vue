@@ -2,9 +2,9 @@
   <LogoComponent />   
   <div class="profile-container">
     <div class="container">   
-      <h2>Профиль</h2>
+      <h2>{{ $t('profile.title') }}</h2>
       <div v-if="isOrganizer" class="admin-panel-container">
-        <a href="/admin" class="admin-btn">Админ-панель</a>
+        <a href="/admin" class="admin-btn">{{ $t('profile.adminPanel') }}</a>
       </div>
       <!-- Главная информация о пользователе -->
       <ProfileMain 
@@ -37,7 +37,7 @@
         @team-left="fetchUserData" 
       />
     </div>
-    <a @click="logout" class="logout-btn">Выйти</a>
+    <a @click="logout" class="logout-btn">{{ $t('profile.logout') }}</a>
   </div>
 </template>
 
@@ -82,7 +82,7 @@ export default {
           fetch('/api/auth/qr')
         ]);
 
-        if (!userRes.ok || !qrRes.ok) throw new Error('Ошибка загрузки данных');
+        if (!userRes.ok || !qrRes.ok) throw new Error(this.$t('profile.error'));
 
         this.userData = await userRes.json();
         this.qrCodeData = await qrRes.json();
@@ -99,7 +99,7 @@ export default {
         
         console.log('Данные загружены');
       } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
+        console.error(this.$t('profile.error') + ':', error);
         this.$router.push('/registration');
       }
     },
@@ -110,7 +110,7 @@ export default {
         await this.makeRequest('/api/auth/logout', 'POST');
         this.$router.push('/');
       } catch (error) {
-        console.error('Ошибка при выходе:', error);
+        console.error(this.$t('profile.logoutError') + ':', error);
       }
     },
     
@@ -129,7 +129,7 @@ export default {
           document.body.removeChild(textArea);
         }
         
-        alert('Ссылка для приглашения скопирована!');
+        alert(this.$t('profile.linkCopied'));
       } catch (error) {
         console.error('Ошибка при копировании ссылки:', error);
         alert('Не удалось скопировать ссылку: ' + error.message);
@@ -169,7 +169,7 @@ export default {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Ошибка запроса');
+        throw new Error(errorData.detail || this.$t('profile.error'));
       }
       
       return response.json();

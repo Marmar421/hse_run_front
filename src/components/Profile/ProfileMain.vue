@@ -18,7 +18,7 @@
     </div>
 
     <div v-else class="loading-state">
-      Загрузка...
+      {{ $t('profile.error') }}...
     </div>
     
     <div class="qr-modal" v-if="showQrModal && qrCodeData" @click="showQrModal = false">
@@ -55,7 +55,7 @@ export default {
   computed: {
     
     userName() {
-      return this.userData?.full_name || 'Имя не указано';
+      return this.userData?.full_name || this.$t('profile.notSpecified');
     },
     userUsername() {
       return this.userData?.telegram_username || 'username';
@@ -73,7 +73,7 @@ export default {
       if (this.userData?.commands && this.userData.commands.length > 0) {
         return this.userData.commands[0].name;
       }
-      return 'Нет команды';
+      return this.$t('profile.noTeam');
     }
   },
   watch: {
