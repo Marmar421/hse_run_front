@@ -36,9 +36,10 @@ module.exports = defineConfig({
     proxy: {
       '^/admin/stats': { ...analyticsProxyConfig, pathRewrite: { '^/admin/stats': '/api/analytics/teams' } },
       '^/api/analytics': { ...analyticsProxyConfig, pathRewrite: { '^/api/analytics': '/api/analytics' } },
+      '^/admin/database': { ...backendProxyConfig, pathRewrite: { '^/admin/database': '/admin/database' } },
       '^/api': backendProxyConfig,
       '^/static': backendProxyConfig,
-      '^/admin(?!/stats)': { ...backendProxyConfig, pathRewrite: { '^/admin': '/admin' } },
+      '^/admin(?!/stats)(?!/database)': { ...backendProxyConfig, pathRewrite: { '^/admin': '/admin' } },
     },
   },
   chainWebpack: config => {

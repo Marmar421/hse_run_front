@@ -1,9 +1,9 @@
 <template>
   <a v-if="externalLink" :href="externalLink" rel="noopener noreferrer" class="logo-link">
-    <img src="@/assets/images/hserun_logo_stroke.svg" class="logo">
+    <img src="@/assets/images/hserun_logo.svg" class="logo">
   </a>
   <router-link v-else :to="defaultLink" class="logo-link">
-    <img src="@/assets/images/hserun_logo_stroke.svg" class="logo">
+    <img src="@/assets/images/hserun_logo.svg" class="logo">
   </router-link>
 </template>
 

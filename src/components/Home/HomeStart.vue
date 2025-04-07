@@ -220,6 +220,11 @@ export default {
   padding: 22px 30px;
   font-size: 20px;
   font-family: 'InvolveMedium';
+  outline: none;
+  text-decoration: none;
+}
+a {
+    text-decoration: none;
 }
 
 .start-quest-btn {
