@@ -127,7 +127,7 @@ h2 {
   width: 100%;
   justify-content: space-between;
   max-width: 1360px;
-  min-height: 120px;
+  min-height: 150px;
   overflow: hidden; 
   transition: transform 0.3s ease-in-out;
   min-width: 320px;
@@ -161,7 +161,7 @@ h2 {
   box-sizing: border-box;
   text-align: center;
   transition: transform 0.4s ease-in-out;
-  max-height: 110px;
+  max-height: 160px;
 
 }
 

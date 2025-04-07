@@ -54,14 +54,14 @@ export default {
 @media (max-width: 768px) {
   .logo {
     font-size: 32px;
-    max-height: 70px;
+    max-height: 50px;
   }
 }
 
 @media (max-width: 480px) {
   .logo {
     font-size: 28px;
-    max-height: 60px;
+    max-height: 40px;
   }
 }
 </style> 
