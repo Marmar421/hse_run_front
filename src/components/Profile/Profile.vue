@@ -1,16 +1,11 @@
 <template>
-  <LogoComponent />
+  <LogoComponent />   
   <div class="profile-container">
-    
-    <router-link to="/" class="back-link">Назад</router-link>
-    <div v-if="isOrganizer" class="admin-panel-container">
-        <a href="/admin" class="admin-btn">Админ-панель</a>
-    </div>
-    <div class="container">
-      <button @click="logout" class="logout-btn">Выйти</button>
-      
+    <div class="container">   
       <h2>Профиль</h2>
-      
+      <div v-if="isOrganizer" class="admin-panel-container">
+        <a href="/admin" class="admin-btn">Админ-панель</a>
+      </div>
       <!-- Главная информация о пользователе -->
       <ProfileMain 
         v-if="userData" 
@@ -36,12 +31,13 @@
         :userData="userData" 
         :qrLink="qrLink" 
         @copy-qr-link="copyQrLink" 
+        @update="updateUserData" 
         @team-created="fetchUserData" 
-        @team-updated="fetchUserData" 
         @team-deleted="fetchUserData" 
         @team-left="fetchUserData" 
       />
     </div>
+    <a @click="logout" class="logout-btn">Выйти</a>
   </div>
 </template>
 
@@ -78,6 +74,7 @@ export default {
   methods: {
     // Запрос данных
     async fetchUserData() {
+      console.log('Вызов fetchUserData - загрузка данных с сервера');
       try {
         // Загружаем данные пользователя и QR код параллельно
         const [userRes, qrRes] = await Promise.all([
@@ -94,10 +91,13 @@ export default {
         
         // Обрабатываем данные о команде
         if (this.userData.commands && this.userData.commands.length > 0) {
+          console.log('Обновление userTeam из fetchUserData');
           this.userTeam = this.userData.commands[0];
         } else {
           this.userTeam = null;
         }
+        
+        console.log('Данные загружены');
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
         this.$router.push('/registration');
@@ -139,7 +139,23 @@ export default {
     // Обновление данных пользователя
     updateUserData(updates) {
       if (updates && this.userData) {
-        this.userData = { ...this.userData, ...updates };
+        // Если это обновление для команды
+        if (updates.name || updates.language_id || updates.participants) {
+          console.log('Обновление свойств команды:', updates);
+          
+          // Обновляем свойства команды локально
+          if (this.userTeam) {
+            this.userTeam = { ...this.userTeam, ...updates };
+            
+            // Также обновляем команду в userData
+            if (this.userData.commands && this.userData.commands.length > 0) {
+              this.userData.commands[0] = { ...this.userData.commands[0], ...updates };
+            }
+          }
+        } else {
+          // Иначе обновляем данные пользователя
+          this.userData = { ...this.userData, ...updates };
+        }
       }
     },
     
@@ -162,84 +178,17 @@ export default {
 };
 </script>
 
-<style scoped>
-.profile-container {
-  font-family: Arial, sans-serif;
-  color: #333;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-h1, h2, h3, h4 {
-  color: #333;
-  margin-bottom: 15px;
-}
-
-h1 {
-  font-size: 28px;
+<style>
+@import './ProfileStyles.css';
+h2 {
   text-align: center;
 }
 
-h2 {
-  font-size: 24px;
-  margin-top: 30px;
+/* Специфичные стили только для этого компонента */
+.admin-panel-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
 }
-
-.container {
-  position: relative;
-}
-
-.back-link {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: 500;
-  display: inline-block;
-  margin-bottom: 20px;
-}
-
-.back-link:hover {
-  text-decoration: underline;
-}
-
-.logout-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.admin-btn {
-  display: inline-block;
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-  margin-top: 10px;
-}
-
-.stats-btn {
-  margin-left: 10px;
-  background-color: #28a745;
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-  .profile-container {
-    padding: 10px;
-  }
-  
-  .logout-btn {
-    position: static;
-    margin-bottom: 15px;
-    display: block;
-    width: 100%;
-  }
-}
-</style> 
+</style>

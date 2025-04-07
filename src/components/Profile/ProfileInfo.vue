@@ -4,7 +4,7 @@
       <div class="profile-header">
         <h3>Личная информация</h3>
         <button @click="toggleEditMode" class="edit-btn">
-          {{ isEditing ? 'Сохранить' : 'Редактировать' }}
+          <img src="@/assets/images/edit-button-84380.svg" alt="Редактировать" class="edit-icon">
         </button>
       </div>
       
@@ -98,15 +98,28 @@ export default {
 </script>
 
 <style scoped>
-.profile-info {
-  margin-bottom: 30px;
+@import './ProfileStyles.css';
+.edit-icon {
+  height: 20px;
+  width: 20px;
+  transition: transform 0.2s ease;
 }
 
-.profile-card {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.edit-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.edit-icon:hover, .edit-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Специфичные стили только для этого компонента */
+.profile-info {
+  margin-bottom: 30px;
 }
 
 .profile-header {
@@ -121,16 +134,6 @@ export default {
   margin: 0;
 }
 
-.edit-btn {
-  background-color: #4369AC;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
 .info-display p {
   margin: 8px 0;
   font-size: 16px;
@@ -140,31 +143,8 @@ export default {
   font-weight: 500;
 }
 
-.edit-field {
-  display: flex;
-  align-items: center;
-}
-
-.edit-field input {
-  margin-left: 8px;
-  padding: 6px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  flex: 1;
-}
-
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
-  .profile-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .edit-btn {
-    margin-top: 10px;
-  }
-  
   .edit-field {
     flex-direction: column;
     align-items: flex-start;

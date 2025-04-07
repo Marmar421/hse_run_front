@@ -31,7 +31,7 @@ const routes = [
      path: "/profile",
      name: "profile",
      component: ProfileView,
-     meta: { title: "Личный кабинет" }
+     meta: { title: "Профиль" }
    },
    {
     path: "/previous",

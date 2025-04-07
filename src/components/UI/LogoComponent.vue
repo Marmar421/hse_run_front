@@ -41,6 +41,7 @@ export default {
   font-weight: bold;
   text-align: center;
   margin: 0;
+  padding-left: 12px;
   color: #ff5252;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
   transition: transform 0.2s ease;

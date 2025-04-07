@@ -120,6 +120,9 @@ export default {
 </script>
 
 <style scoped>
+@import './ProfileStyles.css';
+
+/* Специфичные стили только для этого компонента */
 .profile-main {
   margin-bottom: 30px;
 }
@@ -127,16 +130,10 @@ export default {
 .profile-card {
   display: flex;
   align-items: center;
-  background-color: #F3F3F3;
-  border: 2px solid #4369AC;
-  border-radius: 25px;
-  padding: 20px;
   gap: 25px;
 }
 
 .profile-avatar {
-  width: 100%;
-  height: 100%;
   width: 150px;
   height: 150px;
   border-radius: 8%;
@@ -169,7 +166,6 @@ export default {
 
 .profile-details {
   flex-grow: 1;
-  font-family: 'InvolveMedium';
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -182,7 +178,7 @@ export default {
   margin: 0 0 5px 0;
   white-space: normal;
   word-wrap: break-word;
-  max-width: 200px;
+  max-width: 350px;
 }
 
 .profile-username {
@@ -216,43 +212,74 @@ export default {
   object-fit: contain;
 }
 
+.qr-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.qr-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.qr-modal-description {
+  margin-top: 15px;
+  color: #666;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
 @media (max-width: 768px) {
   .profile-card {
     flex-direction: column;
     text-align: center;
     gap: 10px;
-    border: 1px solid #4369AC;
   }
   
   .profile-avatar {
-    width: 100%;
-    height: 100%;
-    max-width: 120px;
-    max-height: 120px;
+    width: 120px;
+    height: 120px;
     min-width: 100px;
     min-height: 100px;
     border-radius: 20%;
-    overflow: hidden;
-    background-color: #b8c9e5;
-    aspect-ratio: 1/1;
     margin-right: 0;
     margin-bottom: 0;
   }
 
   .profile-name {
     font-size: 18px;
-    font-weight: 500;
     white-space: wrap;
   }
 
   .profile-username {
     font-size: 16px;
-  }
-
-  .profile-team {
-    font-size: 16px;
-    color: #666;
-    margin: 0;
   }
   
   .profile-details {
@@ -266,94 +293,5 @@ export default {
     min-width: 100px;
     min-height: 100px;
   }
-}
-
-/* Оверлей для модального окна */
-.qr-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* полупрозрачный фон */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.qr-modal-content {
-  background-color: white;
-  padding: 20px;
-  position: relative;
-  max-width: 90%;
-  max-height: 90%;
-  /* Центрирование */
-  margin: auto;
-  /* Анимация появления */
-  animation: modalAppear 0.3s ease;
-  /* Тень для выделения */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  /* Скругление углов */
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Анимация появления */
-@keyframes modalAppear {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Для мобильных устройств */
-@media (max-width: 768px) {
-  .qr-modal-content {
-    width: 95%;
-    padding: 15px;
-  }
-}
-
-.qr-modal-content img {
-  max-width: 100%;
-  max-height: 100%;
-  width: 200px;
-  height: 200px;
-  padding: 20px;
-}
-
-.qr-modal-description {
-  font-family: 'InvolveMedium';
-  font-size: 14px;
-  color: #666;
-  margin-top: 10px;
-  text-align: center;
-  white-space: wrap;
-  max-width: 400px;
-}
-
-.close-btn {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 45px;
-  cursor: pointer;
-  color: #333;
-}
-
-.loading-state {
-  text-align: center;
-  padding: 20px;
-  font-size: 16px;
-  color: #666;
 }
 </style>
