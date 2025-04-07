@@ -31,7 +31,21 @@ export default {
   methods: {
     handleAuth(user) {
       console.log('Authenticated user:', user);
-      // Обработка данных пользователя
+      // Сохраняем данные пользователя в локальное хранилище
+      if (user) {
+        // Сохраняем полные данные пользователя
+        localStorage.setItem('telegramUser', JSON.stringify(user));
+        
+        // Сохраняем отдельные поля для удобства доступа
+        localStorage.setItem('telegramUserId', user.id);
+        localStorage.setItem('telegramUserName', user.first_name + (user.last_name ? ' ' + user.last_name : ''));
+        
+        if (user.photo_url) {
+          localStorage.setItem('telegramPhotoUrl', user.photo_url);
+        }
+        
+        // Можно добавить отображение процесса авторизации или другую логику
+      }
     },
   }
 };

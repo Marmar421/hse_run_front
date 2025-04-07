@@ -46,6 +46,12 @@ const routes = [
     meta: { title: "Регистрация на квест" }
   },
   {
+    path: "/auth/telegram",
+    name: "telegramAuth",
+    component: RegistrationView,
+    meta: { title: "Авторизация через Telegram" }
+  },
+  {
     path: "/qr/verify",
     name: "qrVerify",
     component: QrVerifyView,

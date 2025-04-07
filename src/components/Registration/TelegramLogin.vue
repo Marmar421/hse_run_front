@@ -44,10 +44,42 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.redirectUrl = urlParams.get('redirect_url');
     
+    // Проверяем, есть ли параметры авторизации Telegram в URL (при redirect)
+    this.checkTelegramRedirect();
+    
     // Проверяем сессию при загрузке компонента
     this.checkSession();
   },
   methods: {
+    // Проверка параметров авторизации в URL после редиректа от Telegram
+    checkTelegramRedirect() {
+      // Ищем параметры авторизации Telegram в URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      const firstName = urlParams.get('first_name');
+      const lastName = urlParams.get('last_name');
+      const username = urlParams.get('username');
+      const photoUrl = urlParams.get('photo_url');
+      const authDate = urlParams.get('auth_date');
+      const hash = urlParams.get('hash');
+      
+      // Если в URL есть все необходимые параметры, обрабатываем их
+      if (id && firstName && authDate && hash) {
+        const user = {
+          id: parseInt(id, 10),
+          first_name: firstName,
+          last_name: lastName || null,
+          username: username || null,
+          photo_url: photoUrl || null,
+          auth_date: parseInt(authDate, 10),
+          hash: hash
+        };
+        
+        // Обрабатываем данные пользователя
+        this.onTelegramAuth(user);
+      }
+    },
+    
     // Проверка существующей сессии
     async checkSession() {
       try {
@@ -126,6 +158,9 @@ export default {
       if (user.photo_url) {
         localStorage.setItem('telegramPhotoUrl', user.photo_url);
       }
+      
+      // Передаем данные пользователя родительскому компоненту
+      this.$emit('auth', user);
       
       try {
         const res = await fetch('/api/auth/telegram', {
