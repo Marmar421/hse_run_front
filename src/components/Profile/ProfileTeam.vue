@@ -123,7 +123,7 @@ export default {
   data() {
     return {
       newTeamName: '',
-      selectedLanguage: 1,
+      selectedLanguage: this.getDefaultLanguageId(),
       editedTeamName: '',
       editedTeamLanguage: 1,
       isDeleteTeamModalVisible: false,
@@ -144,12 +144,19 @@ export default {
       handler(newTeam) {
         if (newTeam) {
           this.editedTeamName = newTeam.name || '';
-          this.editedTeamLanguage = parseInt(newTeam.language_id) || 1;
+          this.editedTeamLanguage = parseInt(newTeam.language_id) || this.getDefaultLanguageId();
         }
       }
     }
   },
   methods: {
+    getDefaultLanguageId() {
+      // Получаем текущий язык системы из i18n
+      const currentLocale = this.$i18n.locale;
+      // Преобразуем код языка в соответствующий ID
+      return currentLocale === 'en' ? 2 : 1; // 1 для русского, 2 для английского
+    },
+    
     hideModals() {
       this.isDeleteTeamModalVisible = false;
     },
@@ -181,8 +188,8 @@ export default {
     async handleCreateTeam() {
       try {
         this.error = null;
-        // Преобразуем language_id в число перед отправкой
-        const languageId = parseInt(this.selectedLanguage);
+        // Преобразуем language_id в число перед отправкой, используя текущее значение
+        const languageId = parseInt(this.selectedLanguage) || this.getDefaultLanguageId();
         
         const response = await this.makeRequest('/api/auth/command/create', 'POST', {
           name: this.newTeamName,
@@ -235,7 +242,7 @@ export default {
         
         // В случае ошибки, возвращаем исходные значения
         this.editedTeamName = this.team.name;
-        this.editedTeamLanguage = parseInt(this.team.language_id) || 1;
+        this.editedTeamLanguage = parseInt(this.team.language_id) || this.getDefaultLanguageId();
       } finally {
         this.isSaving = false;
       }
@@ -297,6 +304,10 @@ export default {
       
       return response.json();
     }
+  },
+  created() {
+    // Инициализация параметров при создании компонента
+    this.selectedLanguage = this.getDefaultLanguageId();
   }
 };
 </script>

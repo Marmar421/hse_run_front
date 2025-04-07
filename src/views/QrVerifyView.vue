@@ -252,7 +252,7 @@ export default {
       this.statusColor = '#f8d7da'; // Красный фон
       
       let countdown = 5;
-      this.errorMessage = `Для проверки QR-кода необходимо авторизоваться. Перенаправление через ${countdown} секунд...`;
+      this.errorMessage = `Для проверки QR-кода необходимо авторизоваться. Перенаправление через ${countdown}`;
       
       const countdownInterval = setInterval(() => {
         countdown--;
@@ -378,13 +378,13 @@ export default {
           this.statusText = 'Успешно';
           this.statusColor = '#d4edda'; // Зеленый фон
           this.redirectCounter = 5;
-          this.guestMessage = `Вы успешно присоединились к команде! Перенаправление в профиль через ${this.redirectCounter} секунд...`;
+          this.guestMessage = `Вы успешно присоединились к команде! Перенаправление в профиль через ${this.redirectCounter}`;
           this.showJoinBox = false;
           
           // Запускаем интервал для обновления счетчика
           this.redirectInterval = setInterval(() => {
             this.redirectCounter--;
-            this.guestMessage = `Вы успешно присоединились к команде! Перенаправление в профиль через ${this.redirectCounter} секунд...`;
+            this.guestMessage = `Вы успешно присоединились к команде! Перенаправление в профиль через ${this.redirectCounter}`;
             
             if (this.redirectCounter <= 0) {
               clearInterval(this.redirectInterval);
