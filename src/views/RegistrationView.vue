@@ -13,7 +13,7 @@
       
       <p class="registration-address">{{ $t('registration.address') }}</p>
       
-      <TelegramLogin @auth="handleAuth" botName="test_burlak1n_bot"/>
+      <TelegramLogin @auth="handleAuth" botName="hse_run_bot"/>
     </div>
   </div>
 </template>

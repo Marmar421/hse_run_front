@@ -42,6 +42,7 @@ export default {
   text-align: center;
   margin: 0;
   color: #ff5252;
+  padding-left: 12px;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
   transition: transform 0.2s ease;
   max-height: 90px;

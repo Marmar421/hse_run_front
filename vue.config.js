@@ -14,6 +14,19 @@ const analyticsProxyConfig = {
   secure: true
 };
 
+// Конфигурация Telegram ботов 
+const telegramConfig = {
+  dev: '7190707372',  // ID бота для разработки
+  prod: '8091205117'  // ID бота для продакшена
+};
+
+// Определяем текущую команду по аргументам запуска
+const isServe = process.argv.some(arg => arg.includes('serve'));
+const isBuild = process.argv.some(arg => arg.includes('build'));
+
+// Выбираем ID бота в зависимости от выполняемой команды
+const telegramBotId = isServe ? telegramConfig.dev : telegramConfig.prod;
+
 module.exports = defineConfig({
   transpileDependencies: true,
   productionSourceMap: false,
@@ -29,6 +42,12 @@ module.exports = defineConfig({
     },
   },
   chainWebpack: config => {
+    // Определяем переменные, доступные в коде приложения
+    config.plugin('define').tap(args => {
+      args[0]['process.env'].VUE_APP_TELEGRAM_BOT_ID = JSON.stringify(telegramBotId);
+      return args;
+    });
+    
     config.module
       .rule('images')
       .use('image-webpack-loader')

@@ -5,7 +5,7 @@
     
     <!-- Кнопка начала регистрации -->
     <button v-if="!showRegistrationForm" @click="startRegistration" class="register-button">
-      Начать регистрацию
+      {{ $t('telegramLogin.startRegistration') }}
     </button>
     
     <!-- Контейнер для виджета Telegram -->
@@ -15,13 +15,13 @@
     
     <!-- Форма завершения регистрации -->
     <div v-if="showRegistrationForm" class="registration-form-container">
-      <h2>Регистрация</h2>
+      <h2>{{ $t('telegramLogin.registration') }}</h2>
       <form @submit.prevent="completeRegistration">
         <div class="form-group">
-          <label for="full-name">ФИО:</label>
+          <label for="full-name">{{ $t('telegramLogin.fullName') }}:</label>
           <input type="text" id="full-name" v-model="fullName" required>
         </div>
-        <button type="submit" class="register-button">Зарегистрироваться</button>
+        <button type="submit" class="register-button">{{ $t('telegramLogin.register') }}</button>
       </form>
     </div>
   </div>
@@ -62,7 +62,7 @@ export default {
         }
       } catch (e) {
         // Если ошибка, просто продолжаем показ страницы регистрации
-        console.log('Нет активной сессии:', e);
+        console.log(this.$t('telegramLogin.noActiveSession'), e);
       }
     },
     
@@ -96,13 +96,13 @@ export default {
     // Инициализация виджета Telegram Login
     initTelegramWidget() {
       if (!window.Telegram || !window.Telegram.Login) {
-        this.showError("Ошибка загрузки Telegram Login Widget");
+        this.showError(this.$t('telegramLogin.errorWidgetLoading'));
         return;
       }
 
       window.Telegram.Login.auth(
         {
-          bot_id: "7190707372", // ID вашего бота
+          bot_id: process.env.VUE_APP_TELEGRAM_BOT_ID, // ID бота из переменных окружения
           request_access: "write",
           lang: this.$i18n?.locale || "ru",
           // Используем относительный URL для лучшей поддержки разных окружений
@@ -115,11 +115,11 @@ export default {
     // Обработчик данных авторизации из Telegram
     async onTelegramAuth(user) {
       if (!user) {
-        this.showError("Не удалось получить данные пользователя");
+        this.showError(this.$t('telegramLogin.errorUserData'));
         return;
       }
       
-      console.log(`Logged in as ${user.first_name} ${user.last_name} (ID: ${user.id})`);
+      console.log(`${this.$t('telegramLogin.loggedInAs')} ${user.first_name} ${user.last_name} (ID: ${user.id})`);
       this.telegramUserData = user;
       
       // Сохраняем URL фотографии в localStorage
@@ -137,7 +137,7 @@ export default {
         const data = await res.json();
         
         if (!res.ok || !data.ok) {
-          throw new Error(data.message || 'Ошибка аутентификации');
+          throw new Error(data.message || this.$t('telegramLogin.errorAuthentication'));
         }
         
         if (data.user.is_active) {
@@ -152,7 +152,7 @@ export default {
           this.showRegistrationForm = true;
         }
       } catch (error) {
-        this.showError(error.message || 'Ошибка при обработке данных');
+        this.showError(error.message || this.$t('telegramLogin.errorDataProcessing'));
       }
     },
     
@@ -167,7 +167,7 @@ export default {
         
         if (!res.ok) {
           const error = await res.json();
-          throw new Error(error.message || 'Ошибка завершения регистрации');
+          throw new Error(error.message || this.$t('telegramLogin.errorCompleteRegistration'));
         }
         
         // Перенаправляем в профиль или на указанный URL после успешной регистрации
@@ -177,7 +177,7 @@ export default {
           this.$router.push('/profile');
         }
       } catch (error) {
-        this.showError(error.message || 'Не удалось завершить регистрацию');
+        this.showError(error.message || this.$t('telegramLogin.errorCompleteRegistration'));
       }
     }
   }

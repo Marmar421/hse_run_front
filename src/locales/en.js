@@ -112,5 +112,18 @@ export default {
   registration: {
     title: 'Registration',
     address: 'HSE RUN 29'
+  },
+  telegramLogin: {
+    startRegistration: 'Start Registration',
+    registration: 'Registration',
+    fullName: 'Full Name',
+    register: 'Register',
+    noActiveSession: 'No active session',
+    errorWidgetLoading: 'Error loading Telegram Login Widget',
+    errorUserData: 'Failed to get user data',
+    loggedInAs: 'Logged in as',
+    errorAuthentication: 'Authentication error',
+    errorDataProcessing: 'Error processing data',
+    errorCompleteRegistration: 'Failed to complete registration'
   }
 } 
