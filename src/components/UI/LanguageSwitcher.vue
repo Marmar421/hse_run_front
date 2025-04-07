@@ -58,10 +58,16 @@ select:focus {
 @media (max-width: 768px) {
   .language-switcher {
     font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    padding-top: 3px;
   }
   select {
     font-size: 13px;
     padding: 0px 1px;
+    margin-left: 5px;
   }
 }
 </style>

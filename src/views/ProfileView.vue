@@ -20,4 +20,7 @@ export default {
   max-width: 100%;
   margin: 0 auto;
 }
+.logo {
+  padding-left: 12px;
+}
 </style>

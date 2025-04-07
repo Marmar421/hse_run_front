@@ -1,9 +1,7 @@
 <template>
   <header class="sticky-header">
     <div class="header-content">
-      <div class="logo">
-        <LogoComponent externalLink="https://t.me/+pieUILI_L_RjODk6"/>
-      </div>
+      <LogoComponent externalLink="https://t.me/+pieUILI_L_RjODk6"/>
       <nav class="navigation">
         <LanguageSwitcher />
         <a @click="scrollToParticipation" class="nav-link-participation">{{ $t('header.participation') }}</a>
@@ -139,6 +137,9 @@ export default {
 .down-button-mobile{
   display: none;
 }
+.logo-link {
+  margin: 0;
+}
 
 @media (max-width: 768px) {
   .sticky-header {
@@ -151,11 +152,11 @@ export default {
   align-items: center;
   height: 100%;
   }
-  .logo-link {
-    margin: 0;
-  }
-  .logo {
+  img.logo {
     max-width: 100px;
+    margin: 0 auto;
+    display: block;
+    padding-left: 0;
   }
   .language-selector{
     max-width: 9px;
