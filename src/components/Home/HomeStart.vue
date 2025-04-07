@@ -295,9 +295,12 @@ a {
   box-sizing: border-box;
 }
 .card-title {
-  max-width:  140px;
+  max-width: 140px;
   text-align: center;
-  margin: 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .card:hover {
   transform: perspective(800px) rotateY(0);
