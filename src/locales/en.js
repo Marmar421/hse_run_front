@@ -74,6 +74,7 @@ export default {
     noTeam: 'You don\'t have a team. Create your own or join an existing one.',
     enterTeamName: 'Enter team name',
     linkCopied: 'Link copied to clipboard',
+    linkCopyError: 'Error copying link',
     leaveTeam: 'Leave Team',
     notSpecified: 'Not specified',
     lookingForTeam: 'Looking for a team',

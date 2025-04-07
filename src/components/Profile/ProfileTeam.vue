@@ -120,6 +120,9 @@
           <div v-if="showCopyNotification" class="copy-notification">
             {{ $t('profile.linkCopied') }}
           </div>
+          <div v-if="showCopyError" class="copy-error-notification">
+            {{ $t('profile.linkCopyError') }}
+          </div>
         </div>
       </div>
     </div>
@@ -168,6 +171,7 @@ export default {
       isEditing: false,
       isSaving: false,
       showCopyNotification: false,
+      showCopyError: false,
       error: null
     };
   },
@@ -214,13 +218,76 @@ export default {
     handleCopyQrLink() {
       if (!this.qrLink) return;
       
-      navigator.clipboard.writeText(this.qrLink).then(() => {
-        this.showCopyNotification = true;
+      try {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(this.qrLink)
+            .then(() => {
+              this.showCopyNotification = true;
+              this.showCopyError = false;
+              
+              setTimeout(() => {
+                this.showCopyNotification = false;
+              }, 3000);
+            })
+            .catch(error => {
+              console.error('Ошибка при копировании:', error);
+              this.showCopyError = true;
+              
+              setTimeout(() => {
+                this.showCopyError = false;
+              }, 3000);
+              
+              this.fallbackCopyToClipboard();
+            });
+        } else {
+          // Запасной метод для браузеров без поддержки navigator.clipboard
+          this.fallbackCopyToClipboard();
+        }
+      } catch (error) {
+        console.error('Ошибка при копировании ссылки:', error);
+        this.showCopyError = true;
         
         setTimeout(() => {
-          this.showCopyNotification = false;
+          this.showCopyError = false;
         }, 3000);
-      });
+      }
+    },
+    
+    fallbackCopyToClipboard() {
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = this.qrLink;
+        textArea.style.position = 'fixed';  // Чтобы не влиять на вёрстку
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        const successful = document.execCommand('copy');
+        if (successful) {
+          this.showCopyNotification = true;
+          this.showCopyError = false;
+          
+          setTimeout(() => {
+            this.showCopyNotification = false;
+          }, 3000);
+        } else {
+          console.error('Не удалось скопировать текст');
+          this.showCopyError = true;
+          
+          setTimeout(() => {
+            this.showCopyError = false;
+          }, 3000);
+        }
+        
+        document.body.removeChild(textArea);
+      } catch (err) {
+        console.error('Ошибка при резервном копировании:', err);
+        this.showCopyError = true;
+        
+        setTimeout(() => {
+          this.showCopyError = false;
+        }, 3000);
+      }
     },
     
     async handleCreateTeam() {
@@ -697,6 +764,28 @@ input:checked + .slider:before {
   border-radius: 4px;
   text-align: center;
   animation: fadeIn 0.3s, fadeOut 0.5s 2.5s;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.copy-error-notification {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #ffebee;
+  color: #C80002;
+  border-radius: 4px;
+  text-align: center;
+  animation: fadeIn 0.3s, fadeOut 0.5s 2.5s;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 @keyframes fadeIn {
