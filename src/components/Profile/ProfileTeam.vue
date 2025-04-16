@@ -8,8 +8,10 @@
             <img src="@/assets/images/copy.svg" alt="Копировать" class="copy-icon">
           </button>
           <button v-if="isUserCaptain" @click="toggleEditMode" class="edit-btn">
-            <img v-if="!isEditing" src="@/assets/images/edit-button-84380.svg" alt="Редактировать" class="edit-icon">
-            <img v-else src="@/assets/images/verification.svg" alt="Подтвердить" class="edit-icon" style="width: 24px; height: 24px;">
+            <transition name="fade" mode="out-in">
+              <img v-if="!isEditing" key="edit" src="@/assets/images/edit-button-84380.svg" alt="Редактировать" class="edit-icon">
+              <img v-else key="verify" src="@/assets/images/verification.svg" alt="Подтвердить" class="edit-icon" style="width: 24px; height: 24px;">
+            </transition>
           </button>
           <button v-if="team && !isUserCaptain" @click="handleLeaveTeam" class="exit-btn">
             <img src="@/assets/images/exit.svg" alt="Выйти из команды" class="exit-icon">
