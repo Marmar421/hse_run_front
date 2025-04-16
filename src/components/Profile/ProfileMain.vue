@@ -58,7 +58,7 @@ export default {
       return this.userData?.full_name || this.$t('profile.notSpecified');
     },
     userUsername() {
-      return this.userData?.telegram_username || 'username';
+      return this.userData?.telegram_username || '';
     },
     userAvatar() {
       if (this.telegramPhotoUrl) {

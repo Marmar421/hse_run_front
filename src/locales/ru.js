@@ -116,7 +116,7 @@ export default {
     address: 'HSE RUN 29'
   },
   telegramLogin: {
-    startRegistration: 'Начать регистрацию',
+    startRegistration: 'Войти через Telegram',
     registration: 'Регистрация',
     fullName: 'ФИО',
     register: 'Зарегистрироваться',
