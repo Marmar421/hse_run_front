@@ -26,7 +26,7 @@
       
       <!-- Информация о команде или форма создания -->
       <ProfileTeam 
-        v-if="userData" 
+        v-if="userData && isNotInsider" 
         :team="userTeam" 
         :userData="userData" 
         :qrLink="qrLink" 
@@ -69,6 +69,9 @@ export default {
   computed: {
     isOrganizer() {
       return this.userData?.role?.name === 'organizer';
+    },
+    isNotInsider() {
+      return this.userData?.role?.name !== 'insider';
     }
   },
   mounted() {

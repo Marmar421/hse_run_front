@@ -82,7 +82,8 @@ export default {
     lookingForTeammates: 'Ищу сокомандников',
     showLookingStatus: 'Показывать статус в общем списке',
     lookingStatusOn: 'Статус поиска активен',
-    lookingStatusOff: 'Статус поиска неактивен'
+    lookingStatusOff: 'Статус поиска неактивен',
+    insiderStatus: 'Инсайдер'
   },
   faq: {
     title: 'ОСТАЛИСЬ ВОПРОСЫ?',

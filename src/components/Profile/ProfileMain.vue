@@ -70,6 +70,9 @@ export default {
       return require('@/assets/images/default-avatar.png');
     },
     teamName() {
+      if (this.userData?.role?.name === 'insider') {
+        return this.$t('profile.insiderStatus') || 'Инсайдер';
+      }
       if (this.userData?.commands && this.userData.commands.length > 0) {
         return this.userData.commands[0].name;
       }

@@ -81,7 +81,8 @@ export default {
     lookingForTeammates: 'Looking for teammates',
     showLookingStatus: 'Show status in public list',
     lookingStatusOn: 'Looking status is active',
-    lookingStatusOff: 'Looking status is inactive'
+    lookingStatusOff: 'Looking status is inactive',
+    insiderStatus: 'Insider'
   },
 
   faq: {
