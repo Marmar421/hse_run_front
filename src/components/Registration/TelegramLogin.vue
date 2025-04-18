@@ -15,13 +15,24 @@
     
     <!-- Форма завершения регистрации -->
     <div v-if="showRegistrationForm" class="registration-form-container">
-      <h2>{{ $t('telegramLogin.registration') }}</h2>
       <form @submit.prevent="completeRegistration">
         <div class="form-group">
-          <label for="full-name">{{ $t('telegramLogin.fullName') }}:</label>
-          <input type="text" id="full-name" v-model="fullName" required>
+          <input type="text" id="full-name" v-model="fullName" :placeholder="$t('telegramLogin.fullName')" required>
         </div>
-        <button type="submit" class="register-button">{{ $t('telegramLogin.register') }}</button>
+        
+        <!-- Поля только для инсайдеров -->
+        <div v-if="registrationType === 'insider'" class="insider-fields">
+          <div class="form-group">
+            <input type="text" id="student-organization" v-model="studentOrganization" :placeholder="$t('telegramLogin.studentOrganization') || 'Студенческая организация'" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="geo-link" v-model="geoLink" :placeholder="$t('telegramLogin.geoLink') || 'Ссылка на 2ГИС'">
+          </div>
+        </div>
+        
+        <div class="button-container">
+          <button type="submit" class="register-button">{{ $t('telegramLogin.register') }}</button>
+        </div>
       </form>
     </div>
   </div>
@@ -35,8 +46,11 @@ export default {
       errorMessage: null,
       showRegistrationForm: false,
       fullName: '',
+      studentOrganization: '',
+      geoLink: '',
       telegramUserData: null,
-      redirectUrl: null
+      redirectUrl: null,
+      registrationType: 'default'
     }
   },
   created() {
@@ -163,10 +177,18 @@ export default {
       this.$emit('auth', user);
       
       try {
+        // Получаем параметры из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        // Извлекаем код регистрации из параметров URL
+        const registrationCode = urlParams.get('code');
+        
         const res = await fetch('/api/auth/telegram', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(user)
+          body: JSON.stringify({
+            ...user,
+            registration_code: registrationCode
+          })
         });
         
         const data = await res.json();
@@ -174,6 +196,9 @@ export default {
         if (!res.ok || !data.ok) {
           throw new Error(data.message || this.$t('telegramLogin.errorAuthentication'));
         }
+        
+        // Устанавливаем тип регистрации из ответа
+        this.registrationType = data.registration_type || 'default';
         
         if (data.user.is_active) {
           // Если пользователь уже активен, перенаправляем в профиль или на указанный URL
@@ -194,10 +219,19 @@ export default {
     // Завершение регистрации после заполнения формы
     async completeRegistration() {
       try {
+        // Подготавливаем данные для отправки
+        const registrationData = { full_name: this.fullName };
+        
+        // Если это инсайдер, добавляем дополнительные поля
+        if (this.registrationType === 'insider') {
+          registrationData.student_organization = this.studentOrganization;
+          registrationData.geo_link = this.geoLink;
+        }
+        
         const res = await fetch('/api/auth/complete-registration', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ full_name: this.fullName })
+          body: JSON.stringify(registrationData)
         });
         
         if (!res.ok) {
@@ -225,6 +259,8 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
 }
 
 .telegram-login-container {
@@ -249,10 +285,19 @@ export default {
   transition: background-color 0.3s;
   width: 100%;
   max-width: 300px;
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 
 .register-button:hover {
   background-color: #2d8ad9;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .error-message {
@@ -263,29 +308,33 @@ export default {
   margin-bottom: 15px;
   width: 100%;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .registration-form-container {
   width: 100%;
   max-width: 400px;
+  box-sizing: border-box;
+  padding: 0 15px;
 }
 
 .form-group {
   margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group input {
   width: 100%;
-  padding: 10px;
+  padding: 12px 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+  color: #888;
 }
 
 .form-group input:focus {
@@ -297,5 +346,20 @@ h2 {
   color: #4369AC;
   margin-bottom: 20px;
   text-align: center;
+}
+
+.insider-fields {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .registration-form-container {
+    padding: 0 10px;
+  }
+  
+  .form-group input {
+    font-size: 14px;
+  }
 }
 </style>

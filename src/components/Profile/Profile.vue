@@ -10,8 +10,8 @@
       <ProfileMain 
         v-if="userData" 
         :userData="userData" 
-        :qrCodeData="qrCodeData"
-        :qrLink="qrLink"
+        :qrCodeData="!isInsider ? qrCodeData : null"
+        :qrLink="!isInsider ? qrLink : null"
         @copy-qr-link="copyQrLink"
       />
       
@@ -19,8 +19,8 @@
       <ProfileInfo 
         v-if="userData" 
         :userData="userData" 
-        :qrCodeData="qrCodeData" 
-        :qrLink="qrLink" 
+        :qrCodeData="!isInsider ? qrCodeData : null" 
+        :qrLink="!isInsider ? qrLink : null" 
         @update="updateUserData" 
       />
       
@@ -72,6 +72,9 @@ export default {
     },
     isNotInsider() {
       return this.userData?.role?.name !== 'insider';
+    },
+    isInsider() {
+      return this.userData?.role?.name === 'insider';
     }
   },
   mounted() {
@@ -143,27 +146,35 @@ export default {
       }
     },
     
-    // Обновление данных пользователя
-    updateUserData(updates) {
-      if (updates && this.userData) {
-        // Если это обновление для команды
-        if (updates.name || updates.language_id || updates.participants) {
-          console.log('Обновление свойств команды:', updates);
-          
-          // Обновляем свойства команды локально
-          if (this.userTeam) {
-            this.userTeam = { ...this.userTeam, ...updates };
-            
-            // Также обновляем команду в userData
-            if (this.userData.commands && this.userData.commands.length > 0) {
-              this.userData.commands[0] = { ...this.userData.commands[0], ...updates };
-            }
-          }
-        } else {
-          // Иначе обновляем данные пользователя
-          this.userData = { ...this.userData, ...updates };
+    // Обновляем данные в родительском компоненте
+    updateUserData(updatedData) {
+      // Клонируем текущие данные
+      const newUserData = { ...this.userData };
+      
+      // Обновляем ФИО
+      if (updatedData.full_name) {
+        newUserData.full_name = updatedData.full_name;
+      }
+      
+      // Обновляем информацию инсайдера, если она есть
+      if (updatedData.insider_info && newUserData.role && newUserData.role.name === 'insider') {
+        // Если у пользователя еще нет объекта insider_info, создаем его
+        if (!newUserData.insider_info) {
+          newUserData.insider_info = {};
+        }
+        
+        // Обновляем поля
+        if (updatedData.insider_info.student_organization !== undefined) {
+          newUserData.insider_info.student_organization = updatedData.insider_info.student_organization;
+        }
+        
+        if (updatedData.insider_info.geo_link !== undefined) {
+          newUserData.insider_info.geo_link = updatedData.insider_info.geo_link;
         }
       }
+      
+      // Устанавливаем обновленные данные
+      this.userData = newUserData;
     },
     
     // Метод для выполнения запросов к API

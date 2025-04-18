@@ -15,7 +15,7 @@ export default {
     subtitle2: 'Главное – решить как\u00A0можно больше загадок во\u00A0время\u00A0квеста.',
     registration: 'ЗАРЕГИСТРИРОВАТЬСЯ',
     startquest: 'НАЧАТЬ КВЕСТ',
-    eventdate: '27 апреля 10:00',
+    eventdate: '27 апреля 10:30',
     eventplace:'Хитровский перeулок, 2/8, стр.5',
     card1: '2-6 участников в\u00A0команде',
     card2: 'призы от\u00A0партнеров',
@@ -83,7 +83,9 @@ export default {
     showLookingStatus: 'Показывать статус в общем списке',
     lookingStatusOn: 'Статус поиска активен',
     lookingStatusOff: 'Статус поиска неактивен',
-    insiderStatus: 'Инсайдер'
+    insiderStatus: 'Инсайдер',
+    studentOrganization: 'Студенческая организация',
+    geoLink: 'Ссылка на 2ГИС'
   },
   faq: {
     title: 'ОСТАЛИСЬ ВОПРОСЫ?',
@@ -126,6 +128,8 @@ export default {
     loggedInAs: 'Вошел как',
     errorAuthentication: 'Ошибка аутентификации',
     errorDataProcessing: 'Ошибка при обработке данных',
-    errorCompleteRegistration: 'Не удалось завершить регистрацию'
+    errorCompleteRegistration: 'Не удалось завершить регистрацию',
+    studentOrganization: 'Студенческая организация',
+    geoLink: 'Ссылка на 2ГИС'
   }
 };

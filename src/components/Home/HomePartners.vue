@@ -34,20 +34,28 @@ export default {
       currentIndex: 0,
       partners: [
         {
-          logo: require('@/assets/images/partners_logo/reshape_logo_1.png'),
-          url: 'https://reshape.global/'
+          logo: require('@/assets/images/partners_logo/2GIS.svg'),
+          url: 'https://friends.2gis.ru/'
         },
         {
           logo: require('@/assets/images/partners_logo/Ahmad_Tea_logo.png'),
           url: 'https://ahmadtea.ru'
         },
         {
+          logo: require('@/assets/images/partners_logo/klausrt_logo.png'),
+          url: 'https://clck.ru/3CmmpF'
+        },
+        {
           logo: require('@/assets/images/partners_logo/sborka_logo.svg'),
           url: 'https://ecosborka.ru'
         },
         {
-          logo: require('@/assets/images/partners_logo/klausrt_logo.png'),
-          url: 'https://clck.ru/3CmmpF'
+          logo: require('@/assets/images/partners_logo/new_york_dance.png'),
+          url: 'https://ny-dance.ru/'
+        },
+        {
+          logo: require('@/assets/images/partners_logo/reshape_logo_1.png'),
+          url: 'https://reshape.global/'
         },
         {
           logo: require('@/assets/images/partners_logo/kept_logo.png'),

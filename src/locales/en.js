@@ -13,7 +13,7 @@ export default {
     subtitle2: 'The main thing is to solve as many riddles as\u00A0possible during the quest.',
     registration: 'REGISTRATION',
     startquest: 'START QUEST',
-    eventdate: 'April 27, 10:00',
+    eventdate: 'April 27, 10:30',
     eventplace: 'Khitrovsky Lane, 2/8, building 5',
     card1: '2-6 participants in\u00A0a\u00A0team',
     card2: 'prizes from\u00A0partners',
@@ -49,7 +49,7 @@ export default {
     
   profile: {
     title: 'Profile',
-    qrdescription: 'This QR code is for the entering and earning points for the program and quest',
+    qrdescription: 'This is a QR code for entrance and getting points for the program and quest',
     personalInfo: 'Personal Information',
     fullName: 'Full Name',
     workPlace: 'Workplace',
@@ -79,10 +79,12 @@ export default {
     notSpecified: 'Not specified',
     lookingForTeam: 'Looking for a team',
     lookingForTeammates: 'Looking for teammates',
-    showLookingStatus: 'Show status in public list',
-    lookingStatusOn: 'Looking status is active',
-    lookingStatusOff: 'Looking status is inactive',
-    insiderStatus: 'Insider'
+    showLookingStatus: 'Show status in the general list',
+    lookingStatusOn: 'Search status active',
+    lookingStatusOff: 'Search status inactive',
+    insiderStatus: 'Insider',
+    studentOrganization: 'Student Organization',
+    geoLink: '2GIS Link'
   },
 
   faq: {
@@ -116,9 +118,9 @@ export default {
     address: 'HSE RUN 29'
   },
   telegramLogin: {
-    startRegistration: 'Login via Telegram',
+    startRegistration: 'Login with Telegram',
     registration: 'Registration',
-    fullName: 'Full Name',
+    fullName: 'Full name',
     register: 'Register',
     noActiveSession: 'No active session',
     errorWidgetLoading: 'Error loading Telegram Login Widget',
@@ -126,6 +128,8 @@ export default {
     loggedInAs: 'Logged in as',
     errorAuthentication: 'Authentication error',
     errorDataProcessing: 'Error processing data',
-    errorCompleteRegistration: 'Failed to complete registration'
+    errorCompleteRegistration: 'Failed to complete registration',
+    studentOrganization: 'Student organization',
+    geoLink: '2GIS link'
   }
 } 
