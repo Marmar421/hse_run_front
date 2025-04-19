@@ -7,12 +7,11 @@
       </button>
       
       <div class="partners-logos">
-        <div class="logos-container" :style="slidesStyle">
-          <div v-for="(partner, index) in visiblePartners" :key="index" class="partner-logo">
+        <div class="logos-container" :style="slidesStyle" ref="carouselTrack">
+          <div v-for="(partner, index) in duplicatedPartners" :key="index" class="partner-logo">
             <img 
               :src="partner.logo" 
               @click="goToPartnerSite(partner.url)"
-              class="partner-logo"
               :alt="'Partner logo'"
             >
           </div>
@@ -32,11 +31,10 @@ export default {
   data() {
     return {
       currentIndex: 0,
+      slidesPerView: 3,
+      slideWidth: 0,
+      isAnimating: false,
       partners: [
-        {
-          logo: require('@/assets/images/partners_logo/feedback.png'),
-          url: 'https://feedback-massage.ru/'
-        },
         {
           logo: require('@/assets/images/partners_logo/2GIS.svg'),
           url: 'https://friends.2gis.ru/'
@@ -44,6 +42,10 @@ export default {
         {
           logo: require('@/assets/images/partners_logo/Ahmad_Tea_logo.png'),
           url: 'https://ahmadtea.ru'
+        },
+        {
+          logo: require('@/assets/images/partners_logo/feedback.png'),
+          url: 'https://feedback-massage.ru/'
         },
         {
           logo: require('@/assets/images/partners_logo/klausrt_logo.png'),
@@ -71,34 +73,83 @@ export default {
     };
   },
   computed: {
-    visiblePartners() {
-      // Создаем зацикленный массив из партнеров для отображения
-      const result = [];
-      const count = this.partners.length;
-      
-      // Показываем 3 партнера, начиная с текущего индекса
-      for (let i = 0; i < 3; i++) {
-        const index = (this.currentIndex + i) % count;
-        result.push(this.partners[index]);
-      }
-      
-      return result;
+    duplicatedPartners() {
+      // Дублируем массив партнеров для создания эффекта бесконечной карусели
+      return [...this.partners, ...this.partners];
     },
     slidesStyle() {
-      // Для плавного перехода между слайдами
       return {
-        transition: 'transform 0.1s ease-in-out'
+        transform: `translateX(-${this.currentIndex * this.slideWidth}px)`,
+        transition: this.isAnimating ? 'transform 0.5s ease-in-out' : 'none'
       };
     }
   },
+  mounted() {
+    this.updateSlideWidth();
+    window.addEventListener('resize', this.handleResize);
+    
+    // Настройка карусели после монтирования
+    this.$nextTick(() => {
+      this.handleResize();
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+  },
   methods: {
+    handleResize() {
+      // Обновляем количество отображаемых слайдов в зависимости от ширины экрана
+      if (window.innerWidth <= 768) {
+        this.slidesPerView = 1;
+      } else if (window.innerWidth <= 1024) {
+        this.slidesPerView = 2;
+      } else {
+        this.slidesPerView = 3;
+      }
+      this.updateSlideWidth();
+    },
+    updateSlideWidth() {
+      const container = this.$refs.carouselTrack;
+      if (container) {
+        const containerWidth = container.parentElement.clientWidth;
+        this.slideWidth = containerWidth / this.slidesPerView;
+      }
+    },
     slideLeft() {
-      // Прокрутка влево с зацикливанием
-      this.currentIndex = (this.currentIndex - 1 + this.partners.length) % this.partners.length;
+      if (this.isAnimating) return;
+      
+      this.isAnimating = true;
+      this.currentIndex -= 1;
+      
+      // Проверка для бесконечной прокрутки
+      if (this.currentIndex < 0) {
+        setTimeout(() => {
+          this.isAnimating = false;
+          this.currentIndex = this.partners.length - 1;
+        }, 500);
+      } else {
+        setTimeout(() => {
+          this.isAnimating = false;
+        }, 500);
+      }
     },
     slideRight() {
-      // Прокрутка вправо с зацикливанием
-      this.currentIndex = (this.currentIndex + 1) % this.partners.length;
+      if (this.isAnimating) return;
+      
+      this.isAnimating = true;
+      this.currentIndex += 1;
+      
+      // Проверка для бесконечной прокрутки
+      if (this.currentIndex >= this.partners.length) {
+        setTimeout(() => {
+          this.isAnimating = false;
+          this.currentIndex = 0;
+        }, 500);
+      } else {
+        setTimeout(() => {
+          this.isAnimating = false;
+        }, 500);
+      }
     },
     goToPartnerSite(url) {
       if (url) {
@@ -141,59 +192,42 @@ h2 {
   max-width: 1360px;
   min-height: 150px;
   overflow: hidden; 
-  transition: transform 0.3s ease-in-out;
   min-width: 320px;
-}
-
-
-.carousel-slide {
-  min-width: 100%; /* Каждый слайд занимает всю ширину контейнера */
-  box-sizing: border-box;
-  /* Стили для ваших слайдов */
 }
 
 .partners-logos {
   display: flex;
   justify-content: center;
   overflow: hidden;
+  width: 100%;
 }
 
 .logos-container {
   display: flex;
-  justify-content: center;
-  flex: 1;
-  gap: 82px;
+  flex-wrap: nowrap;
+  width: 100%;
 }
 
 .partner-logo {
+  flex: 0 0 calc(100% / var(--slides-per-view, 3)); /* Динамический расчет ширины слайда */
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  padding: 0 20px;
   box-sizing: border-box;
-  text-align: center;
-  transition: transform 0.4s ease-in-out;
-  max-height: 160px;
-
-}
-
-
-.partner-logo:hover {
-  transform: scale(1.01);
+  height: 150px;
 }
 
 .partner-logo img {
   max-width: 100%;
-  max-height: 150px;
-  margin-bottom: 10px;
+  max-height: 120px;
   object-fit: contain;
-  
+  transition: transform 0.4s ease-in-out;
 }
 
-.partner-logo p {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
+.partner-logo img:hover {
+  transform: scale(1.05);
+  cursor: pointer;
 }
 
 .carousel-arrow {
@@ -208,22 +242,13 @@ h2 {
   font-size: 28px;
   margin: 0 15px;
   color: #191A1E;
-  transition: background-color 0.3s ease;
+  transition: color 0.3s ease;
+  z-index: 1;
+  flex-shrink: 0;
 }
 
 .carousel-arrow:hover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  border: none;
-  background-color: #F3F3F3;
-  cursor: pointer;
-  font-size: 28px;
-  margin: 0 15px;
   color: #C80002;
-  transition: background-color 0.3s ease;
 }
 
 @media (max-width: 1360px) {
@@ -231,31 +256,40 @@ h2 {
     padding: 40px 50px;
   }
 }
-/* Адаптив для мобильных устройств */
+
 @media (max-width: 768px) {
   .partners {
-  gap: 22px;
-  padding: 22px;
-}
+    gap: 22px;
+    padding: 22px;
+  }
   h2 {
     font-size: 22px;
     -webkit-text-stroke: 1px #C80002;
   }
   .partner-logo {
-    flex: 0 0 100%;
+    height: 80px;
+    --slides-per-view: 1; /* На мобильных - 1 слайд */
   }
   .partner-logo img {
-  max-height: 60px;
-  margin-bottom: 0;
-  margin-top: 0;
-  margin-left: 0;
-  margin-right: 0;
-  max-width: 200px;
+    max-height: 60px;
+  }
+  .carousel-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin: 0 5px;
+  }
 }
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .partner-logo {
+    --slides-per-view: 2; /* На планшетах - 2 слайда */
+  }
 }
+
 @media (max-width: 480px) {
   h2 {
-  font-size: 16px;
-}
+    font-size: 16px;
+  }
 }
 </style>
