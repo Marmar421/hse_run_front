@@ -34,6 +34,10 @@ export default {
       currentIndex: 0,
       partners: [
         {
+          logo: require('@/assets/images/partners_logo/feedback.png'),
+          url: 'https://feedback-massage.ru/'
+        },
+        {
           logo: require('@/assets/images/partners_logo/2GIS.svg'),
           url: 'https://friends.2gis.ru/'
         },
