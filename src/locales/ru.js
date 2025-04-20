@@ -21,6 +21,7 @@ export default {
     card2: 'призы от\u00A0партнеров',
     card3: 'квест идет 4\u00A0часа',
     card4: 'увлекательная программа',
+    rules: 'Инструкция HSE RUN',
   },
 
   participation: {

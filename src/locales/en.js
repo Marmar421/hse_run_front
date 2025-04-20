@@ -19,6 +19,7 @@ export default {
     card2: 'prizes from\u00A0partners',
     card3: 'the quest takes\u00A04\u00A0hours',
     card4: 'an exciting festival program',
+    rules: 'HSE RUN Rules'
   },
 
   participation: {

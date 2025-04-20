@@ -30,8 +30,11 @@
                 </BaseButton>
               </router-link>
             </div>
-            <p class="event-date">{{ $t('start.eventdate') }}</p>
-            <p class="event-place">{{ $t('start.eventplace') }}</p>
+            <div class="info-text-container">
+              <p class="rules-link"><a href="https://telegra.ph/Instrukciya-HSE-RUN29-ot-Ingrup-StS-04-07">{{ $t('start.rules') }}</a></p>
+              <p class="event-date">{{ $t('start.eventdate') }}</p>
+              <p class="event-place">{{ $t('start.eventplace') }}</p>
+            </div>
           </div>
           
           </div>
@@ -211,6 +214,34 @@ export default {
   margin-bottom: 10px;
 }
 
+.info-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rules-link {
+  font-size: 25px;
+  color: #4369AC;
+  margin: 0;
+  font-weight: bold;
+  margin-left: 12px;
+  font-family: 'InvolveMedium';
+}
+
+.rules-link a {
+  color: #4369AC;
+  text-decoration: none;
+}
+
+.event-date {
+  font-size: 25px;
+  color: #191A1E;
+  margin: 0;
+  font-weight: bold;
+  margin-left: 12px;
+  font-family: 'InvolveMedium';
+}
 
 .register-btn {
   background-color: #C80002;
@@ -238,14 +269,6 @@ a {
   outline: none;
 }
 
-.event-date {
-  font-size: 25px;
-  color: #191A1E;
-  margin: 0;
-  font-weight: bold;
-  margin-left: 12px;
-  font-family: 'InvolveMedium';
-}
 .event-place {
   font-size: 25px;
   color: #191A1E;
@@ -346,7 +369,7 @@ a {
 }
 @media (max-width: 1150px) {
   .buttons-container{
-    margin-top: 35px;
+    margin-top: 40px;
   }
   .brand-mark {
     display: none;
@@ -361,26 +384,19 @@ a {
   .card-title {
     font-size: 20px;
   }
-  .event-date {
-  font-size: 20px;
-}
-.event-place {
-  font-size: 20px;
-}
-.card-content { 
-  padding: 30px 50px ;
-  max-height: 100px;
-
-}
-.buttons-info-section{
-    margin-top: 2%;
+  .event-date, .event-place, .rules-link {
+    font-size: 20px;
   }
-  .buttons-container{
-    margin-top: 40px;
+  .buttons-info-section{
+    margin-top: 2%;
   }
   .start-quest-btn, .register-btn{
     top: -7px;
     font-size: 16px;
+  }
+  .card-content { 
+    padding: 30px 50px;
+    max-height: 100px;
   }
 }
 @media (max-width: 1050px) {
@@ -439,10 +455,7 @@ a {
   .buttons-info-section{
     margin-top: 20px;
   }
-  .event-date {
-    font-size: clamp(15px, 3vw, 17px);
-  }
-  .event-place {
+  .event-date, .event-place, .rules-link {
     font-size: clamp(15px, 3vw, 17px);
   }
 }
@@ -501,6 +514,11 @@ a {
     margin-top: 0;
     flex-direction: column;
     width: 100%;
+    margin-bottom: 5px;
+  }
+  .info-text-container {
+    gap: 0;
+    margin-top: 0;
   }
   .register-btn {
   padding: 18px 22px;
@@ -512,10 +530,7 @@ a {
   border-radius: 20px;
   display: flex;
 }
-.event-date {
-  font-size: clamp(15px, 3vw, 17px);
-}
-.event-place {
+.event-date, .event-place, .rules-link {
   font-size: clamp(15px, 3vw, 17px);
 }
 
@@ -541,11 +556,14 @@ a {
   font-size: 15px;
   max-width: 160px;
 }
+.card:hover {
+  transform: perspective(800px) rotateY(0);
+}
 }
 
 @media (max-width: 600px) {
   .buttons-info-section{
-    top: 73%;
+    top: 72%;
   }
   .main-title{
     font-size: clamp(25px, 2vw, 30px);
@@ -573,17 +591,17 @@ a {
     display: flex;
     margin-left: 0;
   }
-  .event-date{
+  .event-date, .event-place, .rules-link {
     margin-left: 11px;
-    font-size: clamp(14px, 2vw, 18px) ;
-  }
-  .event-place{
-    margin-left: 11px;
-    font-size: clamp(14px, 2vw, 18px) ;
+    font-size: clamp(14px, 2vw, 18px);
   }
   .tag-line{
     font-size: 30px;
     top: -21px;
+  }
+  .info-text-container {
+    gap: 0;
+    margin-top: 0;
   }
 }
 @media (max-width: 480px) {
@@ -611,33 +629,42 @@ a {
   }
   .buttons-info-section {
     position: absolute;
+    top: 70%;
     transform: translateY(-50%);
     width: 70%;
+  }
+  .rules-link {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .rules-link a {
+    font-size: clamp(12px, 2vw, 18px);
   }
   .register-btn {
   font-size: clamp(13px, 3vw, 15px);
   padding: 13px 11px;
   display: flex;
   margin-left: 0;
+  margin-bottom: 0;
 }
 .start-quest-btn {
   font-size: clamp(13px, 3vw, 15px);
   padding: 12px 10px;
   border: 1px solid #C80002;
 }
-.event-place {
+.event-date, .event-place, .rules-link {
   margin-left: 11px;
-  font-size: clamp(12px, 2vw, 18px) ;
-}
-.event-date {
-  margin-left: 11px;
-  font-size: clamp(12px, 2vw, 18px) ;
+  font-size: clamp(12px, 2vw, 18px);
 }
 .cards-container {
   column-gap: 15px;;
 }
 .card-content {
   padding: 14px 15px;
+}
+.info-text-container {
+  gap: 0;
+  margin-top: 0;
 }
 }
 @media (max-width: 390px) { 
@@ -656,10 +683,17 @@ a {
     top:-17px;
   }
   .buttons-info-section{
-    top: 75%;
+    top: 73%;
   }
   .buttons-container {
-    row-gap: 0px;
+    margin-bottom: 3px;
+  }
+  .rules-link {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .rules-link a {
+    font-size: clamp(11px, 2vw, 13px);
   }
   .register-btn {
   font-size: clamp(11px, 2vw, 13px);
@@ -682,5 +716,24 @@ a {
   font-size: clamp(13px, 2vw, 15px);
   min-width: 80px;
 }
+.info-text-container {
+  gap: 0;
+  margin-top: 0;
+}
+}
+@media (max-width: 360px) {
+  .buttons-info-section{
+    top: 70%;
+  }
+  .buttons-container {
+    margin-bottom: 0;
+  }
+  .info-text-container {
+    gap: 0;
+    margin-top: 0;
+  }
+  .rules-link, .event-date, .event-place {
+    font-size: clamp(10px, 2vw, 12px);
+  }
 }
 </style>
