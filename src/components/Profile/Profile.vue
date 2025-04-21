@@ -36,6 +36,7 @@
         @team-created="fetchUserData" 
         @team-deleted="fetchUserData" 
         @team-left="fetchUserData"
+        @team-updated="fetchUserData"
         @toggle-looking-status="toggleLookingStatus"
       />
     </div>

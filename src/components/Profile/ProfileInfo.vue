@@ -3,12 +3,10 @@
     <div class="profile-card">
       <div class="profile-header">
         <h3>{{ $t('profile.personalInfo') }}</h3>
-        <button @click="toggleEditMode" class="edit-btn">
-          <transition name="fade" mode="out-in">
-            <img v-if="!isEditing" key="edit" src="@/assets/images/edit-button-84380.svg" alt="Редактировать" class="edit-icon">
-            <img v-else key="verify" src="@/assets/images/verification.svg" alt="Подтвердить" class="edit-icon" style="width: 24px; height: 24px;">
-          </transition>
-        </button>
+        <EditButton 
+          :is-editing="isEditing" 
+          @toggle="toggleEditMode"
+        />
       </div>
       
       <div class="info-display">
@@ -56,8 +54,13 @@
 </template>
 
 <script>
+import EditButton from '@/components/UI/EditButton.vue';
+
 export default {
   name: 'ProfileInfo',
+  components: {
+    EditButton
+  },
   props: {
     userData: {
       type: Object,
@@ -170,23 +173,6 @@ export default {
 
 <style scoped>
 @import './ProfileStyles.css';
-.edit-icon {
-  height: 20px;
-  width: 20px;
-  transition: transform 0.2s ease;
-}
-
-.edit-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.edit-icon:hover, .edit-btn:hover {
-  transform: scale(1.1);
-}
 
 /* Специфичные стили только для этого компонента */
 .profile-info {
@@ -232,13 +218,5 @@ export default {
     margin-top: 5px;
     width: 100%;
   }
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.15s ease;
-}
-
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
 }
 </style>

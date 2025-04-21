@@ -642,14 +642,14 @@ a {
   }
   .register-btn {
   font-size: clamp(13px, 3vw, 15px);
-  padding: 13px 11px;
+  padding: 11px 9px;
   display: flex;
   margin-left: 0;
   margin-bottom: 0;
 }
 .start-quest-btn {
   font-size: clamp(13px, 3vw, 15px);
-  padding: 12px 10px;
+  padding: 11px 9px;
   border: 1px solid #C80002;
 }
 .event-date, .event-place, .rules-link {

@@ -3,16 +3,15 @@
     <div class="profile-card">
       <div class="team-header">
         <h3>{{ $t('profile.team') }}</h3>
-        <div v-if="team" class="dropdown">
+        <div v-if="team" class="header-buttons">
           <button v-if="isUserCaptain" @click="handleCopyQrLink" class="settings-btn">
             <img src="@/assets/images/copy.svg" alt="Копировать" class="copy-icon">
           </button>
-          <button v-if="isUserCaptain" @click="toggleEditMode" class="edit-btn">
-            <transition name="fade" mode="out-in">
-              <img v-if="!isEditing" key="edit" src="@/assets/images/edit-button-84380.svg" alt="Редактировать" class="edit-icon">
-              <img v-else key="verify" src="@/assets/images/verification.svg" alt="Подтвердить" class="edit-icon" style="width: 24px; height: 24px;">
-            </transition>
-          </button>
+          <EditButton 
+            v-if="isUserCaptain" 
+            :is-editing="isEditing" 
+            @toggle="toggleEditMode"
+          />
           <button v-if="team && !isUserCaptain" @click="handleLeaveTeam" class="exit-btn">
             <img src="@/assets/images/exit.svg" alt="Выйти из команды" class="exit-icon">
           </button>
@@ -147,8 +146,13 @@
 </template>
 
 <script>
+import EditButton from '@/components/UI/EditButton.vue';
+
 export default {
   name: 'ProfileTeam',
+  components: {
+    EditButton
+  },
   props: {
     team: {
       type: Object,
@@ -383,19 +387,19 @@ export default {
     },
     
     async handleRemoveParticipant(participantId) {
+      // Запрашиваем подтверждение перед удалением
+      if (!confirm(this.$t('profile.confirmRemoveParticipant'))) {
+        return; // Выходим, если пользователь отменил
+      }
+      
       try {
-        await this.makeRequest('/api/auth/command/kick', 'POST', {
-          participant_id: participantId
+        // Отправляем запрос на удаление пользователя и ждем ответа
+        await this.makeRequest('/api/auth/command/remove_user', 'POST', {
+          user_id: participantId
         });
         
-        // Обновляем список участников локально
-        if (this.team && this.team.participants) {
-          const updatedParticipants = this.team.participants.filter(
-            p => p.id !== participantId
-          );
-          
-          this.$emit('update', { participants: updatedParticipants });
-        }
+        // Вместо локального обновления вызываем обновление всех данных команды
+        this.$emit('team-updated');
       } catch (error) {
         alert(error.message);
       }
@@ -529,14 +533,31 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.copy-icon {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.2s ease;
+/* Общие стили для всех кнопок и иконок */
+.settings-btn, .exit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
 }
 
-.copy-icon:hover {
+.copy-icon, .exit-icon {
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s ease;
+}
+
+.settings-btn:hover, .exit-btn:hover {
   transform: scale(1.1);
+}
+
+.edit-actions {
+  margin-top: 15px;
 }
 
 /* Специфичные стили только для этого компонента */
@@ -562,16 +583,10 @@ input:checked + .slider:before {
   margin: 0;
 }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.settings-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .team-creation, .team-info {
@@ -706,48 +721,6 @@ input:checked + .slider:before {
   }
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-}
-
-.edit-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.edit-icon {
-  height: 20px;
-  width: 20px;
-  transition: transform 0.2s ease;
-}
-
-.edit-icon:hover, .edit-btn:hover {
-  transform: scale(1.1);
-}
-
-.exit-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.exit-icon {
-  height: 20px;
-  width: 20px;
-  transition: transform 0.2s ease;
-}
-
-.exit-icon:hover, .exit-btn:hover {
-  transform: scale(1.1);
-}
-
 .edit-actions {
   margin-top: 15px;
 }
@@ -802,5 +775,88 @@ input:checked + .slider:before {
 @keyframes fadeOut {
   from { opacity: 1; }
   to { opacity: 0; }
+}
+
+/* Стили для модального окна */
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: auto;
+  padding: 20px;
+  border-radius: 5px;
+  width: 60%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+
+.close:hover {
+  color: black;
+}
+
+.delete-team-btn {
+  background-color: #C80002;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.copy-notification {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 4px;
+  text-align: center;
+  animation: fadeIn 0.3s, fadeOut 0.5s 2.5s;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.copy-error-notification {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #ffebee;
+  color: #C80002;
+  border-radius: 4px;
+  text-align: center;
+  animation: fadeIn 0.3s, fadeOut 0.5s 2.5s;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 </style>
