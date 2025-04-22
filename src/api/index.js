@@ -4,8 +4,18 @@ const api = axios.create({
   baseURL: process.env.VUE_APP_API_URL || '/api',
   headers: {
     'Content-Type': 'application/json',
+    'Cache-Control': 'max-age=0, must-revalidate',
   },
   withCredentials: true // для работы с куками
+});
+
+// Добавляем timestamp к GET-запросам для предотвращения кэширования
+api.interceptors.request.use(config => {
+  if (config.method === 'get') {
+    const separator = config.url.includes('?') ? '&' : '?';
+    config.url = `${config.url}${separator}_t=${new Date().getTime()}`;
+  }
+  return config;
 });
 
 // Добавим перехватчики для обработки ошибок
@@ -24,6 +34,17 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Функция для принудительного обновления данных без кэша
+export const forceRefresh = (url) => {
+  return api.get(url, {
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+  });
+};
 
 export const authAPI = {
   login: (data) => api.post('/auth/registration', data),

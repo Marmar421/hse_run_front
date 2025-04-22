@@ -3,14 +3,19 @@
 /**
  * Выполняет GET-запрос по указанному URL
  * @param {string} url - URL для запроса
+ * @param {boolean} [noCache=false] - Флаг для отключения кэширования
  * @returns {Promise<any>} - результат запроса
  */
-export async function getData(url) {
+export async function getData(url, noCache = false) {
   try {
-    const response = await fetch(url, {
+    // Добавляем timestamp для предотвращения кэширования, если требуется
+    const urlWithTimestamp = noCache ? `${url}${url.includes('?') ? '&' : '?'}_t=${new Date().getTime()}` : url;
+    
+    const response = await fetch(urlWithTimestamp, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Cache-Control': noCache ? 'no-cache, no-store, must-revalidate' : 'max-age=0, must-revalidate'
       },
       credentials: 'include' // Для работы с куки/сессиями
     });
@@ -81,10 +86,11 @@ export const programAPI = {
   /**
    * Получение информации о баллах пользователя
    * @param {number} userId - ID пользователя
+   * @param {boolean} [noCache=false] - Флаг для отключения кэширования
    * @returns {Promise<any>} - результат запроса
    */
-  async getUserScore(userId) {
-    return getData(`/api/auth/program/user/${userId}`);
+  async getUserScore(userId, noCache = false) {
+    return getData(`/api/auth/program/user/${userId}`, noCache);
   },
   
   /**
