@@ -1,7 +1,8 @@
 <template>
   <div class="action-buttons">
-    <button @click="$emit('change-points')" class="btn btn-points">Изменить баллы</button>
-    <button v-if="isOrganizer" @click="$emit('mark-attendance')" class="btn btn-attendance">Отметить посещение</button>
+    <div class="button-group">
+      <!-- Другие кнопки, если они есть -->
+    </div>
   </div>
 </template>
 
@@ -15,46 +16,65 @@ export default {
     },
     commandName: {
       type: String,
-      required: true
+      default: ''
     }
-  },
-  emits: ['change-points', 'mark-attendance']
+  }
 }
 </script>
 
 <style scoped>
 .action-buttons {
-  margin-top: 20px;
-}
-.btn {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
+  margin: 15px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  transition: background-color 0.3s;
-}
-.btn:hover {
-  opacity: 0.9;
-}
-.btn-points {
-  background-color: #2196F3;
-}
-.btn-attendance {
-  background-color: #FF9800;
+  background-color: #f9f9fa;
 }
 
-/* Адаптивность для мобильных устройств */
+h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.action-btn {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+  background-color: #45a049;
+}
+
+.action-btn.danger {
+  background-color: #e74c3c;
+}
+
+.action-btn.danger:hover {
+  background-color: #c0392b;
+}
+
 @media (max-width: 480px) {
-  .btn {
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .action-btn {
     width: 100%;
-    margin: 5px 0;
   }
 }
 </style> 

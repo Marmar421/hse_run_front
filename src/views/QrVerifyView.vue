@@ -6,26 +6,29 @@
       <StatusDisplay :status-text="statusText" :status-color="statusColor" />
       
       <div v-if="qrData" class="result-container">
-        <!-- Информация о пользователе (для организаторов) -->
-        <UserInfo v-if="isOrganizer" :user="qrData.user" />
+        <!-- Информация о пользователе (для организаторов и ctc) -->
+        <UserInfo v-if="isOrganizer || isCtc" :user="qrData.user" />
         
-        <!-- Информация о команде (для организаторов) -->
-        <CommandInfo v-if="isOrganizer" :command="qrData.command" />
+        <!-- Управление баллами (для ctc и organizer) -->
+        <ProgramScore 
+          v-if="isCtc || isOrganizer" 
+          :userId="qrData.user.id"
+          :userName="qrData.user.full_name"
+          :token="token"
+          :initialScore="qrData.program?.total_score || 0"
+          :role="qrData.scanner_role"
+          @score-updated="updateScore"
+        />
         
-        <!-- Для организаторов и инсайдеров -->
+        <!-- Информация о команде (для организаторов и ctc) -->
+        <CommandInfo v-if="isOrganizer || isCtc" :command="qrData.command" />
+        
+        <!-- Для организаторов, инсайдеров и ctc -->
         <ParticipantList 
-          v-if="isOrganizer || isInsider" 
+          v-if="isOrganizer || isInsider || isCtc" 
           :participants="qrData.command.participants" 
         />
         
-        <!-- Кнопки действий для организаторов и инсайдеров -->
-        <ActionButtons 
-          v-if="isOrganizer || isInsider" 
-          :is-organizer="isOrganizer" 
-          :command-name="qrData.command.name" 
-          @change-points="changePoints"
-          @mark-attendance="markAttendance"
-        />
       </div>
       
       <!-- Сообщение для гостя -->
@@ -64,6 +67,7 @@ import ErrorMessage from '@/components/QrVerify/ErrorMessage.vue';
 import GuestMessage from '@/components/QrVerify/GuestMessage.vue';
 import StatusDisplay from '@/components/QrVerify/StatusDisplay.vue';
 import LogoComponent from '@/components/UI/LogoComponent.vue';
+import ProgramScore from '@/components/QrVerify/ProgramScore.vue';
 
 export default {
   name: 'QrVerifyView',
@@ -76,7 +80,8 @@ export default {
     ErrorMessage,
     GuestMessage,
     StatusDisplay,
-    LogoComponent
+    LogoComponent,
+    ProgramScore
   },
   data() {
     return {
@@ -99,6 +104,9 @@ export default {
     },
     isInsider() {
       return this.qrData && this.qrData.scanner_role === 'insider';
+    },
+    isCtc() {
+      return this.qrData && this.qrData.scanner_role === 'ctc';
     }
   },
   created() {
@@ -148,8 +156,14 @@ export default {
         if (response.data.ok) {
           this.handleSuccessfulVerification(response.data);
         } else {
-          // В случае ошибки от сервера
-          this.handleServerErrorMessage(response.data);
+          // Проверяем сообщение об ошибке
+          if (response.data.message === "Недостаточно прав для проверки QR-кода") {
+            // Для гостевых пользователей делаем дополнительный запрос с простой структурой
+            await this.handleGuestVerification(this.token);
+          } else {
+            // В случае других ошибок от сервера
+            this.handleServerErrorMessage(response.data);
+          }
         }
       } catch (error) {
         console.error('Произошла ошибка при выполнении запроса:', error);
@@ -160,6 +174,12 @@ export default {
         
         // Получаем данные ответа, если они есть
         const responseData = error.response?.data;
+        
+        // Если сообщение "Недостаточно прав для проверки QR-кода"
+        if (responseData?.message === "Недостаточно прав для проверки QR-кода") {
+          await this.handleGuestVerification(this.token);
+          return;
+        }
         
         // Если ошибка 403 - требуется авторизация
         if (error.response?.status === 403) {
@@ -186,6 +206,52 @@ export default {
       }
     },
     
+    // Новый метод для обработки верификации гостевых пользователей
+    async handleGuestVerification(token) {
+      try {
+        // Прямой запрос для получения данных без проверки ролей
+        const response = await fetch('/api/auth/qr/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token }),
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.ok) {
+          // Заполняем необходимые данные для отображения приглашения
+          this.qrData = {
+            can_join: result.can_join,
+            join_reason: result.join_reason,
+            command_name: result.command_name,
+            captain_name: result.captain_name,
+            token: result.token,
+            message: result.message
+          };
+          
+          this.statusText = 'Успешно';
+          this.statusColor = '#d4edda'; // Зеленый фон
+          
+          // Определяем тип отображения для гостя
+          this.determineUserView();
+        } else {
+          this.handleServerErrorMessage(result);
+        }
+      } catch (error) {
+        console.error('Ошибка при получении данных для гостя:', error);
+        this.statusText = 'Ошибка';
+        this.statusColor = '#f8d7da'; // Красный фон
+        this.errorMessage = 'Произошла ошибка при обработке QR-кода. Пожалуйста, попробуйте позже.';
+      }
+    },
+    
     handleSuccessfulVerification(result) {
       this.statusText = 'Успешно';
       this.statusColor = '#d4edda'; // Зеленый фон
@@ -195,6 +261,26 @@ export default {
       
       // Определяем, какое отображение показать
       this.determineUserView();
+      
+      // Обработка для роли ctc
+      if (result.scanner_role === 'ctc') {
+        // Успешная верификация для ctc
+        this.statusText = 'QR-код подтвержден';
+        this.statusColor = '#d4edda'; // Зеленый фон
+        
+        // Обработка результата
+        this.qrData = result;
+      }
+      
+      // Проверяем наличие баллов для organizer
+      if (result.scanner_role === 'organizer' && !result.program) {
+        // Если данных о программе нет, добавляем пустой объект
+        // Чтобы компонент ProgramScore мог корректно отображаться
+        this.qrData.program = {
+          total_score: 0,
+          can_add_score: true
+        };
+      }
     },
     
     handleServerError(response) {
@@ -299,8 +385,19 @@ export default {
       this.statusText = result.message || 'Ошибка верификации';
       this.statusColor = '#f8d7da'; // Красный фон
       
-      // Если сообщение о том, что пользователь уже в команде
-      if (result.message && result.message.includes('уже состоите в')) {
+      // Проверяем, является ли сообщение об ошибке "Только QR капитана команды позволяет присоединиться"
+      // и пользователь не является гостем
+      if (result.message && 
+          result.message.includes('Только QR капитана') && 
+          this.qrData && 
+          this.qrData.scanner_role && 
+          ['insider', 'ctc', 'organizer'].includes(this.qrData.scanner_role)) {
+        // Для организаторов, инсайдеров и ctc - не показываем ошибку о капитане
+        this.statusText = 'Информация';
+        this.statusColor = '#d1ecf1'; // Синий информационный фон
+        // Не устанавливаем сообщение об ошибке, так как для этих ролей это не ошибка
+      } else if (result.message && result.message.includes('уже состоите в')) {
+        // Если сообщение о том, что пользователь уже в команде
         this.guestMessage = result.message;
       } else {
         // Для других ошибок показываем общий формат ошибки
@@ -314,33 +411,77 @@ export default {
         return;
       }
       
-      if (this.qrData.join_reason) {
-        switch(this.qrData.join_reason) {
-          case 'already_in_team':
-            this.guestMessage = "Вы уже состоите в команде и не можете присоединиться к другой";
-            break;
-          case 'not_captain':
-            this.guestMessage = "Только QR-код капитана команды позволяет присоединиться";
-            break;
-          case 'team_full':
-            this.guestMessage = "В команде уже максимальное количество участников (6/6)";
-            break;
-          default:
-            this.guestMessage = `Невозможно присоединиться к команде. Причина: ${this.qrData.join_reason}`;
+      // Для гостей и пользователей без роли - проверяем возможность присоединения
+      if (!this.qrData.scanner_role || this.qrData.scanner_role === 'guest') {
+        if (this.qrData.join_reason) {
+          switch(this.qrData.join_reason) {
+            case 'already_in_team':
+              this.guestMessage = "Вы уже состоите в команде и не можете присоединиться к другой";
+              break;
+            case 'not_captain':
+              this.guestMessage = "Только QR-код капитана команды позволяет присоединиться";
+              break;
+            case 'team_full':
+              this.guestMessage = "В команде уже максимальное количество участников (6/6)";
+              break;
+            default:
+              this.guestMessage = `Невозможно присоединиться к команде. Причина: ${this.qrData.join_reason}`;
+          }
+          return;
         }
-        return;
+        
+        if (this.qrData.can_join) {
+          this.showJoinBox = true;
+          return;
+        }
+        
+        if (this.qrData.message === "Вы успешно добавлены в команду") {
+          this.guestMessage = this.qrData.message;
+          return;
+        }
+        
+        if (this.qrData.message) {
+          this.guestMessage = this.qrData.message;
+          return;
+        }
+      } else {
+        // Для организаторов, инсайдеров и ctc - обрабатываем по-прежнему
+        if (this.qrData.join_reason) {
+          // Для не-гостевых ролей не показываем сообщение "не капитан"
+          if (this.qrData.join_reason === 'not_captain' && 
+              ['insider', 'ctc', 'organizer'].includes(this.qrData.scanner_role)) {
+            // Не показываем сообщение об ошибке для ролей insider, ctc, organizer
+            return;
+          }
+          
+          switch(this.qrData.join_reason) {
+            case 'already_in_team':
+              this.guestMessage = "Вы уже состоите в команде и не можете присоединиться к другой";
+              break;
+            case 'not_captain':
+              this.guestMessage = "Только QR-код капитана команды позволяет присоединиться";
+              break;
+            case 'team_full':
+              this.guestMessage = "В команде уже максимальное количество участников (6/6)";
+              break;
+            default:
+              this.guestMessage = `Невозможно присоединиться к команде. Причина: ${this.qrData.join_reason}`;
+          }
+          return;
+        }
+        
+        if (this.qrData.can_join) {
+          this.showJoinBox = true;
+          return;
+        }
+        
+        if (this.qrData.message === "Вы успешно добавлены в команду") {
+          this.guestMessage = this.qrData.message;
+          return;
+        }
       }
       
-      if (this.qrData.can_join) {
-        this.showJoinBox = true;
-        return;
-      }
-      
-      if (this.qrData.message === "Вы успешно добавлены в команду") {
-        this.guestMessage = this.qrData.message;
-        return;
-      }
-      
+      // Если ничего из вышеперечисленного не подошло
       if (this.qrData.message) {
         this.guestMessage = this.qrData.message;
       } else {
@@ -421,25 +562,9 @@ export default {
       this.guestMessage = 'Вы отменили присоединение к команде';
     },
     
-    changePoints() {
-      const points = prompt('Введите количество баллов для команды:');
-      if (points !== null && !isNaN(Number(points))) {
-        // Здесь будет логика для изменения баллов
-        const confirmMessage = `Вы добавляете ${points} баллов команде "${this.qrData.command.name}". Продолжить?`;
-        if (confirm(confirmMessage)) {
-          // Заглушка для будущего API
-          alert(`Функциональность изменения баллов будет добавлена позднее. Вы ввели: ${points} баллов`);
-        }
-      } else if (points !== null) {
-        alert('Пожалуйста, введите корректное число баллов');
-      }
-    },
-    
-    markAttendance() {
-      const confirmMessage = `Вы собираетесь отметить посещение команды "${this.qrData.command.name}". Продолжить?`;
-      if (confirm(confirmMessage)) {
-        // Заглушка для будущего API
-        alert('Функциональность отметки посещения будет добавлена позднее');
+    updateScore(newTotalScore) {
+      if (this.qrData && this.qrData.program) {
+        this.qrData.program.total_score = newTotalScore;
       }
     }
   }
