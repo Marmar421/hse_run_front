@@ -60,6 +60,14 @@ export default {
           url: 'https://ny-dance.ru/'
         },
         {
+          logo: require('@/assets/images/partners_logo/guild.png'),
+          url: 'https://creativityweek.ru/?ysclid=m9gyp6chwt617073916'
+        },
+        {
+          logo: require('@/assets/images/partners_logo/rockthecycle.png'),
+          url: 'https://rockthecycle.ru/'
+        },
+        {
           logo: require('@/assets/images/partners_logo/reshape_logo_1.png'),
           url: 'https://reshape.global/'
         },
