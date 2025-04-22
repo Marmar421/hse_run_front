@@ -58,6 +58,38 @@
             </label>
             <span class="toggle-label">{{ $t('profile.showLookingStatus') }}</span>
           </div>
+          
+          <!-- Компонент для отображения всех пользователей, ищущих команду -->
+          <div v-if="isLookingForTeam" class="find-team-section">
+            <div class="find-team-header">
+              <h4>{{ $t('profile.peopleSearching') }}</h4>
+            </div>
+            
+            <div v-if="isLoadingUsers" class="loading-users">
+              {{ $t('profile.loadingUsers') }}...
+            </div>
+            
+            <div v-else-if="lookingUsers.length > 0" class="users-list">
+              <div v-for="user in lookingUsers" :key="user.id" class="user-item">
+                <div class="user-info">
+                  <div class="user-name">
+                    <a v-if="user.telegram_username" 
+                       :href="'https://t.me/' + user.telegram_username" 
+                       target="_blank" 
+                       class="user-link">
+                      {{ user.full_name }}{{ user.is_captain ? ' 👑' : '' }}
+                    </a>
+                    <span v-else>{{ user.full_name }}{{ user.is_captain ? ' 👑' : '' }}</span>
+                  </div>
+                  <div v-if="user.team_name" class="team-label">{{ $t('profile.teamLabel') }}: {{ user.team_name }}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div v-else-if="lookingUsersLoaded" class="no-users-message">
+              {{ $t('profile.noLookingUsers') }}
+            </div>
+          </div>
         </div>
       </div>
       
@@ -99,8 +131,8 @@
             </div>
           </div>
           
-          <!-- Статус "Ищу сокомандников" только для капитана при редактировании -->
-          <div v-if="isEditing && isUserCaptain" class="looking-status-container">
+          <!-- Статус "Ищу сокомандников" доступен для всех участников команды -->
+          <div class="looking-status-container">
             <div class="looking-status" :class="{ 'active': isLookingForTeam }">
               <span>{{ $t('profile.lookingForTeammates') }}</span>
               <span class="status-indicator">{{ isLookingForTeam ? $t('profile.lookingStatusOn') : $t('profile.lookingStatusOff') }}</span>
@@ -113,6 +145,38 @@
                 <span class="slider round"></span>
               </label>
               <span class="toggle-label">{{ $t('profile.showLookingStatus') }}</span>
+            </div>
+          </div>
+          
+          <!-- Компонент для отображения всех пользователей, ищущих команду -->
+          <div v-if="!isEditing && isLookingForTeam" class="find-team-section">
+            <div class="find-team-header">
+              <h4>{{ $t('profile.peopleSearching') }}</h4>
+            </div>
+            
+            <div v-if="isLoadingUsers" class="loading-users">
+              {{ $t('profile.loadingUsers') }}...
+            </div>
+            
+            <div v-else-if="lookingUsers.length > 0" class="users-list">
+              <div v-for="user in lookingUsers" :key="user.id" class="user-item">
+                <div class="user-info">
+                  <div class="user-name">
+                    <a v-if="user.telegram_username" 
+                       :href="'https://t.me/' + user.telegram_username" 
+                       target="_blank" 
+                       class="user-link">
+                      {{ user.full_name }}{{ user.is_captain ? ' 👑' : '' }}
+                    </a>
+                    <span v-else>{{ user.full_name }}{{ user.is_captain ? ' 👑' : '' }}</span>
+                  </div>
+                  <div v-if="user.team_name" class="team-label">{{ $t('profile.teamLabel') }}: {{ user.team_name }}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div v-else-if="lookingUsersLoaded" class="no-users-message">
+              {{ $t('profile.noLookingUsers') }}
             </div>
           </div>
           
@@ -182,7 +246,10 @@ export default {
       isSaving: false,
       showCopyNotification: false,
       showCopyError: false,
-      error: null
+      error: null,
+      lookingUsers: [],
+      isLoadingUsers: false,
+      lookingUsersLoaded: false
     };
   },
   computed: {
@@ -198,6 +265,16 @@ export default {
           this.editedTeamName = newTeam.name || '';
           this.editedTeamLanguage = parseInt(newTeam.language_id) || this.getDefaultLanguageId();
         }
+      }
+    },
+    isLookingForTeam(newValue) {
+      // Если включен статус поиска команды, загружаем список пользователей
+      if (newValue) {
+        this.loadLookingUsers();
+      } else {
+        // Сбрасываем список при выключении статуса
+        this.lookingUsers = [];
+        this.lookingUsersLoaded = false;
       }
     }
   },
@@ -409,6 +486,24 @@ export default {
       this.$emit('toggle-looking-status');
     },
     
+    async loadLookingUsers() {
+      console.log('Загрузка пользователей начата...');
+      this.isLoadingUsers = true;
+      try {
+        console.log('Отправка запроса на сервер...');
+        const response = await this.makeRequest('/api/auth/users/looking_for_team', 'GET');
+        console.log('Ответ получен:', response);
+        this.lookingUsers = response.users || [];
+        console.log('Пользователи загружены:', this.lookingUsers.length);
+        this.lookingUsersLoaded = true;
+      } catch (error) {
+        console.error('Ошибка при загрузке пользователей:', error);
+        this.lookingUsersLoaded = false;
+      } finally {
+        this.isLoadingUsers = false;
+      }
+    },
+    
     async makeRequest(url, method, body) {
       const response = await fetch(url, {
         method,
@@ -427,6 +522,12 @@ export default {
   created() {
     // Инициализация параметров при создании компонента
     this.selectedLanguage = this.getDefaultLanguageId();
+  },
+  mounted() {
+    // Загружаем список пользователей, ищущих команду, если у пользователя включен соответствующий статус
+    if (this.isLookingForTeam) {
+      this.loadLookingUsers();
+    }
   }
 };
 </script>
@@ -858,5 +959,91 @@ input:checked + .slider:before {
   transform: translateX(-50%);
   z-index: 1000;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Стили для нового компонента FindTeamList */
+.find-team-section {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.find-team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.refresh-icon {
+  font-size: 18px;
+}
+
+.loading-users {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.users-list {
+  margin-bottom: 10px;
+}
+
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-name {
+  margin-right: 10px;
+}
+
+.team-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.telegram-link {
+  color: #666;
+  text-decoration: none;
+}
+
+.telegram-icon {
+  margin-right: 5px;
+}
+
+.no-users-message {
+  text-align: center;
+  color: #666;
+}
+
+.user-link {
+  color: #666;
+  text-decoration: none;
+}
+
+.user-link:hover {
+  color: #4369AC;
+  text-decoration: underline;
 }
 </style>

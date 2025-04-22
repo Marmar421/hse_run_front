@@ -87,7 +87,14 @@ export default {
     lookingStatusOff: 'Статус поиска неактивен',
     insiderStatus: 'Инсайдер',
     studentOrganization: 'Студенческая организация',
-    geoLink: 'Ссылка на 2ГИС'
+    geoLink: 'Ссылка на 2ГИС',
+    findTeammates: 'Найти команду',
+    findPlayers: 'Найти игроков',
+    peopleSearching: 'Люди в поиске',
+    loadingUsers: 'Загрузка пользователей',
+    noLookingUsers: 'Нет пользователей, ищущих команду',
+    captain: 'Капитан команды',
+    teamLabel: 'Команда'
   },
   faq: {
     title: 'ОСТАЛИСЬ ВОПРОСЫ?',

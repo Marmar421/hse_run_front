@@ -85,8 +85,15 @@ export default {
     lookingStatusOn: 'Search status active',
     lookingStatusOff: 'Search status inactive',
     insiderStatus: 'Insider',
-    studentOrganization: 'Student Organization',
-    geoLink: '2GIS Link'
+    studentOrganization: 'Student organization',
+    geoLink: '2GIS link',
+    findTeammates: 'Find Team',
+    findPlayers: 'Find Players',
+    peopleSearching: 'People searching',
+    loadingUsers: 'Loading users',
+    noLookingUsers: 'No users looking for a team',
+    captain: 'Team Captain',
+    teamLabel: 'Team'
   },
 
   faq: {
