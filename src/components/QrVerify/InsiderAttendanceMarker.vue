@@ -12,21 +12,26 @@
     
     <div v-else>
       <div v-if="tasks && tasks.length > 0">
-        <h5>Ваши назначенные загадки:</h5>
         <ul>
           <li v-for="task in tasks" :key="task.id">
             <span>{{ task.title }}</span>
+            
+            <!-- Условное отображение: статус, кнопка или сообщение -->
             <span v-if="task.is_attendance_marked" class="marked-status">
-              (Посещение отмечено для команды {{ scannedCommandName }})
+              Посещение отмечено для команды "{{ scannedCommandName }}"
             </span>
             <button 
-              v-else 
+              v-else-if="task.can_mark_attendance" 
               @click="markAttendance(task.id)" 
               :disabled="markingTask === task.id" 
-              class="btn btn-primary"
+              class="btn btn-primary" 
             >
               {{ markingTask === task.id ? 'Отметка...' : 'Отметить посещение' }}
             </button>
+            <span v-else class="pending-status">
+              Загадка ещё не решена командой "{{ scannedCommandName }}"
+            </span>
+
           </li>
         </ul>
       </div>
@@ -171,19 +176,57 @@ h5 {
 ul {
   list-style: none;
   padding-left: 0;
+  margin-top: 10px; /* Добавим отступ сверху для списка */
 }
 
 li {
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */ /* Убираем старый отступ */
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #eee; /* Добавляем разделитель */
+  padding: 10px 0; /* Добавляем вертикальные отступы */
+}
+
+/* Стилизуем кнопку внутри списка */
+li .btn {
+  min-width: 160px; /* Задаем минимальную ширину */
+  text-align: center; /* Центрируем текст */
+  padding: 5px 10px; /* Убедимся, что паддинг одинаковый */
+  box-sizing: border-box; /* Учитываем padding и border в ширине */
+}
+
+/* Убираем границу у последнего элемента списка */
+li:last-child {
+  border-bottom: none;
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 480px) {
+  li {
+    flex-direction: column; /* Элементы друг под другом */
+    align-items: stretch; /* Растягиваем элементы по ширине */
+    gap: 8px; /* Добавляем отступ между названием и кнопкой */
+  }
+
+  li .btn {
+    min-width: auto; /* Убираем минимальную ширину */
+    width: 100%; /* Кнопка занимает всю ширину */
+  }
+  
+  .marked-status, .pending-status { /* Применяем и к новому статусу */
+    text-align: center; /* Центрируем текст об отметке */
+    margin-top: -5px; /* Немного пододвигаем вверх */
+    /* Переопределяем выравнивание текста на центр для мобильных */
+    text-align: center !important; 
+  }
 }
 
 .marked-status {
   font-style: italic;
   color: #6c757d;
   font-size: 0.9em;
+  text-align: right; /* Прижимаем текст вправо по умолчанию */
 }
 
 .btn-primary {
@@ -231,5 +274,13 @@ li {
   background-color: #d1ecf1;
   color: #0c5460;
   border: 1px solid #bee5eb;
+}
+
+/* Стиль для статуса "не решено" (по аналогии с marked-status) */
+.pending-status {
+  font-style: italic;
+  color: #6c757d; /* Серый цвет */
+  font-size: 0.9em;
+  text-align: right; /* Прижимаем текст вправо по умолчанию */
 }
 </style> 

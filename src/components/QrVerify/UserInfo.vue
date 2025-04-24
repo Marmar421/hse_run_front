@@ -1,6 +1,13 @@
 <template>
   <div class="user-info">
-    <h3>Информация о пользователе</h3>
+    <h3 class="user-info-header">
+      <span>Информация о пользователе</span>
+      <span v-if="user.role" 
+            class="role-badge" 
+            :class="{'role-ctc': user.role === 'ctc', 'role-organizer': user.role === 'organizer'}">
+        {{ user.role === 'ctc' ? 'CTC' : (user.role === 'organizer' ? 'Организатор' : user.role) }}
+      </span>
+    </h3>
     <div 
       v-for="field in fields" 
       :key="field.key" 
@@ -31,7 +38,6 @@ export default {
       fields: [
         { key: 'id', label: 'ID' },
         { key: 'full_name', label: 'Имя' },
-        { key: 'role', label: 'Роль' },
         { key: 'telegram_id', label: 'Telegram ID' },
         { key: 'telegram_username', label: 'Telegram Username', defaultValue: 'Не указано' }
       ]
@@ -46,5 +52,33 @@ export default {
 .user-info {
   margin-bottom: 15px;
   position: relative;
+}
+
+/* Стили для заголовка, чтобы разнести текст и значок */
+.user-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px; /* Восстанавливаем отступ снизу */
+}
+
+/* Стили для значка роли */
+.role-badge {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  color: white;
+  margin-left: 10px;
+  vertical-align: middle; /* Выравнивание по центру заголовка */
+}
+
+.role-ctc {
+  /* background-color: #2c3e50; */ /* Старый стиль */
+  background-color: #6f42c1; /* Фиолетовый фон */
+  color: #ffc107; /* Желтый текст */
+}
+
+.role-organizer {
+  background-color: #e74c3c;
 }
 </style> 

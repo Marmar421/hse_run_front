@@ -5,11 +5,12 @@
     <div class="container">
       <StatusDisplay :status-text="statusText" :status-color="statusColor" />
       
-      <div v-if="qrData" class="result-container">
-        <!-- Информация о пользователе (для организаторов и ctc) -->
-        <UserInfo v-if="isOrganizer || isCtc" :user="qrData.user" />
+      <!-- Контейнер с результатами, только для ролей с контентом внутри -->
+      <div v-if="qrData && (isOrganizer || isCtc || isInsider)" class="result-container">
+
+        <!-- Блоки действий (сразу после статуса) -->
         
-        <!-- Управление баллами (для ctc и organizer) -->
+        <!-- Управление баллами (для ctc, organizer и insider) -->
         <ProgramScore 
           v-if="isCtc || isOrganizer" 
           :userId="qrData.user.id"
@@ -19,16 +20,7 @@
           :role="qrData.scanner_role"
           @score-updated="updateScore"
         />
-        
-        <!-- Информация о команде (для организаторов и ctc) -->
-        <CommandInfo v-if="isOrganizer || isCtc" :command="qrData.command" />
-        
-        <!-- Для организаторов, инсайдеров и ctc -->
-        <ParticipantList 
-          v-if="isOrganizer || isInsider || isCtc" 
-          :participants="qrData.command.participants" 
-        />
-        
+
         <!-- Отметка посещения инсайдером или организатором -->
         <InsiderAttendanceMarker 
           v-if="(isInsider || isOrganizer) && qrData.user && qrData.command"
@@ -37,7 +29,20 @@
           :scannedCommandId="qrData.command.id"
           :scannedCommandName="qrData.command.name"
         />
+
+        <!-- Информационные блоки (ниже действий) -->
+        <!-- Для организаторов, инсайдеров и ctc -->
+        <ParticipantList 
+          v-if="isOrganizer || isInsider || isCtc" 
+          :participants="qrData.command.participants" 
+          :scannedUserId="qrData.user.id"
+          :commandName="qrData.command.name"
+        />
+        <!-- Информация о пользователе (для организаторов и ctc) -->
+        <UserInfo v-if="isOrganizer || isCtc" :user="qrData.user" />
         
+        <!-- Информация о команде (для организаторов и ctc) -->
+        <CommandInfo v-if="isOrganizer || isCtc" :command="qrData.command" />
       </div>
       
       <!-- Сообщение для гостя -->
