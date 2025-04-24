@@ -56,6 +56,10 @@ export default {
           url: 'https://ecosborka.ru'
         },
         {
+          logo: require('@/assets/images/partners_logo/addzip.svg'),
+          url: 'https://addzip.ru'
+        },
+        {
           logo: require('@/assets/images/partners_logo/new_york_dance.png'),
           url: 'https://ny-dance.ru/'
         },

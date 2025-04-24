@@ -113,7 +113,7 @@ export default {
   },
   footer: {
     coordinator: 'Coordinator HSE RUN 29: Super Sonic',
-    copyright: '© 2025 HSE RUN. All rights reserved.'
+    copyright: '© 2011-2025 HSE RUN. All rights reserved.'
   },
   partners: {
     title: 'Our Partners'

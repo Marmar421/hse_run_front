@@ -113,7 +113,7 @@ export default {
   },
   footer: {
     coordinator: 'Координатор HSE RUN 29: Супер Соник',
-    copyright: '© 2025 HSE RUN. Все права защищены.'
+    copyright: '© 2011-2025 HSE RUN. Все права защищены.'
   },
   partners: {
     title: 'Наши партнеры'

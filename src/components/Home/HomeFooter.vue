@@ -2,7 +2,6 @@
   <section class="HomeFooter">
     <div class="footer-content">
       <div class="nav-links">
-        <router-link to="/" class="nav-link">{{ $t('header.about') }}</router-link>
         <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link>
         <router-link to="/registration" class="nav-link">{{ $t('header.signin') }}</router-link>
       </div>
