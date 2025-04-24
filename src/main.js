@@ -47,6 +47,12 @@ const sanitizeInput = (input) => {
 // Создаем приложение
 const app = createApp(App);
 
+// Настраиваем плагины
+app.use(i18n);
+app.use(store);
+app.use(router);
+app.use(UI);
+
 // Глобальная защита от XSS
 app.config.globalProperties.$sanitize = sanitizeInput;
 
@@ -56,12 +62,6 @@ app.config.errorHandler = (err, vm, info) => {
   console.info('Vue Component:', vm);
   console.info('Error Info:', info);
 };
-
-// Настраиваем плагины
-app.use(store);
-app.use(router);
-app.use(UI);
-app.use(i18n);
 
 // Регистрируем глобальные компоненты
 app.component('HomeHeader', HomeHeader);

@@ -44,6 +44,10 @@ export default {
           url: 'https://ahmadtea.ru'
         },
         {
+          logo: require('@/assets/images/partners_logo/holycorn.png'),
+          url: 'https://holycorn.ru/'
+        },
+        {
           logo: require('@/assets/images/partners_logo/feedback.png'),
           url: 'https://feedback-massage.ru/'
         },
