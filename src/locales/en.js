@@ -133,7 +133,7 @@ export default {
     register: 'Register',
     noActiveSession: 'No active session',
     errorWidgetLoading: 'Error loading Telegram Login Widget',
-    errorUserData: 'Failed to get user data',
+    errorUserData: 'Failed to get user data. This issue may be related to the restrictions of the Telegram browser. Try logging in with another browser.',
     loggedInAs: 'Logged in as',
     errorAuthentication: 'Authentication error',
     errorDataProcessing: 'Error processing data',

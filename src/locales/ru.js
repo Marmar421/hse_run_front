@@ -133,7 +133,7 @@ export default {
     register: 'Зарегистрироваться',
     noActiveSession: 'Нет активной сессии',
     errorWidgetLoading: 'Ошибка загрузки Telegram Login Widget',
-    errorUserData: 'Не удалось получить данные пользователя',
+    errorUserData: 'Не удалось получить данные пользователя. Эта проблема может быть связана с ограничениями во встроенном браузере Telegram. Попробуйте войти через другой браузер.',
     loggedInAs: 'Вошел как',
     errorAuthentication: 'Ошибка аутентификации',
     errorDataProcessing: 'Ошибка при обработке данных',
