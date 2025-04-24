@@ -11,7 +11,8 @@ const api = axios.create({
 
 // Добавляем timestamp к GET-запросам для предотвращения кэширования
 api.interceptors.request.use(config => {
-  if (config.method === 'get') {
+  // Добавляем _t только для GET запросов, *кроме* insider-tasks-status
+  if (config.method === 'get' && !config.url.startsWith('/quest/insider-tasks-status')) {
     const separator = config.url.includes('?') ? '&' : '?';
     config.url = `${config.url}${separator}_t=${new Date().getTime()}`;
   }
@@ -65,6 +66,13 @@ export const teamAPI = {
 export const qrAPI = {
   verify: (token) => api.post('/auth/qr/verify', { token }),
   generate: () => api.get('/auth/qr/generate'),
+};
+
+// Добавляем методы для работы с квестом (если еще не созданы)
+export const questAPI = {
+  getInsiderTasksStatus: (commandId) => api.get(`/quest/insider-tasks-status?command_id=${commandId}`),
+  markInsiderAttendance: (data) => api.post('/quest/mark-insider-attendance', data),
+  // Добавьте сюда другие методы questAPI, если они понадобятся
 };
 
 export default api; 

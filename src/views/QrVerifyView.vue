@@ -29,6 +29,15 @@
           :participants="qrData.command.participants" 
         />
         
+        <!-- Отметка посещения инсайдером или организатором -->
+        <InsiderAttendanceMarker 
+          v-if="(isInsider || isOrganizer) && qrData.user && qrData.command"
+          :scannedUserId="qrData.user.id"
+          :scannedUserName="qrData.user.full_name"
+          :scannedCommandId="qrData.command.id"
+          :scannedCommandName="qrData.command.name"
+        />
+        
       </div>
       
       <!-- Сообщение для гостя -->
@@ -68,6 +77,7 @@ import GuestMessage from '@/components/QrVerify/GuestMessage.vue';
 import StatusDisplay from '@/components/QrVerify/StatusDisplay.vue';
 import LogoComponent from '@/components/UI/LogoComponent.vue';
 import ProgramScore from '@/components/QrVerify/ProgramScore.vue';
+import InsiderAttendanceMarker from '@/components/QrVerify/InsiderAttendanceMarker.vue';
 
 export default {
   name: 'QrVerifyView',
@@ -81,7 +91,8 @@ export default {
     GuestMessage,
     StatusDisplay,
     LogoComponent,
-    ProgramScore
+    ProgramScore,
+    InsiderAttendanceMarker
   },
   data() {
     return {
