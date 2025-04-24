@@ -55,9 +55,9 @@
     
     <!-- Модальное окно для просмотра изображений -->
     <div v-if="showImageModal" class="image-modal" @click="closeImageModal">
-      <div class="modal-content" @click.stop>
+      <div class="modal-content">
         <span class="modal-close" @click="closeImageModal">&times;</span>
-        <img :src="modalImageSrc" class="modal-image">
+        <img :src="modalImageSrc" class="modal-image" @click="closeImageModal">
       </div>
     </div>
   </QuestShell>

@@ -13,10 +13,10 @@
     </div>
 
     <!-- Модальное окно для QR-кода -->
-    <div class="qr-modal" v-if="qrModalVisible">
-      <div class="qr-modal-content">
+    <div class="qr-modal" v-if="qrModalVisible" @click="closeQR">
+      <div class="qr-modal-content" @click.stop>
         <img :src="qrImageSrc" alt="QR Code">
-        <button @click="closeQR" class="close-btn">Закрыть</button>
+        <p class="qr-modal-description">Покажите этот QR инсайдеру, чтобы отметить посещение</p>
       </div>
     </div>
   </div>
@@ -163,12 +163,20 @@ h3 {
   padding: 25px;
   border-radius: 10px;
   text-align: center;
-  max-width: 90%;
+  max-width: 300px;
+  width: 80%;
 }
 
 .qr-modal-content img {
-  max-width: 250px;
+  max-width: 350px;
   margin-bottom: 15px;
+}
+
+.qr-modal-description {
+  max-width: 80%;
+  margin: 0 auto;
+  color: #555;
+  font-size: 14px;
 }
 
 .close-btn {
@@ -192,10 +200,6 @@ h3 {
     align-items: center;
     gap: 10px;
     padding: 15px;
-  }
-  
-  .qr-modal-content img {
-    max-width: 200px;
   }
   
   .logo {
