@@ -5,7 +5,9 @@
       <div class="stats-bar">
         <div class="stats-item">Счёт: {{ teamScore }}</div>
         <div class="stats-item">Монеты: {{ teamCoins }}</div>
-        <button @click="showQR" class="qr-btn">QR-код</button>
+        <button @click="showQrCode" class="qr-btn" :disabled="isLoadingQr">
+          {{ isLoadingQr ? 'Загрузка...' : 'QR-код' }}
+        </button>
       </div>
       
       <!-- Содержимое компонента будет отображаться через слот -->
@@ -13,7 +15,7 @@
     </div>
 
     <!-- Модальное окно для QR-кода -->
-    <div class="qr-modal" v-if="qrModalVisible" @click="closeQR">
+    <div class="qr-modal" v-if="isQrModalVisible" @click="closeQrCode">
       <div class="qr-modal-content" @click.stop>
         <img :src="qrImageSrc" alt="QR Code">
         <p class="qr-modal-description">Покажите этот QR инсайдеру, чтобы отметить посещение</p>
@@ -22,27 +24,28 @@
   </div>
 </template>
 
-<script>
-import { qrCodeMixin } from './QuestMixins.js'
+<script setup>
+import { useQrCode } from '@/composables/useQrCode'; 
 import LogoComponent from '@/components/UI/LogoComponent.vue';
 
-export default {
-  name: 'QuestShell',
-  components: {
-    LogoComponent
+const props = defineProps({
+  teamScore: {
+    type: Number,
+    default: 0
   },
-  mixins: [qrCodeMixin],
-  props: {
-    teamScore: {
-      type: Number,
-      default: 0
-    },
-    teamCoins: {
-      type: Number,
-      default: 0
-    }
+  teamCoins: {
+    type: Number,
+    default: 0
   }
-}
+});
+
+const { 
+  isQrModalVisible, 
+  qrImageSrc, 
+  isLoadingQr, 
+  showQrCode, 
+  closeQrCode 
+} = useQrCode();
 </script>
 
 <style scoped>
@@ -64,8 +67,6 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
 }
-
-
 
 h1 {
   font-size: 28px;
@@ -143,6 +144,11 @@ h3 {
 
 .qr-btn:hover {
   background-color: #333;
+}
+
+.qr-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .qr-modal {

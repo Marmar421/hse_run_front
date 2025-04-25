@@ -614,6 +614,8 @@ export default {
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 15px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .result-container {
@@ -655,6 +657,7 @@ export default {
 @media (max-width: 480px) {
   .container {
     padding: 10px;
+    max-width: calc(100% - 20px);
   }
 }
 

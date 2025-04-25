@@ -4,6 +4,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import i18n from './i18n';
+import { createPinia } from 'pinia';
+import PrimeVue from 'primevue/config';
+import ToastService from 'primevue/toastservice';
 
 // Импортируем только нужные компоненты для лучшей оптимизации
 import UI from "./components/UI/index"
@@ -19,6 +22,7 @@ import ProfileMain from "./components/Profile/ProfileMain.vue";
 import BaseButton from "./components/UI/BaseButton.vue";
 import QuestBlocks from "./components/Quest/QuestBlocks.vue";
 import TelegramLogin from "./components/Registration/TelegramLogin.vue";
+import Skeleton from 'primevue/skeleton';
 
 // Импортируем стили в последнюю очередь для оптимизации загрузки
 import '@/assets/styles/variables.css';
@@ -47,11 +51,16 @@ const sanitizeInput = (input) => {
 // Создаем приложение
 const app = createApp(App);
 
+const pinia = createPinia();
+
 // Настраиваем плагины
 app.use(i18n);
 app.use(store);
+app.use(pinia);
 app.use(router);
 app.use(UI);
+app.use(PrimeVue);
+app.use(ToastService);
 
 // Глобальная защита от XSS
 app.config.globalProperties.$sanitize = sanitizeInput;
@@ -74,6 +83,7 @@ app.component('ProfileMain', ProfileMain);
 app.component('BaseButton', BaseButton);
 app.component('QuestBlocks', QuestBlocks);
 app.component('TelegramLogin', TelegramLogin);
+app.component('Skeleton', Skeleton);
 
 // Монтируем приложение
 app.mount('#app');

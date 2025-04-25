@@ -1,7 +1,24 @@
 <template>
-  <QuestShell :teamScore="teamScore" :teamCoins="teamCoins">
-    <div class="quest-blocks">
-      <div v-for="block in blocks" :key="block.id" 
+  <QuestShell :teamScore="questStore.teamScore" :teamCoins="questStore.teamCoins">
+    <!-- Skeleton Loading for Quest Blocks -->
+    <div v-if="questStore.loading" class="quest-blocks-skeleton">
+      <div v-for="n in 3" :key="n" class="quest-block-skeleton">
+        <!-- Skeleton: Block Title -->
+        <Skeleton height="2rem" width="60%" class="mb-3"></Skeleton>
+        <!-- Skeleton: Progress Area -->
+        <div class="skeleton-progress-area">
+            <!-- Skeleton: Progress Bar 1 -->
+            <Skeleton height="25px" width="100%" borderRadius="16px" class="mb-2"></Skeleton>
+            <!-- Skeleton: Progress Bar 2 -->
+            <Skeleton height="25px" width="100%" borderRadius="16px"></Skeleton>
+        </div>
+      </div>
+    </div>
+    <!-- Error Display -->
+    <div v-else-if="questStore.error" class="error">{{ questStore.error }}</div>
+    <!-- Actual Content -->
+    <div v-else class="quest-blocks">
+      <div v-for="block in questStore.blocks" :key="block.id" 
            class="quest-block" 
            @click="startBlock(block.id)">
         <div class="block-title">
@@ -46,58 +63,38 @@
   </QuestShell>
 </template>
 
-<script>
-import QuestShell from './QuestShell.vue'
+<script setup>
+import { onMounted, onActivated } from 'vue';
+import { useRouter } from 'vue-router';
+import { useQuestStore } from '@/stores/quest';
+import QuestShell from './QuestShell.vue';
 
-export default {
-  name: 'QuestComponent',
-  components: {
-    QuestShell
-  },
-  data() {
-    return {
-      blocks: [],
-      teamScore: 0,
-      teamCoins: 0,
-    }
-  },
-   created() {
-     this.fetchUserData()
-    
-     // Обновление данных при возвращении на страницу
-     document.addEventListener('visibilitychange', this.handleVisibilityChange)
-   },
-   beforeUnmount() {
-     // Очистка слушателя событий
-     document.removeEventListener('visibilitychange', this.handleVisibilityChange)
-   },
-  methods: {
-    async fetchUserData() {
-      try {
-        const res = await fetch('/api/quest')
-        if (!res.ok) throw new Error('Ошибка сервера')
-        
-        const data = await res.json()
-        this.blocks = data.blocks
-        this.teamScore = data.team_score
-        this.teamCoins = data.team_coins
-      } catch (e) {
-        // При ошибке перенаправляем на страницу регистрации
-        this.$router.push('/registration')
-      }
-    },
-    
-    startBlock(blockId) {
-      this.$router.push(`/quest/${blockId}`)
-    },
-    
-    handleVisibilityChange() {
-      if (document.visibilityState === 'visible') {
-        this.fetchUserData()
-      }
-    }
-  }
-}
+const router = useRouter();
+const questStore = useQuestStore();
+
+const startBlock = (blockId) => {
+  router.push(`/quest/${blockId}`);
+};
+
+// Используем onMounted для первоначальной загрузки
+onMounted(() => {
+  questStore.fetchQuestData();
+});
+
+// Используем onActivated для обновления при возвращении на KeepAlive компонент (если используется)
+// или при смене видимости вкладки (как было раньше с visibilitychange)
+onActivated(() => {
+  questStore.fetchQuestData(); // Повторно загружаем для актуальности
+});
+
+// Опционально: можно добавить watcher для visibilitychange, если KeepAlive не используется
+// import { useEventListener } from '@vueuse/core'; // Потребует установки @vueuse/core
+// useEventListener(document, 'visibilitychange', () => {
+//   if (document.visibilityState === 'visible') {
+//     questStore.fetchQuestData();
+//   }
+// });
+
 </script>
 
 <style scoped>
@@ -122,9 +119,12 @@ export default {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.quest-block:hover {
-  transform: scale(1.02);
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+/* Применяем hover-эффект только для устройств с мышью/указателем */
+@media (hover: hover) {
+  .quest-block:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+  }
 }
 
 .block-title {
@@ -190,5 +190,57 @@ export default {
 .red-text {
   color: #ff5252;
 }
+
+/* Добавим стили для loading и error, если их нет */
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #666;
+}
+
+.error {
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+/* Контейнер скелетонов - ограничиваем ширину здесь */
+.quest-blocks-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 337px; /* Ограничение контейнера */
+  margin: 0 auto;   /* Центрирование контейнера */
+  width: 100%; 
+}
+
+/* Карточка скелетона - занимает 100% ширины ограниченного контейнера */
+.quest-block-skeleton {
+  max-width: 337px; /* Возвращаем max-width сюда */
+  width: 100%; 
+  box-sizing: border-box; 
+  border: 2px solid #e0e0e0; 
+  border-radius: 15px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 10px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.skeleton-progress-area {
+  width: 100%;
+  padding: 0 15px 15px;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+/* PrimeVue Skeleton по умолчанию может не иметь margin, добавляем утилиты */
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
 
 </style>

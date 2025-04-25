@@ -12,6 +12,7 @@
     "babel-eslint": "^10.1.0",
     "core-js": "^3.8.3",
     "maska": "^2.1.11",
+    "pinia": "^3.0.2",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
     "primevue": "^3.41.0",

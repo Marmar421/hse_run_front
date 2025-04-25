@@ -65,13 +65,20 @@ export const teamAPI = {
 // Добавляем методы для работы с QR
 export const qrAPI = {
   verify: (token) => api.post('/auth/qr/verify', { token }),
-  generate: () => api.get('/auth/qr/generate'),
+  generate: () => api.get('/auth/qr'),
 };
 
-// Добавляем методы для работы с квестом (если еще не созданы)
+// Добавляем методы для работы с квестом
 export const questAPI = {
-  getInsiderTasksStatus: (commandId) => api.get(`/quest/insider-tasks-status?command_id=${commandId}`),
-  markInsiderAttendance: (data) => api.post('/quest/mark-insider-attendance', data),
+  // --- Загрузка данных ---
+  getAllBlocks: () => api.get('/quest/'), 
+  getBlock: (blockId) => api.get(`/quest/${blockId}`),
+  // --- Взаимодействие с загадками ---
+  checkAnswer: (riddleId, answer) => api.post(`/quest/riddles/${riddleId}/check-answer`, { answer }),
+  getHint: (riddleId) => api.get(`/quest/riddles/${riddleId}/hint`), 
+  // --- Функции инсайдера (уже были) ---
+  getInsiderTasksStatus: (commandId) => api.get(`/quest/insiders/tasks/status?command_id=${commandId}`),
+  markInsiderAttendance: (data) => api.post('/quest/insiders/attendance/mark', data),
   // Добавьте сюда другие методы questAPI, если они понадобятся
 };
 
