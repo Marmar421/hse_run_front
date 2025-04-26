@@ -7,10 +7,15 @@
     
     <!-- Если загадка уже отвечена -->
     <template v-if="isAnswered(riddle)">
-      <!-- Отображаем координаты как обычный текст -->
-      <p v-if="riddle.geo_answered" class="riddle-text">
+      <!-- Отображаем координаты с возможностью копирования -->
+      <div 
+        v-if="riddle.geo_answered" 
+        class="copy-field riddle-text" 
+        @click="copyToClipboard(riddle.geo_answered)"
+      >
         <span v-html="riddle.geo_answered"></span> <!-- Координаты без ссылки -->
-      </p>
+        <span class="tooltip">{{ tooltipText }}</span>
+      </div>
       <!-- Контейнер для иконок-ссылок инсайдеров -->
       <div v-if="riddle.insiderLinks && riddle.insiderLinks.length > 0" class="insider-links-container">
         <!-- Отображаем до 2х иконок -->
@@ -62,6 +67,8 @@
         :filePath="riddle.image_path_answered"
         maxWidth="100%"
         class="riddle-image" />
+      <!-- Уведомление о копировании -->
+      <div v-if="copySuccess" class="copy-notification">Скопировано!</div>
     </template>
     
     <!-- Если загадка не отвечена -->
@@ -107,7 +114,7 @@
       />
     </template>
     
-    <div v-if="riddle.has_insider_attempt" class="insider-badge">Отсканировано инсайдером</div>
+    <div v-if="riddle.has_insider_attempt" class="insider-badge">{{ $t('quest.riddleCard.insiderBadge') }}</div>
 
     <!-- Модальное окно для просмотра изображений -->
     <div v-if="showImageModal" class="image-modal" @click="closeImageModal">
@@ -141,6 +148,29 @@ const questStore = useQuestStore();
 
 const showImageModal = ref(false);
 const modalImageSrc = ref('');
+
+// --- Логика копирования в буфер ---
+const copySuccess = ref(false);
+const tooltipText = ref('Нажмите, чтобы скопировать');
+
+const copyToClipboard = (text) => {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      copySuccess.value = true;
+      tooltipText.value = 'Скопировано!'; // Меняем текст тултипа
+      setTimeout(() => {
+        copySuccess.value = false;
+        tooltipText.value = 'Нажмите, чтобы скопировать'; // Возвращаем текст тултипа
+      }, 2000);
+    })
+    .catch(err => {
+      console.error('Ошибка при копировании: ', err);
+      tooltipText.value = 'Ошибка копирования'; // Сообщаем об ошибке
+      setTimeout(() => {
+         tooltipText.value = 'Нажмите, чтобы скопировать'; // Возвращаем текст тултипа
+      }, 2000);
+    });
+};
 
 // --- Логика модального окна изображений ---
 // openImageModal вызывается событием @image-click от ImageViewer
@@ -218,6 +248,9 @@ const getFileType = (filePath) => {
 </script>
 
 <style scoped>
+/* Импортируем стили для копируемого поля */
+@import '@/assets/styles/CopyFieldStyles.css';
+
 /* Стили скопированы из QuestBlocks.vue, относящиеся к .riddle-block и его содержимому */
 .riddle-block {
   border: 2px solid #ff5252;
@@ -246,6 +279,17 @@ const getFileType = (filePath) => {
   margin-bottom: 3px;
   text-align: center;
   width: 100%;
+}
+
+/* Стили для ссылок внутри заголовка */
+.riddle-title :deep(a) {
+  color: var(--secondary-color, #4285f4); /* Используем переменную или запасной цвет */
+  text-decoration: none; /* Оставляем подчеркивание для ясности */
+}
+
+.riddle-title :deep(a:hover) {
+  /* Можно добавить стили для hover, например, изменение яркости */
+  filter: brightness(0.8);
 }
 
 .riddle-text {
@@ -284,8 +328,18 @@ const getFileType = (filePath) => {
 /* Стили для иконки-ссылки инсайдера (одиночной или в контейнере) */
 .insider-icon-link {
   display: inline-block; /* Изменяем на inline-block для размещения в flex */
-  margin-top: 8px; 
-  line-height: 0; 
+  transition: transform 0.2s ease; /* Добавляем плавный переход для hover */
+  padding: 4px 0; /* Объединенный отступ сверху и снизу */
+}
+
+/* Добавляем стиль для hover */
+.insider-icon-link:hover {
+  transform: scale(1.1); /* Немного увеличиваем иконку при наведении */
+}
+
+/* Стиль для изображения внутри ссылки инсайдера */
+.insider-icon-link img {
+  display: block; /* Убедимся, что отступ применяется корректно */
 }
 
 /* Новый контейнер для ссылок */
@@ -360,5 +414,28 @@ const getFileType = (filePath) => {
   border: 3px solid rgba(255, 255, 255, 0.2);
   border-radius: 5px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Стили для уведомления о копировании (можно настроить) */
+.copy-notification {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #e8f5e9; /* Светло-зеленый фон */
+  color: #2e7d32; /* Темно-зеленый текст */
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+  animation: fadeIn 0.3s, fadeOut 0.5s 1.5s; /* Анимация появления/исчезновения */
+}
+
+/* Анимации для уведомления */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 </style> 

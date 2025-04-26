@@ -67,7 +67,7 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url('@/assets/images/map-reg3.svg');
+  background-image: url('@/assets/images/map-reg.svg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

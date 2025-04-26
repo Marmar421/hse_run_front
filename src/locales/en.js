@@ -144,10 +144,18 @@ export default {
   },
   quest: {
     answerForm: {
-      placeholder: 'Enter the address as it appears on 2GIS maps'
+      placeholder: 'Enter the answer, as on the maps'
     },
     hint: {
       title: 'Hint'
+    },
+    riddleCard: {
+      insiderBadge: 'Scanned by insider'
     }
+  },
+  clipboard: {
+    copyTooltipDefault: 'Click to copy',
+    copyTooltipSuccess: 'Copied!',
+    copyTooltipError: 'Copy error'
   }
 } 

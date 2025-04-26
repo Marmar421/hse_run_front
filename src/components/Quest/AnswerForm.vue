@@ -66,7 +66,7 @@ const onSubmit = () => {
 }
 
 .answer-input::placeholder {
-  font-size: clamp(6px, calc(2.08vw - 0.67px), 16px);
+  font-size: clamp(8px, calc(1.5vw + 2.87px), 16px);
 }
 
 .answer-input:disabled {

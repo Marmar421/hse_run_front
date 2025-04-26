@@ -99,10 +99,13 @@ export default {
   },
   quest: {
     answerForm: {
-      placeholder: 'Введите адрес, как он записан на картах 2ГИС'
+      placeholder: 'Введите ответ, как на картах'
     },
     hint: {
       title: 'Подсказка'
+    },
+    riddleCard: {
+      insiderBadge: 'Отсканировано инсайдером'
     }
   },
   faq: {
@@ -149,5 +152,10 @@ export default {
     errorCompleteRegistration: 'Не удалось завершить регистрацию',
     studentOrganization: 'Студенческая организация',
     geoLink: 'Ссылка на 2ГИС'
+  },
+  clipboard: {
+    copyTooltipDefault: 'Нажмите, чтобы скопировать',
+    copyTooltipSuccess: 'Скопировано!',
+    copyTooltipError: 'Ошибка копирования'
   }
 };
