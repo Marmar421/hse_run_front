@@ -14,7 +14,7 @@
       <div v-if="tasks && tasks.length > 0">
         <ul>
           <li v-for="task in tasks" :key="task.id">
-            <span>{{ task.title }}</span>
+            <span v-html="task.title"></span>
             
             <!-- Условное отображение: статус, кнопка или сообщение -->
             <span v-if="task.is_attendance_marked" class="marked-status">
@@ -282,5 +282,15 @@ li:last-child {
   color: #6c757d; /* Серый цвет */
   font-size: 0.9em;
   text-align: right; /* Прижимаем текст вправо по умолчанию */
+}
+
+/* Стили для ссылок внутри span */
+li span:first-child :deep(a) {
+  color: var(--secondary-color, #4285f4); 
+  text-decoration: none; 
+}
+
+li span:first-child :deep(a:hover) {
+  filter: brightness(0.8);
 }
 </style> 

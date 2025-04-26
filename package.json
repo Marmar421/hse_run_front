@@ -20,13 +20,11 @@
     "vue-debounce": "^5.0.0",
     "vue-i18n": "^9.2.2",
     "vue-meta": "^3.0.0-alpha.10",
-    "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vue-router": "^4.0.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "^5.0.8",
     "css-purge": "^1.1.1",
     "eslint": "^8.57.0",
@@ -36,7 +34,8 @@
     "husky": "^8.0.3",
     "image-webpack-loader": "^8.1.0",
     "lint-staged": "^15.2.0",
-    "prettier": "3.3.2"
+    "prettier": "3.3.2",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "browserslist": [
     "> 1%",

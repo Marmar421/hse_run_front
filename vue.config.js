@@ -1,4 +1,5 @@
 const { defineConfig } = require("@vue/cli-service");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const backendProxyConfig = {
   target: 'http://127.0.0.1:8000',
@@ -48,6 +49,15 @@ module.exports = defineConfig({
       args[0]['process.env'].VUE_APP_TELEGRAM_BOT_ID = JSON.stringify(telegramBotId);
       return args;
     });
+    
+    // Добавляем анализатор бандла только для команды build
+    if (process.env.NODE_ENV === 'production') {
+      config.plugin('bundle-analyzer').use(BundleAnalyzerPlugin, [{
+        analyzerMode: 'static', // Генерировать HTML-отчет
+        openAnalyzer: false, // Не открывать отчет автоматически
+        reportFilename: '../bundle-report.html' // Имя файла отчета в корне проекта
+      }]);
+    }
     
     config.module
       .rule('images')

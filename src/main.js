@@ -2,11 +2,13 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import store from "./store";
+// import store from "./store"; // Удаляем импорт Vuex store
 import i18n from './i18n';
 import { createPinia } from 'pinia';
-import PrimeVue from 'primevue/config';
+import { useSecurityStore } from './stores/security'; // Импортируем security store
+// import PrimeVue from 'primevue/config'; // Не используем глобально
 import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast'; // Импортируем Toast
 
 // Импортируем только нужные компоненты для лучшей оптимизации
 import UI from "./components/UI/index"
@@ -55,12 +57,16 @@ const pinia = createPinia();
 
 // Настраиваем плагины
 app.use(i18n);
-app.use(store);
-app.use(pinia);
+// app.use(store); // Удаляем использование Vuex
+app.use(pinia); // Pinia уже используется
 app.use(router);
 app.use(UI);
-app.use(PrimeVue);
 app.use(ToastService);
+
+// Вызываем получение CSRF токена при инициализации
+// Нужно делать это после инициализации Pinia
+const securityStore = useSecurityStore();
+securityStore.fetchCSRFToken();
 
 // Глобальная защита от XSS
 app.config.globalProperties.$sanitize = sanitizeInput;
@@ -84,6 +90,7 @@ app.component('BaseButton', BaseButton);
 app.component('QuestBlocks', QuestBlocks);
 app.component('TelegramLogin', TelegramLogin);
 app.component('Skeleton', Skeleton);
+app.component('Toast', Toast); // Регистрируем Toast
 
 // Монтируем приложение
 app.mount('#app');
