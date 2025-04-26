@@ -56,6 +56,10 @@ export default {
           url: 'https://clck.ru/3CmmpF'
         },
         {
+          logo: require('@/assets/images/partners_logo/tedo.png'),
+          url: 'https://tedo.ru/career-start'
+        },
+        {
           logo: require('@/assets/images/partners_logo/sborka_logo.svg'),
           url: 'https://ecosborka.ru'
         },

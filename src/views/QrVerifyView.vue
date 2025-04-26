@@ -9,7 +9,15 @@
       <div v-if="qrData && (isOrganizer || isCtc || isInsider)" class="result-container">
 
         <!-- Блоки действий (сразу после статуса) -->
-        
+        <!-- Отметка посещения инсайдером, организатором или ctc (если есть задачи) -->
+        <InsiderAttendanceMarker 
+          v-if="((isInsider || isOrganizer) || (isCtc && scannerTasks.length > 0)) && qrData.user && qrData.command"
+          :scannedUserId="qrData.user.id"
+          :scannedUserName="qrData.user.full_name"
+          :scannedCommandId="qrData.command.id"
+          :scannedCommandName="qrData.command.name"
+        />
+
         <!-- Управление баллами (для ctc, organizer и insider) -->
         <ProgramScore 
           v-if="isCtc || isOrganizer" 
@@ -19,15 +27,7 @@
           :initialScore="qrData.program?.total_score || 0"
           :role="qrData.scanner_role"
           @score-updated="updateScore"
-        />
-
-        <!-- Отметка посещения инсайдером или организатором -->
-        <InsiderAttendanceMarker 
-          v-if="(isInsider || isOrganizer) && qrData.user && qrData.command"
-          :scannedUserId="qrData.user.id"
-          :scannedUserName="qrData.user.full_name"
-          :scannedCommandId="qrData.command.id"
-          :scannedCommandName="qrData.command.name"
+          :user-role="qrData.user?.role"
         />
 
         <!-- Информационные блоки (ниже действий) -->
@@ -38,16 +38,23 @@
           :scannedUserId="qrData.user.id"
           :commandName="qrData.command.name"
         />
-        <!-- Информация о пользователе (для организаторов и ctc) -->
-        <UserInfo v-if="isOrganizer || isCtc" :user="qrData.user" />
+        <!-- Информация о пользователе (только для организаторов) -->
+        <UserInfo 
+          v-if="isOrganizer" 
+          :user="qrData.user" 
+          :scanner-role="qrData.scanner_role"
+        />
         
-        <!-- Информация о команде (для организаторов и ctc) -->
-        <CommandInfo v-if="isOrganizer || isCtc" :command="qrData.command" />
+        <!-- Информация о команде (только для организаторов) -->
+        <CommandInfo 
+          v-if="isOrganizer" 
+          :command="qrData.command" 
+        />
       </div>
       
-      <!-- Сообщение для гостя -->
+      <!-- Сообщение для гостя (не показываем инсайдерам и ctc) -->
       <GuestMessage 
-        v-if="guestMessage" 
+        v-if="guestMessage && !isInsider && !isCtc" 
         :message="guestMessage" 
       />
       
@@ -111,7 +118,8 @@ export default {
       isJoining: false,
       redirectTimeout: null,
       redirectCounter: 5,
-      redirectInterval: null
+      redirectInterval: null,
+      scannerTasks: [] // Добавляем для хранения задач сканера (если ctc)
     }
   },
   computed: {
@@ -277,6 +285,11 @@ export default {
       
       // Определяем, какое отображение показать
       this.determineUserView();
+      
+      // Если сканер - ctc, загружаем его статус (задачи)
+      if (this.isCtc) { // Используем computed property
+        this.fetchScannerStatus(); // Вызываем переименованный метод
+      }
       
       // Обработка для роли ctc
       if (result.scanner_role === 'ctc') {
@@ -452,7 +465,10 @@ export default {
         }
         
         if (this.qrData.message === "Вы успешно добавлены в команду") {
-          this.guestMessage = this.qrData.message;
+          // Не показываем сообщение инсайдерам и ctc
+          if (!['insider', 'ctc'].includes(this.qrData.scanner_role)) {
+            this.guestMessage = this.qrData.message;
+          }
           return;
         }
         
@@ -472,36 +488,45 @@ export default {
           
           switch(this.qrData.join_reason) {
             case 'already_in_team':
+              // Возвращаем простую установку сообщения
               this.guestMessage = "Вы уже состоите в команде и не можете присоединиться к другой";
               break;
             case 'not_captain':
-              this.guestMessage = "Только QR-код капитана команды позволяет присоединиться";
+              // Этот кейс уже обрабатывается return выше для нужных ролей
               break;
             case 'team_full':
+              // Возвращаем простую установку сообщения
               this.guestMessage = "В команде уже максимальное количество участников (6/6)";
               break;
             default:
+              // Возвращаем простую установку сообщения
               this.guestMessage = `Невозможно присоединиться к команде. Причина: ${this.qrData.join_reason}`;
           }
           return;
         }
         
-        if (this.qrData.can_join) {
+        // Показываем окно присоединения только для organizer (и гостей/без роли ранее)
+        if (this.qrData.can_join && !['insider', 'ctc'].includes(this.qrData.scanner_role)) {
           this.showJoinBox = true;
           return;
         }
         
         if (this.qrData.message === "Вы успешно добавлены в команду") {
+          // Возвращаем простую установку сообщения
           this.guestMessage = this.qrData.message;
           return;
         }
       }
       
-      // Если ничего из вышеперечисленного не подошло
+      // Возвращаем простую установку финального сообщения 
+      // (условие отображения компонента теперь в v-if)
       if (this.qrData.message) {
         this.guestMessage = this.qrData.message;
       } else {
-        this.guestMessage = 'Нет данных для отображения';
+        // Показываем это сообщение только если не guestMessage из join_reason
+        if (!this.guestMessage) { 
+             this.guestMessage = 'Нет данных для отображения';
+        }
       }
     },
     
@@ -581,6 +606,39 @@ export default {
     updateScore(newTotalScore) {
       if (this.qrData && this.qrData.program) {
         this.qrData.program.total_score = newTotalScore;
+      }
+    },
+    
+    // Метод для получения статуса (задач) сканирующего пользователя (если ctc)
+    // Используем тот же эндпоинт, что и для инсайдера
+    async fetchScannerStatus() { 
+      const commandId = this.qrData?.command?.id;
+      
+      if (!commandId) {
+        console.error('Не найден ID команды для запроса статуса CTC.');
+        return; // Не делаем запрос без ID команды
+      }
+      
+      try {
+        // Используем эндпоинт статуса задач инсайдера
+        const url = `/api/quest/insiders/tasks/status?command_id=${commandId}`;
+        console.log('Запрос статуса задач CTC (используя эндпоинт инсайдера):', url); // Логируем URL
+        
+        const response = await fetch(url, { // Используем URL инсайдера
+          credentials: 'include' // Важно для аутентификации по сессии/куки
+        });
+        
+        if (response.ok) {
+          const stats = await response.json();
+          if (stats.ok && Array.isArray(stats.tasks)) {
+            this.scannerTasks = stats.tasks;
+            console.log('Задачи CTC пользователя загружены:', this.scannerTasks);
+          }
+        } else {
+          console.error('Ошибка при загрузке статистики пользователя:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Исключение при загрузке статуса задач CTC:', error);
       }
     }
   }

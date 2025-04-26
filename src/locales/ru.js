@@ -94,7 +94,16 @@ export default {
     loadingUsers: 'Загрузка пользователей',
     noLookingUsers: 'Нет пользователей, ищущих команду',
     captain: 'Капитан команды',
-    teamLabel: 'Команда'
+    teamLabel: 'Команда',
+    noTeamShort: 'Нет команды'
+  },
+  quest: {
+    answerForm: {
+      placeholder: 'Введите адрес, как он записан на картах 2ГИС'
+    },
+    hint: {
+      title: 'Подсказка'
+    }
   },
   faq: {
     title: 'ОСТАЛИСЬ ВОПРОСЫ?',

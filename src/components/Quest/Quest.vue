@@ -2,9 +2,9 @@
   <QuestShell :teamScore="questStore.teamScore" :teamCoins="questStore.teamCoins">
     <!-- Skeleton Loading for Quest Blocks -->
     <div v-if="questStore.loading" class="quest-blocks-skeleton">
-      <div v-for="n in 3" :key="n" class="quest-block-skeleton">
+      <div v-for="n in 5" :key="n" class="quest-block-skeleton">
         <!-- Skeleton: Block Title -->
-        <Skeleton height="2rem" width="60%" class="mb-3"></Skeleton>
+        <Skeleton height="1.5rem" width="60%" class="mb-3"></Skeleton>
         <!-- Skeleton: Progress Area -->
         <div class="skeleton-progress-area">
             <!-- Skeleton: Progress Bar 1 -->

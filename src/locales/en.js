@@ -93,7 +93,8 @@ export default {
     loadingUsers: 'Loading users',
     noLookingUsers: 'No users looking for a team',
     captain: 'Team Captain',
-    teamLabel: 'Team'
+    teamLabel: 'Team',
+    noTeamShort: 'No team'
   },
 
   faq: {
@@ -140,5 +141,13 @@ export default {
     errorCompleteRegistration: 'Failed to complete registration',
     studentOrganization: 'Student organization',
     geoLink: '2GIS link'
+  },
+  quest: {
+    answerForm: {
+      placeholder: 'Enter the address as it appears on 2GIS maps'
+    },
+    hint: {
+      title: 'Hint'
+    }
   }
 } 

@@ -7,7 +7,29 @@
     
     <!-- Если загадка уже отвечена -->
     <template v-if="isAnswered(riddle)">
-      <p v-if="riddle.geo_answered" class="riddle-text" v-html="riddle.geo_answered"></p>
+      <!-- Отображаем координаты как обычный текст -->
+      <p v-if="riddle.geo_answered" class="riddle-text">
+        <span v-html="riddle.geo_answered"></span> <!-- Координаты без ссылки -->
+      </p>
+      <!-- Контейнер для иконок-ссылок инсайдеров -->
+      <div v-if="riddle.insiderLinks && riddle.insiderLinks.length > 0" class="insider-links-container">
+        <!-- Отображаем до 2х иконок -->
+        <a 
+          v-for="(link, index) in riddle.insiderLinks.slice(0, 2)" 
+          :key="index" 
+          :href="link" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="insider-icon-link"
+        >
+          <img 
+            :src="index === 0 ? require('@/assets/images/insider1.svg') : require('@/assets/images/insider2.svg')" 
+            alt="Местоположение инсайдера"
+            width="50" 
+            height="50" 
+          />
+        </a>
+      </div>
       <p class="riddle-text">{{ riddle.text_answered || 'Нет данных' }}</p>
       <!-- Используем ImageViewer для отвеченного изображения -->
       <ImageViewer 
@@ -257,6 +279,21 @@ const getFileType = (filePath) => {
   color: #4caf50;
   background-color: rgba(76, 175, 80, 0.1);
   border: 1px solid #4caf50;
+}
+
+/* Стили для иконки-ссылки инсайдера (одиночной или в контейнере) */
+.insider-icon-link {
+  display: inline-block; /* Изменяем на inline-block для размещения в flex */
+  margin-top: 8px; 
+  line-height: 0; 
+}
+
+/* Новый контейнер для ссылок */
+.insider-links-container {
+  display: flex; /* Ставим иконки в ряд */
+  justify-content: center; /* Центрируем по горизонтали */
+  gap: 15px; /* Добавляем отступ между иконками */
+  width: 100%; /* Занимаем всю ширину для центрирования */
 }
 
 /* Стили для модального окна изображения */

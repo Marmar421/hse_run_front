@@ -2,9 +2,7 @@
   <div class="program-score">
     <h3>
       Управление баллами
-      <span v-if="role" class="role-badge" :class="{'role-ctc': role === 'ctc', 'role-organizer': role === 'organizer'}">
-        {{ role === 'ctc' ? 'CTC' : 'Организатор' }}
-      </span>
+      <RoleBadge :role="userRole" />
     </h3>
     <div class="total-score" :class="{'score-attended': hasAttended, 'score-not-attended': !hasAttended}">
       <strong>Общий балл пользователя:</strong> {{ totalScore }}
@@ -56,9 +54,13 @@
 
 <script>
 import { programAPI } from '@/services/api';
+import RoleBadge from './RoleBadge.vue';
 
 export default {
   name: 'ProgramScore',
+  components: {
+    RoleBadge
+  },
   props: {
     userId: {
       type: Number,
@@ -79,6 +81,10 @@ export default {
     role: {
       type: String,
       default: ''
+    },
+    userRole: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -230,22 +236,6 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.role-badge {
-  font-size: 12px;
-  padding: 3px 8px;
-  border-radius: 12px;
-  color: white;
-  margin-left: 10px;
-}
-
-.role-ctc {
-  background-color: #2c3e50;
-}
-
-.role-organizer {
-  background-color: #e74c3c;
 }
 
 .total-score {

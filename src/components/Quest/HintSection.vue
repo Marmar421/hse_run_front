@@ -7,7 +7,7 @@
         :id="`hint-button-${riddle.id}`"
         :disabled="questStore.requestingHint"
       >
-        {{ 'Подсказка' }}
+        {{ $t('quest.hint.title') }}
       </button>
     </div>
     

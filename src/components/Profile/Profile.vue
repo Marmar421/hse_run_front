@@ -10,8 +10,8 @@
       <ProfileMain 
         v-if="userData" 
         :userData="userData" 
-        :qrCodeData="!isInsider ? qrCodeData : null"
-        :qrLink="!isInsider ? qrLink : null"
+        :qrCodeData="canViewTeamAndQr ? qrCodeData : null"
+        :qrLink="canViewTeamAndQr ? qrLink : null"
         @copy-qr-link="copyQrLink"
       />
       
@@ -19,14 +19,14 @@
       <ProfileInfo 
         v-if="userData" 
         :userData="userData" 
-        :qrCodeData="!isInsider ? qrCodeData : null" 
-        :qrLink="!isInsider ? qrLink : null" 
+        :qrCodeData="canViewTeamAndQr ? qrCodeData : null" 
+        :qrLink="canViewTeamAndQr ? qrLink : null" 
         @update="updateUserData" 
       />
       
       <!-- Информация о команде или форма создания -->
       <ProfileTeam 
-        v-if="userData && isNotInsider" 
+        v-if="userData && canViewTeamAndQr" 
         :team="userTeam" 
         :userData="userData" 
         :qrLink="qrLink" 
@@ -71,11 +71,15 @@ export default {
     isOrganizer() {
       return this.userData?.role?.name === 'organizer';
     },
-    isNotInsider() {
-      return this.userData?.role?.name !== 'insider';
+    canViewTeamAndQr() {
+      const role = this.userData?.role?.name;
+      return role !== 'insider' && role !== 'ctc';
     },
     isInsider() {
       return this.userData?.role?.name === 'insider';
+    },
+    isCtc() {
+      return this.userData?.role?.name === 'ctc';
     }
   },
   mounted() {
@@ -149,33 +153,35 @@ export default {
     
     // Обновляем данные в родительском компоненте
     updateUserData(updatedData) {
-      // Клонируем текущие данные
-      const newUserData = { ...this.userData };
-      
-      // Обновляем ФИО
-      if (updatedData.full_name) {
-        newUserData.full_name = updatedData.full_name;
+      console.log('Profile.vue: Received update event with data:', JSON.stringify(updatedData));
+
+      // Создаем полностью новый объект для userData, чтобы гарантировать реактивность
+      const newUserState = {
+        ...this.userData, // Копируем все текущие верхнеуровневые свойства
+        full_name: updatedData.full_name !== undefined ? updatedData.full_name : this.userData.full_name, // Обновляем full_name
+        // Обрабатываем insider_info: создаем новый объект, если он был, иначе null
+        insider_info: this.userData.insider_info ? { ...this.userData.insider_info } : null
+      };
+
+      // Обновляем поля внутри нового insider_info, если данные пришли
+      if (updatedData.insider_info) {
+          // Если insider_info был null, но пришли данные, создаем объект
+          if (newUserState.insider_info === null) {
+              newUserState.insider_info = {};
+          }
+          // Обновляем student_organization, если это инсайдер и данные есть
+          if (updatedData.insider_info.student_organization !== undefined && newUserState.role?.name === 'insider') {
+              newUserState.insider_info.student_organization = updatedData.insider_info.student_organization;
+          }
+          // Обновляем geo_link, если данные есть (для обеих ролей)
+          if (updatedData.insider_info.geo_link !== undefined) {
+              newUserState.insider_info.geo_link = updatedData.insider_info.geo_link;
+          }
       }
-      
-      // Обновляем информацию инсайдера, если она есть
-      if (updatedData.insider_info && newUserData.role && newUserData.role.name === 'insider') {
-        // Если у пользователя еще нет объекта insider_info, создаем его
-        if (!newUserData.insider_info) {
-          newUserData.insider_info = {};
-        }
-        
-        // Обновляем поля
-        if (updatedData.insider_info.student_organization !== undefined) {
-          newUserData.insider_info.student_organization = updatedData.insider_info.student_organization;
-        }
-        
-        if (updatedData.insider_info.geo_link !== undefined) {
-          newUserData.insider_info.geo_link = updatedData.insider_info.geo_link;
-        }
-      }
-      
-      // Устанавливаем обновленные данные
-      this.userData = newUserData;
+
+      // Присваиваем совершенно новый объект свойству userData
+      this.userData = newUserState;
+      console.log('Profile.vue: Updated local userData state:', JSON.stringify(this.userData));
     },
     
     // Метод для выполнения запросов к API

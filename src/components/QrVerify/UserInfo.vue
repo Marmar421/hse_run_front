@@ -2,11 +2,7 @@
   <div class="user-info">
     <h3 class="user-info-header">
       <span>Информация о пользователе</span>
-      <span v-if="user.role" 
-            class="role-badge" 
-            :class="{'role-ctc': user.role === 'ctc', 'role-organizer': user.role === 'organizer'}">
-        {{ user.role === 'ctc' ? 'CTC' : (user.role === 'organizer' ? 'Организатор' : user.role) }}
-      </span>
+      <RoleBadge :role="user.role" />
     </h3>
     <div 
       v-for="field in fields" 
@@ -23,14 +19,22 @@
 
 <script>
 import { QrVerifyFieldsMixin } from '@/mixins/QrVerifyFieldsMixin';
+import RoleBadge from './RoleBadge.vue';
 
 export default {
   name: 'UserInfo',
   mixins: [QrVerifyFieldsMixin],
+  components: {
+    RoleBadge
+  },
   props: {
     user: {
       type: Object,
       required: true
+    },
+    scannerRole: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -60,25 +64,23 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px; /* Восстанавливаем отступ снизу */
+  border-radius: 4px; /* Слегка скругляем углы */
+  transition: background-color 0.3s, color 0.3s; /* Плавный переход */
 }
 
-/* Стили для значка роли */
+/* Удаляем стили для значка роли, т.к. они теперь в RoleBadge.vue */
+/*
 .role-badge {
-  font-size: 12px;
-  padding: 3px 8px;
-  border-radius: 12px;
-  color: white;
-  margin-left: 10px;
-  vertical-align: middle; /* Выравнивание по центру заголовка */
+  ...
 }
-
-.role-ctc {
-  /* background-color: #2c3e50; */ /* Старый стиль */
-  background-color: #6f42c1; /* Фиолетовый фон */
-  color: #ffc107; /* Желтый текст */
+.role-ctc { 
+  ...
 }
-
 .role-organizer {
-  background-color: #e74c3c;
+  ...
 }
+.role-default {
+  ...
+}
+*/
 </style> 

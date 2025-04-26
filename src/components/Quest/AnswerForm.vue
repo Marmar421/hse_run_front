@@ -2,7 +2,7 @@
   <form @submit.prevent="onSubmit" class="answer-form">
     <input 
       v-model.trim="answerText" 
-      placeholder="Введите ваш ответ"
+      :placeholder="$t('quest.answerForm.placeholder')"
       required 
       class="answer-input" 
       :disabled="disabled"
@@ -57,12 +57,16 @@ const onSubmit = () => {
 
 .answer-input {
   font-family: 'Involve', Arial, sans-serif;
-  padding: 12px;
+  padding: 12px 4px; /* Устанавливаем верхний/нижний отступ 12px и левый/правый 4px */
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
   width: 100%;
   text-align: center;
+}
+
+.answer-input::placeholder {
+  font-size: clamp(6px, calc(2.08vw - 0.67px), 16px);
 }
 
 .answer-input:disabled {
