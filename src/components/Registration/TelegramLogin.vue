@@ -343,7 +343,7 @@ export default {
 }
 
 h2 {
-  color: #4369AC;
+  color: var(--hse-blue);
   margin-bottom: 20px;
   text-align: center;
 }

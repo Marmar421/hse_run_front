@@ -200,8 +200,8 @@ h2 {
   font-size: 55px;
   text-align: center;
   font-family: 'PhonkSans';
-  color: #C80002;
-  -webkit-text-stroke: 3px #C80002;
+  color: var(--hse-red);
+  -webkit-text-stroke: 3px var(--hse-red);
 }
 
 .carousel-container {
@@ -261,14 +261,14 @@ h2 {
   cursor: pointer;
   font-size: 28px;
   margin: 0 15px;
-  color: #191A1E;
+  color: var(--hse-red);
   transition: color 0.3s ease;
   z-index: 1;
   flex-shrink: 0;
 }
 
 .carousel-arrow:hover {
-  color: #C80002;
+  color: var(--hse-red);
 }
 
 @media (max-width: 1360px) {
@@ -284,7 +284,7 @@ h2 {
   }
   h2 {
     font-size: 22px;
-    -webkit-text-stroke: 1px #C80002;
+    -webkit-text-stroke: 1px var(--hse-red);
   }
   .partner-logo {
     height: 80px;

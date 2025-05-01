@@ -15,6 +15,12 @@
         @copy-qr-link="copyQrLink"
       />
       
+      <!-- Отображаем компонент с баллами -->
+      <ProfileScore 
+        v-if="userScore !== null" 
+        :score="userScore"
+      />
+
       <!-- Личная информация и QR-код -->
       <ProfileInfo 
         v-if="userData" 
@@ -22,6 +28,7 @@
         :qrCodeData="canViewTeamAndQr ? qrCodeData : null" 
         :qrLink="canViewTeamAndQr ? qrLink : null" 
         @update="updateUserData" 
+        @toggle-looking-status="toggleLookingStatus"
       />
       
       <!-- Информация о команде или форма создания -->
@@ -37,7 +44,6 @@
         @team-deleted="fetchUserData" 
         @team-left="fetchUserData"
         @team-updated="fetchUserData"
-        @toggle-looking-status="toggleLookingStatus"
       />
     </div>
     <a @click="logout" class="logout-btn">{{ $t('profile.logout') }}</a>
@@ -48,6 +54,7 @@
 import ProfileMain from './ProfileMain.vue';
 import ProfileInfo from './ProfileInfo.vue';
 import ProfileTeam from './ProfileTeam.vue';
+import ProfileScore from './ProfileScore.vue';
 import LogoComponent from '@/components/UI/LogoComponent.vue';
 
 export default {
@@ -56,6 +63,7 @@ export default {
     ProfileMain,
     ProfileInfo,
     ProfileTeam,
+    ProfileScore,
     LogoComponent
   },
   data() {
@@ -64,7 +72,8 @@ export default {
       userTeam: null,
       qrCodeData: null,
       qrLink: null,
-      isLookingForTeam: false
+      isLookingForTeam: false,
+      userScore: null
     };
   },
   computed: {
@@ -103,6 +112,7 @@ export default {
         
         this.qrLink = this.qrCodeData.qr_link;
         this.isLookingForTeam = !!this.userData.is_looking_for_friends;
+        this.userScore = this.userData.score;
         
         // Обрабатываем данные о команде
         if (this.userData.commands && this.userData.commands.length > 0) {

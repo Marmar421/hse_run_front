@@ -80,7 +80,7 @@
     font-family: 'PhonkSans';
     font-size: 55px;
     font-weight: 300;
-    color: #C80002;
+    color: var(--hse-red);
     line-height: 1.5;
   }
 

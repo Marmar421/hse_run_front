@@ -81,8 +81,8 @@ export default {
   font-size: 55px;
   text-align: center;
   font-family: 'PhonkSans';
-  color: #C80002;
-  -webkit-text-stroke: 3px #C80002;
+  color: var(--hse-red);
+  -webkit-text-stroke: 3px var(--hse-red);
 }
 .questions {
   display: grid;
@@ -101,7 +101,7 @@ export default {
   perspective: 1000px;
   border-radius: 40px;
   display: flex;
-  border: solid 2px #C80002;
+  border: solid 2px var(--hse-red);
   justify-content: center;
   align-items: center;
   position: relative;
@@ -117,7 +117,7 @@ export default {
   font-size: 33px;
   margin: 0;
   font-family: 'InvolveMedium';
-  color: #C80002;
+  color: var(--hse-red);
   text-align: center;
   padding: 10px 20px;
 }
@@ -136,7 +136,7 @@ export default {
   left: 0;
   top: 0;
   transform: rotateY(180deg);
-  background-color: #C80002;
+  background-color: var(--hse-red);
   border-radius: 38px;
   
 }
@@ -178,7 +178,7 @@ export default {
 
   .homefaq-wrapper h2 {
     font-size: 22px;
-    -webkit-text-stroke: 1px #C80002;
+    -webkit-text-stroke: 1px var(--hse-red);
   }
 
   .question-card__front h3,
@@ -190,11 +190,11 @@ export default {
     min-height: 120px;
     margin: 0 auto;
     border-radius: 16px;
-    border: solid 1px #C80002;
+    border: solid 1px var(--hse-red);
   }
   .question-card__back {
     border-radius: 16px;
-    border: solid 1px #C80002;
+    border: solid 1px var(--hse-red);
   }
 }
 @media (max-width: 480px) {

@@ -189,7 +189,7 @@ export default {
 
 .profile-username {
   font-size: 16px;
-  color: #4369AC;
+  color: var(--hse-blue);
   margin: 0 0 10px 0;
 }
 

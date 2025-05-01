@@ -86,7 +86,7 @@ export default {
   border-radius: 20px;
   background-color: #F3F3F3;
   transition: transform 0.3s ease;
-  border: 2px solid #4369AC;
+  border: 2px solid var(--hse-blue);
 }
 
 .auth-button:hover {

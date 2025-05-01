@@ -94,7 +94,8 @@ export default {
     noLookingUsers: 'No users looking for a team',
     captain: 'Team Captain',
     teamLabel: 'Team',
-    noTeamShort: 'No team'
+    noTeamShort: 'No team',
+    programScore: 'Program Score'
   },
 
   faq: {
@@ -121,7 +122,20 @@ export default {
   },
   previousQuests: {
     title: 'Previous Quests',
-    description: 'Soon here will be answers and descriptions from previous quests!'
+    description: 'Soon here will be answers and descriptions from previous quests!',
+    leaderboard: {
+      title: 'Team Lists',
+      loading: 'Loading data...',
+      errorPrefix: 'Loading error:',
+      russianTitle: 'Russian Language',
+      englishTitle: 'English Language',
+      teamNameHeader: 'Team',
+      scoreHeader: 'Score',
+      noRussianTeams: 'No teams in Russian meeting the criteria.',
+      noEnglishTeams: 'No teams in English meeting the criteria.',
+      myTeamButton: 'My Team',
+      rankHeader: '#'
+    }
   },
   registration: {
     title: 'Registration',

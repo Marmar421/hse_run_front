@@ -95,7 +95,8 @@ export default {
     noLookingUsers: 'Нет пользователей, ищущих команду',
     captain: 'Капитан команды',
     teamLabel: 'Команда',
-    noTeamShort: 'Нет команды'
+    noTeamShort: 'Нет команды',
+    programScore: 'Баллы за программу'
   },
   quest: {
     answerForm: {
@@ -132,7 +133,20 @@ export default {
   },
   previousQuests: {
     title: 'Прошлые квесты',
-    description: 'Скоро тут появятся ответы и описания с прошлых квестов!'
+    description: 'Скоро тут появятся ответы и описания с прошлых квестов!',
+    leaderboard: {
+      title: 'Списки команд',
+      loading: 'Загрузка данных...',
+      errorPrefix: 'Ошибка загрузки:',
+      russianTitle: 'Русский язык',
+      englishTitle: 'Английский язык',
+      teamNameHeader: 'Название',
+      scoreHeader: 'Очки',
+      noRussianTeams: 'Нет команд на русском языке, удовлетворяющих условиям.',
+      noEnglishTeams: 'Нет команд на английском языке, удовлетворяющих условиям.',
+      myTeamButton: 'Моя команда',
+      rankHeader: '#'
+    }
   },
   registration: {
     title: 'Регистрация',

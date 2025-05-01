@@ -18,7 +18,7 @@
           type="number" 
           step="0.5" 
           v-model="scoreInput" 
-          placeholder="Введите значение (например, 1.5 или -1)" 
+          placeholder="Введите значение (например, 1.5, 0 или -1)" 
           class="form-control"
         />
         <input 
@@ -156,7 +156,16 @@ export default {
         const response = await programAPI.addScoreByQr(this.token, scoreData);
 
         if (response.ok) {
-          this.scoreMessage = `Баллы успешно ${scoreValue > 0 ? 'начислены' : 'списаны'}`;
+          // Обновляем сообщение в зависимости от значения scoreValue
+          let messageAction;
+          if (scoreValue > 0) {
+            messageAction = 'начислены';
+          } else if (scoreValue < 0) {
+            messageAction = 'списаны';
+          } else {
+            messageAction = 'зачтены';
+          }
+          this.scoreMessage = `Баллы успешно ${messageAction}`;
           this.scoreMessageClass = 'success';
           this.totalScore = response.total_score;
           this.scoreInput = '';

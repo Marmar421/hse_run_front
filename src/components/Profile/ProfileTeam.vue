@@ -615,11 +615,11 @@ h4 {
 }
 
 input:checked + .slider {
-  background-color: #4369AC;
+  background-color: var(--hse-blue);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #4369AC;
+  box-shadow: 0 0 1px var(--hse-blue);
 }
 
 input:checked + .slider:before {
@@ -732,7 +732,7 @@ input:checked + .slider:before {
 
 .team-error {
   margin-top: 10px;
-  color: #C80002;
+  color: var(--hse-red);
   font-size: 14px;
 }
 
@@ -769,7 +769,7 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #C80002;
+  color: var(--hse-red);
   transition: transform 0.2s ease;
 }
 
@@ -827,7 +827,7 @@ input:checked + .slider:before {
 }
 
 .delete-team-btn {
-  background-color: #C80002;
+  background-color: var(--hse-red);
   color: white;
   padding: 8px 16px;
   border: none;
@@ -856,7 +856,7 @@ input:checked + .slider:before {
   margin-top: 15px;
   padding: 10px;
   background-color: #ffebee;
-  color: #C80002;
+  color: var(--hse-red);
   border-radius: 4px;
   text-align: center;
   animation: fadeIn 0.3s, fadeOut 0.5s 2.5s;
@@ -920,7 +920,7 @@ input:checked + .slider:before {
 }
 
 .delete-team-btn {
-  background-color: #C80002;
+  background-color: var(--hse-red);
   color: white;
   padding: 8px 16px;
   border: none;
@@ -949,7 +949,7 @@ input:checked + .slider:before {
   margin-top: 15px;
   padding: 10px;
   background-color: #ffebee;
-  color: #C80002;
+  color: var(--hse-red);
   border-radius: 4px;
   text-align: center;
   animation: fadeIn 0.3s, fadeOut 0.5s 2.5s;
@@ -1043,7 +1043,7 @@ input:checked + .slider:before {
 }
 
 .user-link:hover {
-  color: #4369AC;
+  color: var(--hse-blue);
   text-decoration: underline;
 }
 </style>

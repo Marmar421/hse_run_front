@@ -9,6 +9,9 @@ import { useSecurityStore } from './stores/security'; // Импортируем 
 // import PrimeVue from 'primevue/config'; // Не используем глобально
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast'; // Импортируем Toast
+import axios from 'axios';
+import './input.css'
+import '@/assets/styles/phonk-sans.css'; // <-- Импорт стилей шрифта
 
 // Импортируем только нужные компоненты для лучшей оптимизации
 import UI from "./components/UI/index"

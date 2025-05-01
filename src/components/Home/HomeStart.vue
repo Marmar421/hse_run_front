@@ -5,7 +5,7 @@
         <div class="tag-line">{{ $t('start.tagline') }}</div>
         <div class="hero-content">
           <div class="hero-title-section">
-            <h1 class="main-title">{{ $t('start.maintitle') }}</h1>
+            <h1 class="main-title phonk-text">{{ $t('start.maintitle') }}</h1>
             <p class="subtitle">
                 <span class="bold-subtitle">{{ $t('start.subtitle1') }}</span> <br />
                 {{ $t('start.subtitle2') }}
@@ -146,7 +146,7 @@ export default {
   position: absolute;
   top: -50px;
   left: 60px;
-  color: #4369AC;
+  color: var(--hse-blue);
   font-size: 66px;
   z-index: 100;
 }
@@ -172,11 +172,9 @@ export default {
 }
 
 .main-title {
-  font-family: 'PhonkSans';
   font-size: clamp(45px, 3vw, 50px);
-  font-weight: 300;
-  color: #C80002;
-  -webkit-text-stroke: 3px #C80002;
+  color: var(--hse-red);
+  -webkit-text-stroke: 3px var(--hse-red);
   margin-bottom: 0;
   margin-right: 60px;
   box-sizing: border-box;
@@ -222,7 +220,7 @@ export default {
 
 .rules-link {
   font-size: 25px;
-  color: #4369AC;
+  color: var(--hse-blue);
   margin: 0;
   font-weight: bold;
   margin-left: 12px;
@@ -230,7 +228,7 @@ export default {
 }
 
 .rules-link a {
-  color: #4369AC;
+  color: var(--hse-blue);
   text-decoration: none;
 }
 
@@ -244,7 +242,7 @@ export default {
 }
 
 .register-btn {
-  background-color: #C80002;
+  background-color: var(--hse-red);
   color: white;
   border: none;
   border-radius: 24px;
@@ -260,8 +258,8 @@ a {
 
 .start-quest-btn {
   background-color: white;
-  color: #C80002;
-  border: 2px solid #C80002;
+  color: var(--hse-red);
+  border: 2px solid var(--hse-red);
   border-radius: 24px;
   padding: 20px 28px;
   font-size: 20px;
@@ -283,7 +281,7 @@ a {
   position: absolute;
   bottom: -60px;
   right: 15px;
-  color: #4369AC;
+  color: var(--hse-blue);
   font-size: 66px;
   font-family: 'DisruptorScript';
 }
@@ -308,7 +306,7 @@ a {
   font-size: 24px;
   color: #333030;
   font-family: 'InvolveMedium';
-  border: 2px solid #C80002;
+  border: 2px solid var(--hse-red);
   padding: 30px 70px ;
   border-radius: 39px;
   max-height: 114px;
@@ -338,7 +336,7 @@ a {
   }
   .main-title{
     font-size: 40px;
-    -webkit-text-stroke: 2px #C80002;
+    -webkit-text-stroke: 2px var(--hse-red);
     margin-top: 40px;
   }
   .buttons-info-section{
@@ -408,7 +406,7 @@ a {
   }
   .main-title {
     font-size: 30px;
-    -webkit-text-stroke: 2px #C80002;
+    -webkit-text-stroke: 2px var(--hse-red);
     margin-top: 20px;
   }
   .hero-img {
@@ -477,7 +475,7 @@ a {
   .main-title {
     margin-top: 30px;
     margin-right: 15px;
-    -webkit-text-stroke: 1px #C80002;
+    -webkit-text-stroke: 1px var(--hse-red);
     font-size: clamp(30px, 3vw, 35px);
   }
   .subtitle {
@@ -548,7 +546,7 @@ a {
 .card-content {
   padding: 20px 30px;
   border-radius: 20px;
-  border: 1px solid #C80002;
+  border: 1px solid var(--hse-red);
   height: 82px;
 }
 .card-title {
@@ -614,7 +612,7 @@ a {
   .main-title {
     margin-top: 18px;
     margin-right: 15px;
-    -webkit-text-stroke: 1px #C80002;
+    -webkit-text-stroke: 1px var(--hse-red);
     font-size: clamp(16px, 3vw, 18px);
   }
   .subtitle {
@@ -650,7 +648,7 @@ a {
 .start-quest-btn {
   font-size: clamp(13px, 3vw, 15px);
   padding: 11px 9px;
-  border: 1px solid #C80002;
+  border: 1px solid var(--hse-red);
 }
 .event-date, .event-place, .rules-link {
   margin-left: 11px;
@@ -704,7 +702,7 @@ a {
 .start-quest-btn {
   font-size: clamp(11px, 2vw, 13px);
   padding: 9px 7px;
-  border: 1px solid #C80002;
+  border: 1px solid var(--hse-red);
 }
 .cards-container {
   column-gap: 5px;

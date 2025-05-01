@@ -64,7 +64,7 @@ export default {
 
 /* Варианты стилей кнопок */
 .base-button--primary {
-  background-color: #4369AC;
+  background-color: var(--hse-blue);
   color: #F3F3F3;
 }
 
@@ -102,7 +102,7 @@ export default {
 
 .base-button--outline {
   background-color: transparent;
-  color: #4369AC;
+  color: var(--hse-blue);
 }
 
 .base-button--outline:hover:not(:disabled) {

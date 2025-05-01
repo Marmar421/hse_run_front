@@ -39,7 +39,7 @@ input {
 .profile-card {
   padding: 20px;
   background-color: #F3F3F3;
-  border: 2px solid #4369AC;
+  border: 2px solid var(--hse-blue);
   border-radius: 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
@@ -77,11 +77,11 @@ input {
 }
 
 .logout-btn, .delete-btn {
-  background-color: #C80002;
+  background-color: var(--hse-red);
 }
 
 .admin-btn, .create-button, .submit-btn, .cancel-btn {
-  background-color: #4369AC;
+  background-color: var(--hse-blue);
 }
 
 .create-button {

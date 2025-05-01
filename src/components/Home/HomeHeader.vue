@@ -1,12 +1,10 @@
 <template>
   <header class="sticky-header">
     <div class="header-content">
-      <LogoComponent externalLink="https://t.me/+pieUILI_L_RjODk6"/>
+      <LogoComponent/>
       <nav class="navigation">
         <LanguageSwitcher />
-        <a @click="scrollToParticipation" class="nav-link-participation">{{ $t('header.participation') }}</a>
-       <!-- <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link> -->
-        <a @click="scrollToFAQ" class="nav-link-faq">FAQ</a>
+        <router-link to="/previous" class="nav-link">{{ $t('header.previousQuests') }}</router-link>
         <div class="language-selector">
           <router-link to="/profile" class="nav-link">{{ $t('header.signin') }}</router-link> 
         </div>
@@ -126,13 +124,13 @@ export default {
 }
 
 .nav-link:hover {
-  color: #4369AC;
+  color: var(--hse-blue);
 }
 .nav-link-faq:hover {
-  color: #4369AC;
+  color: var(--hse-blue);
 }
 .nav-link-participation:hover {
-  color: #4369AC;
+  color: var(--hse-blue);
 }
 .down-button-mobile{
   display: none;
