@@ -7,6 +7,8 @@ import RegistrationView from "@/views/RegistrationView.vue";
 import QuestView from "@/views/QuestView.vue";
 import BlocksView from "@/views/BlocksView.vue";
 import QrVerifyView from "@/views/QrVerifyView.vue";
+import PreviousEventsListView from "@/views/PreviousEventsListView.vue";
+import PreviousEventAnswersView from "@/views/PreviousEventAnswersView.vue";
 
 const routes = [
   {
@@ -34,10 +36,16 @@ const routes = [
      meta: { title: "Профиль" }
    },
    {
-    path: "/previous",
-    name: "previous",
+    path: "/previous/:event_name/stats",
+    name: "previousEventStats",
     component: PreviousView,
-    meta: { title: "Предыдущие квесты" }
+    meta: { title: "Статистика события" }
+  },
+  {
+    path: "/previous/:event_name/answers",
+    name: "previousEventAnswers",
+    component: PreviousEventAnswersView,
+    meta: { title: "Ответы на квест" }
   },
   {
     path: "/registration",
@@ -84,6 +92,12 @@ const routes = [
       }
     },
     meta: { title: "Аналитика", requiresOrganizer: true }
+  },
+  {
+    path: "/previous",
+    name: "previousEventsList",
+    component: PreviousEventsListView,
+    meta: { title: "Прошедшие квесты" }
   }
 ];
 

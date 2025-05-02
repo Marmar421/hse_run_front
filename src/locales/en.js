@@ -137,6 +137,29 @@ export default {
       rankHeader: '#'
     }
   },
+  previousEventsList: {
+    pageTitle: 'PREVIOUS QUESTS',
+    description: 'HSE RUN has been held in Moscow 29 times, twice in St. Petersburg and the same number of times online. For each quest, unique thematic blocks of riddles with original ciphers are developed. The love for Moscow and interesting tasks is what attracts guests to HSE RUN for almost 15 years.',
+    eventTitle: 'HSE RUN 29',
+    description_hserun29: 'On April 27, HSE RUN 29 took place. The HSE building in Khitrovsky Lane once again welcomed everyone who wanted to unravel the secrets of the capital. At the opening and closing, guests were treated to a large-scale program: festival games, big points and bright performances of artists.',
+    locationTitle: 'Location',
+    locationText: 'Khitrovsky lane, 2/8, p5',
+    questBlocksTitle: 'Quest Blocks',
+    questBlocksDescription: 'This time participants were greeted by 6 quest blocks:',
+    questBlocksList: [
+      'Victory Moscow - a block dedicated to the 80th anniversary of the Great Victory;',
+      'Moscow with Mezzanine - a block dedicated to the anniversary of A.P. Chekhov;',
+      'Scientific Moscow - a block about outstanding scientists and important places for science;',
+      'Moscow in Poet\'s Words - a block dedicated to the life of A.S. Pushkin;',
+      'Moscow of Contemporary Art - a block of important places of new art and new culture in Moscow;',
+      'By the Sounds of Moscow - a block of the most musical places of the capital.'
+    ],
+    partnersTitle: 'Partners',
+    partnersText: 'New York Dance Studio, Feedback, Ahmad Tea, Kept, Trust Technologies, Rock the Cycle, addzip, Holy Corn, 2GIS, Claustrophobia, RESHAPE, Russian Creative Week and Sborka Ecocenter. Thanks to our partners, the winners in the quest nominations received cool prizes and were able to participate in special points at the opening and closing.',
+    integrationText: 'The new "Friends on the Map" feature from 2GIS made it easier for guests to find insiders on the map.',
+    resultsButton: 'Results',
+    answersButton: 'Answers'
+  },
   registration: {
     title: 'Registration',
     address: 'HSE RUN 29'

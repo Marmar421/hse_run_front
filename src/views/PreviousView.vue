@@ -88,6 +88,31 @@
       </div>
       <!-- Конец секции лидерборда -->
 
+      <!-- Секция структуры квеста -->
+      <!-- <div class="quest-structure-section">
+          <h2>{{ $t('previousQuests.questStructure.title') }}</h2>
+          <div v-if="questLoading" class="loading-message">
+              {{ $t('previousQuests.questStructure.loading') }}
+          </div>
+          <div v-else-if="questError" class="error-message">
+              {{ $t('previousQuests.questStructure.errorPrefix') }} {{ questError }}
+          </div>
+          <div v-else-if="!questStructure || questStructure.blocks.length === 0" class="no-data-message">
+              {{ $t('previousQuests.questStructure.noData') }}
+          </div>
+          <div v-else>
+              <div v-for="block in questStructure.blocks" :key="block.id" class="quest-block">
+                  <h3>Блок {{ block.id }}: {{ block.title }} (Язык ID: {{ block.language_id }})</h3>
+                  <ul>
+                      <li v-for="question in block.questions" :key="question.id">
+                          Вопрос {{ question.id }}: {{ question.title }}
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div> -->
+      <!-- Конец секции структуры квеста -->
+
       <HomeFooter />
     </div>
 </template>
@@ -95,7 +120,7 @@
 <script>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import HomeHeader from '@/components/Home/HomeHeader.vue';
 import HomeFooter from '@/components/Home/HomeFooter.vue';
 import LanguageSwitcher from '@/components/UI/LanguageSwitcher.vue';
@@ -109,6 +134,7 @@ export default {
   },
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const leaderboardData = ref([]);
     const loading = ref(false); // Загрузка лидерборда
     const error = ref(null); // Ошибка загрузки ТОЛЬКО лидерборда (не юзера)
@@ -118,7 +144,13 @@ export default {
     const userLoading = ref(false);
     const userError = ref(null); // Ошибка загрузки ТОЛЬКО юзера
 
-    const eventName = 'HSERUN29';
+    // Состояние для структуры квеста
+    const questStructure = ref(null);
+    const questLoading = ref(false);
+    const questError = ref(null);
+
+    // Получаем eventName из параметров маршрута
+    const eventName = ref(route.params.event_name);
 
     // Восстановлена функция генерации ID
     const generateTeamId = (name) => {
@@ -180,11 +212,47 @@ export default {
         }
     };
 
+    // Функция для загрузки структуры квеста
+    const fetchQuestStructure = async (currentEventName) => {
+        questLoading.value = true;
+        questError.value = null;
+        questStructure.value = null;
+        try {
+            // Предполагаем, что токен организатора уже добавлен глобально axios interceptor'ом
+            const response = await axios.get(`/api/v1/quest/events/${currentEventName}/answers`);
+             if (response.data) { // Проверяем наличие данных
+                 questStructure.value = response.data;
+                 console.log("Структура квеста загружена:", questStructure.value);
+             } else {
+                 // Если данные не пришли, но статус < 400
+                 questError.value = 'Сервер вернул пустой ответ (структура квеста).';
+             }
+        } catch (err) {
+            if (err.response?.status === 401 || err.response?.status === 403) {
+                 questError.value = 'Доступ запрещен. Необходима роль организатора.';
+            } else {
+                 questError.value = err.response?.data?.detail || err.message || 'Неизвестная ошибка (структура квеста)';
+            }
+            console.error("Ошибка при загрузке структуры квеста:", err);
+        } finally {
+            questLoading.value = false;
+        }
+    };
+
     // Восстановлена параллельная загрузка
     onMounted(async () => {
+      if (!eventName.value) {
+          console.error("Имя события не найдено в параметрах маршрута!");
+          error.value = "Имя события не указано в URL.";
+          questError.value = "Имя события не указано в URL.";
+          loading.value = false;
+          questLoading.value = false;
+          return;
+      }
       await Promise.all([
-          fetchLeaderboard(eventName),
-          fetchCurrentUserTeam()
+          fetchLeaderboard(eventName.value),
+          fetchCurrentUserTeam(),
+          fetchQuestStructure(eventName.value) // Добавляем загрузку структуры квеста
       ]);
     });
 
@@ -227,7 +295,12 @@ export default {
       englishLeaderboard,
       showMyTeamButton,
       scrollToMyTeam,
-      generateTeamId
+      generateTeamId,
+      // Возвращаем новые refs
+      questStructure,
+      questLoading,
+      questError,
+      eventName // Возвращаем eventName для возможного использования в шаблоне
     };
   }
 }
@@ -422,6 +495,39 @@ export default {
 /* Восстановлены стили для постоянной подсветки своей команды */
 .leaderboard-table tr.my-team-row td {
   background-color: #ffebee;
+}
+
+/* Стили для секции структуры квеста */
+.quest-structure-section {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px auto;
+}
+
+.quest-block {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.quest-block:last-child {
+    border-bottom: none;
+}
+
+.quest-block h3 {
+    color: var(--hse-blue);
+    margin-bottom: 10px;
+}
+
+.quest-block ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.quest-block li {
+    margin-bottom: 5px;
 }
 </style>
 
