@@ -106,6 +106,8 @@ export default {
 }
 .navigation {
   display: flex;
+  align-items: center;
+  vertical-align: middle;
   gap: 20px;
   font-family: 'InvolveMedium';
   font-size: 20px;
@@ -167,7 +169,6 @@ export default {
   }
   .nav-link{
     font-size: 13px;
-    margin-bottom: 5px;
   }
   .burger-menu{
     display: none;

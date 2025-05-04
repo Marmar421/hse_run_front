@@ -139,9 +139,9 @@ export default {
   },
   previousEventsList: {
     pageTitle: 'PREVIOUS QUESTS',
-    description: 'HSE RUN has been held in Moscow 29 times, twice in St. Petersburg and the same number of times online. For each quest, unique thematic blocks of riddles with original ciphers are developed. The love for Moscow and interesting tasks is what attracts guests to HSE RUN for almost 15 years.',
+    description: 'HSE RUN has been held in Moscow 29 times, twice in St. Petersburg and the same number of times online. For each quest, unique thematic blocks and interesting riddles are always developed. At the exciting opening and closing program, guests go through points from partners and invited student organizations. And the winners in the quest nominations receive cool prizes! The love for Moscow and interesting riddles is what has been attracting guests to HSE RUN for almost 15 years.',
     eventTitle: 'HSE RUN 29',
-    description_hserun29: 'On April 27, HSE RUN 29 took place. The HSE building in Khitrovsky Lane once again welcomed everyone who wanted to unravel the secrets of the capital. At the opening and closing, guests were treated to a large-scale program: festival games, big points and bright performances of artists.',
+    description_hserun29: 'On April 27, HSE RUN 29 took place. The HSE building in Khitrovsky Lane once again welcomed everyone who wanted to unravel the secrets of the capital. At the opening and closing, guests were treated to a large-scale program: festival games, big points and bright performances by artists.',
     locationTitle: 'Location',
     locationText: 'Khitrovsky lane, 2/8, p5',
     questBlocksTitle: 'Quest Blocks',
@@ -155,8 +155,8 @@ export default {
       'By the Sounds of Moscow - a block of the most musical places of the capital.'
     ],
     partnersTitle: 'Partners',
-    partnersText: 'New York Dance Studio, Feedback, Ahmad Tea, Kept, Trust Technologies, Rock the Cycle, addzip, Holy Corn, 2GIS, Claustrophobia, RESHAPE, Russian Creative Week and Sborka Ecocenter. Thanks to our partners, the winners in the quest nominations received cool prizes and were able to participate in special points at the opening and closing.',
-    integrationText: 'The new "Friends on the Map" feature from 2GIS made it easier for guests to find insiders on the map.',
+    partnersText: 'New York Dance Studio, Feedback, Ahmad Tea, Kept, Trust Technologies, Rock the Cycle, addzip, Holy Corn, 2GIS, Claustrophobia, RESHAPE, Russian Creative Week and Sborka Ecocenter.',
+    integrationText: 'Integration of the new 2GIS feature "Friends on the Map" made it easier to find insiders during the quest.',
     resultsButton: 'Results',
     answersButton: 'Answers'
   },
@@ -189,6 +189,30 @@ export default {
     riddleCard: {
       insiderBadge: 'Scanned by insider'
     }
+  },
+  previousEventAnswers: {
+    title: 'Answers for',
+    titleDefault: 'Quest Answers',
+    loading: 'Loading data...',
+    errorPrefix: 'Loading error:',
+    languageSelect: 'Language:',
+    allLanguages: 'All',
+    sidebarTitle: 'Quest Blocks',
+    noTasks: 'No tasks available for this block.',
+    noQuestStructure: 'Quest structure not found or contains no blocks.',
+    hintLabel: 'HINT',
+    riddleLabel: 'RIDDLE',
+    noImage: 'Task image is missing',
+    noHint: 'No hint available',
+    answerLabel: 'ANSWER',
+    clickToSeeAnswer: 'See the answer',
+    placeName: 'Location name',
+    solvedPercentLabel: 'Solved by:',
+    answerImageLabel: 'ANSWER (IMAGE)',
+    answerTextLabel: 'ANSWER (TEXT)',
+    noAnswerImage: 'Answer image is missing',
+    noAnswerText: 'Answer description is missing',
+    showRouteButton: 'Show Route'
   },
   clipboard: {
     copyTooltipDefault: 'Click to copy',

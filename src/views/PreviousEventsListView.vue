@@ -36,9 +36,9 @@
               <button @click="goToResults('HSERUN29')" class="action-button results-button">
                 {{ $t('previousEventsList.resultsButton') }}
               </button>
-              <!-- <button @click="goToAnswers('HSERUN29')" class="action-button answers-button">
+              <button @click="goToAnswers('HSERUN29')" class="action-button answers-button">
                 {{ $t('previousEventsList.answersButton') }}
-              </button> -->
+              </button>
             </div>
           </div>
           <div class="participation-right-section">
